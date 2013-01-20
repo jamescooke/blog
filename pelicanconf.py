@@ -3,7 +3,7 @@
 
 AUTHOR = u'James'
 SITENAME = u'James Cooke Dot Info'
-SITEURL = ''
+SITEURL = u'http://jamescooke.info'
 
 TIMEZONE = 'Europe/Paris'
 
