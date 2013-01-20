@@ -21,3 +21,5 @@ SOCIAL = (
 
 DEFAULT_PAGINATION = False
 TYPOGRIFY = True
+
+THEME = 'pelican-svbtle'
