@@ -19,3 +19,4 @@ SOCIAL = (
 )
 
 DEFAULT_PAGINATION = False
+TYPOGRIFY = True
