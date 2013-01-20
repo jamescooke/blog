@@ -3,7 +3,7 @@ Password cases and test fixes on pyramid_simpleauth
 
 :date: 2012-11-30 12:00:00
 :tags: github, python, pyramid
-:category: github-contributions
+:category: GitHub Contributions
 
 At `quib.ly <http://quib.ly>`_ we're using Pyramid at the centre of a Python framework. Providing user functionality is the `pyramid_simpleauth <https://github.com/thruflo/pyramid_simpleauth>`_ library.
 

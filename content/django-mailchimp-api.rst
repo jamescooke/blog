@@ -3,7 +3,7 @@ Django-mailchimp compatability with v1.3 API
 
 :date: 2012-09-25 07:14
 :tags: github, python, django, mailchimp
-:category: github-contributions
+:category: GitHub Contributions
 
 For a fublo project with `Neuxpower <http://www.neuxpower.com/>`_, we had to communicate with `Mailchimp via their API <http://apidocs.mailchimp.com/>`_. On Django one of the best libraries for this is `django-mailchimp <https://github.com/piquadrat/django-mailchimp>`_.
 

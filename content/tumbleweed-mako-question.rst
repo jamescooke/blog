@@ -3,7 +3,7 @@ Got the Stack Overflow tumbleweed badge for Mako filters question
 
 :date: 2013-01-20 16:40:00
 :tags: mako, python
-:category: code
+:category: Code
 
 Last week I posted a question on Stack Overflow - "`Mako template filter ordering <http://stackoverflow.com/questions/14215591/mako-template-filter-ordering>`_" - this week it earned the `Tumbleweed badge <http://stackoverflow.com/badges/63/tumbleweed>`_.
 
