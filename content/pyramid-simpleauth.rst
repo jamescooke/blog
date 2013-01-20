@@ -12,4 +12,4 @@ While writing itegration tests before we put the site live, I found that my test
 These have all been merged in now and the library rolled up a version.
 
 * GitHub Issue: `Any upper case characters in passwords break auth <https://github.com/thruflo/pyramid_simpleauth/issues/5>`_
-* GitHub Pull Request: `Password cases possible fix <https://github.com/thruflo/pyramid_simpleauth/pull/7>_`
+* GitHub Pull Request: `Password cases possible fix <https://github.com/thruflo/pyramid_simpleauth/pull/7>`_
