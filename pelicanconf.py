@@ -5,18 +5,17 @@ AUTHOR = u'James'
 SITENAME = u'James Cooke Dot Info'
 SITEURL = u'http://jamescooke.info'
 
-TIMEZONE = 'Europe/Paris'
+TIMEZONE = u'Europe/London'
 
 DEFAULT_LANG = u'en'
 
 # Blogroll
-LINKS =  (('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
-          ('Python.org', 'http://python.org'),
-          ('Jinja2', 'http://jinja.pocoo.org'),
-          ('You can modify those links in your config file', '#'),)
-
-# Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+LINKS = ()
+SOCIAL = (
+    ('Twitter', 'https://twitter.com/jamesfublo'),
+    ('GitHub', 'https://github.com/jamescooke'),
+    ('LinkedIn', 'https://www.linkedin.com/in/jamescooke'),
+    ('Stack Overflow', 'http://stackoverflow.com/users/1286705/jamesc'),
+)
 
 DEFAULT_PAGINATION = False
