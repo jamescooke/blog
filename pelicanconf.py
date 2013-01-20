@@ -8,6 +8,7 @@ SITEURL = ''
 TIMEZONE = u'Europe/London'
 
 DEFAULT_LANG = u'en'
+DEFAULT_CATEGORY = u'ZZZ Misc...'
 
 # Blogroll
 LINKS = ()
