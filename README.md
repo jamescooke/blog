@@ -1,5 +1,5 @@
 Getting up and running
-======================
+----------------------
 
 Pull down the repo and build the virtualenv.
 
@@ -8,7 +8,12 @@ Pull down the repo and build the virtualenv.
     $ source env/bin/activate
     $ pip install -r requirements.txt
 
-While still in the virtualenv, build the HTML and run dev server.
+
+Writing and testing
+-------------------
+
+While **still in the virtualenv**, build the HTML and run dev server.
 
     $ mkdir output
-    $ 
+    $ make html
+    $ make devserver
