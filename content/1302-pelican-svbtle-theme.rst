@@ -5,9 +5,8 @@ Pelican Svbtle theme tweaks
 :tags: github, python, pelican, theme
 :category: Code
 
-My first experiments with Pelican to run this blog have been good. It's currently built on the Pelican-svbtle theme.
+My first experiments with `Pelican <http://blog.getpelican.com/>`_ to run this blog have been good - it's a great way to publish static pages quickly and I find it much easier to manage than Octopress.
 
-In my opinion, there were some problems with the theme in its current form on the **XXX** branch. So I've forked **XXX***'s version, cleaned out some of the LESS and templates.
+It's built on a version of the `Pelican-svbtle theme <https://github.com/wting/pelican-svbtle>`_. There were some problems with the theme in its current form, so I've forked `CNBorn's already adjusted version <https://github.com/CNBorn/pelican-svbtle>`_ and cleaned out some of the LESS and templates - `my fork is on GitHub <https://github.com/jamescooke/pelican-svbtle>`_.
 
-I quite like the version of the WP_Svbtle theme that **wp geezer** is using on his site... So if it's possible to make a Pelican version of that, I might hope over to that. One of the best things about WordPress is that the themes are well developed and configurable compared to some other blogging systems.
-
+However, this theme isn't going to stay. `Paul <http://www.thesocialspaces.co.uk/>`_ has been working on some flat HTML based on Bootstrap to make a new clean theme. Once that's stable, I'll plug in some Pelican / Jinja2 tags and hopefully this site will have a new clean theme soon.
