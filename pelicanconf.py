@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*- #
 
 AUTHOR = u'James'
-SITENAME = u'James Cooke Dot Info'
+SITENAME = u'James Cooke'
+TAGLINE = u'London based Python developer'
 SITEURL = ''
 
 TIMEZONE = u'Europe/London'
+DEFAULT_DATE_FORMAT = u'%b %d, %Y'
 
 DEFAULT_LANG = u'en'
 DEFAULT_CATEGORY = u'ZZZ Misc...'
@@ -19,7 +21,10 @@ SOCIAL = (
     ('Stack Overflow', 'http://stackoverflow.com/users/1286705/jamesc'),
 )
 
-DEFAULT_PAGINATION = False
+MENUITEMS = [('Home', '/'), ('About', '/pages/hello-my-name-is-james.html'),]
+DISPLAY_PAGES_ON_MENU = False
+
 TYPOGRIFY = True
 
-THEME = 'pelican-svbtle'
+THEME = '/home/james/active/driodstrap'
+DISQUS_SITENAME = "jamescookedotinfo"
