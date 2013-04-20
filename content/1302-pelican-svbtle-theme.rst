@@ -4,6 +4,7 @@ Pelican Svbtle theme tweaks
 :date: 2013-02-21 19:40
 :tags: github, python, pelican, theme
 :category: Code
+:summary: A tweaked fork of the Pelican Svbtle theme with some cleaned CSS and HTML.
 
 My first experiments with `Pelican <http://blog.getpelican.com/>`_ to run this blog have been good - it's a great way to publish static pages quickly and I find it much easier to manage than Octopress.
 

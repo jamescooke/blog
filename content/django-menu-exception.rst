@@ -4,6 +4,7 @@ Fixing exception in django-menu
 :date: 2012-05-05 19:40
 :tags: github, python, django
 :category: GitHub Contributions
+:summary: A tiny pull request to stop django-menu from throwing exceptions on new unconfigured sites.
 
 `django-menu <https://github.com/rossp/django-menu/>`_ is a nice simple library for building very simple menus. However, when a site is loaded for the first time, the menu structure was not configured and so it was throwing a ``DoesNotExist`` Exception.
 

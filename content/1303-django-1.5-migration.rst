@@ -4,6 +4,7 @@ Migrating from Django 1.4 to 1.5 - Lessons learned
 :date: 2013-03-29 19:00
 :tags: django
 :category: Code
+:summary: Migrating a project from Django 1.4 to Django 1.5 had a couple of gotchas that cost me dev time.
 
 From `Ryan Kaskel <https://twitter.com/ryankask/>`_'s talk at `Django London <http://www.meetup.com/The-London-Django-Meetup-Group/>`_ in November last year, I guessed that upgrading the `Action Guide code <https://github.com/jamescooke/actionguide>`_ from Django 1.4 to 1.5 might have created some issues with users (`user models have changed in Django 1.5 to allow more customisation <https://docs.djangoproject.com/en/dev/releases/1.5/#configurable-user-model>`_).
 
