@@ -5,6 +5,8 @@ AUTHOR = u'James'
 SITENAME = u'James Cooke'
 TAGLINE = u'London based Python developer'
 SITEURL = ''
+# LAZY TODO should move this to content.
+PROFILE_IMG_URL = u'http://userserve-ak.last.fm/serve/126/5888928.jpg'
 
 TIMEZONE = u'Europe/London'
 DEFAULT_DATE_FORMAT = u'%b %d, %Y'
@@ -26,5 +28,5 @@ DISPLAY_PAGES_ON_MENU = False
 
 TYPOGRIFY = True
 
-THEME = '/home/james/active/driodstrap'
+THEME = '/home/james/active/droidstrap'
 DISQUS_SITENAME = "jamescookedotinfo"
