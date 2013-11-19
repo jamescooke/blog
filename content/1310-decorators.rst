@@ -57,7 +57,10 @@ someone else who's improving their knowledge of decorators too.
         # Do nothing just return
         return
 
-  .. code-block:: python
+  Run it on the command line, and "Hello World" appears when the `nothing`
+  function is decorated.
+
+  .. code-block:: bash
 
     $ python hello.py
     Hello World
