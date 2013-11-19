@@ -6,7 +6,6 @@ Git: To squash or not to squash?
 :category: Code
 :summary: Should detailed history be kept for development features, if so,
           where?
-:status: draft
 
 
 Over the weekend I spotted a tweet from `Oliver <http://oli.me.uk/>`_...
