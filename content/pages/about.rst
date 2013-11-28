@@ -1,15 +1,23 @@
 Hello, my name is James
 #######################
 
-I'm a London-based web developer working mainly with Python.
+I'm a London-based web development person, working mainly with Linux, Python,
+vim, whiteboards and hopefully as many excellent people as possible.
 
-Web is my thing - I focus on backend development.
+During my time with web, I've worked in a number of different roles focused on
+development - from the specification and design, to implementation, management
+and test. A full breakdown is on my `StackOverflow Careers profile
+<http://careers.stackoverflow.com/jamescooke/>`_.
 
-Previously, I've worked as a freelancer, run a mini web agency called Fublo, worked at a social music startup, done some stuff at Time Out London and Time Out International and now I work at a startup called `Quibly <http://quib.ly>`_.
+I'm currently looking for my next role - you can contact me about work by
+emailing me on `hi AT jamescooke DOT info`.
 
-Elsewhere
----------
+
+Elsewhere on the web
+--------------------
 
 * `GitHub <https://github.com/jamescooke>`_
 * `Twitter <https://twitter.com/jamesfublo>`_
-* `LinkedIn <http://www.linkedin.com/in/jamescooke>`_
+* `StackOverflow Careers profile <http://careers.stackoverflow.com/jamescooke/>`_
+* `LinkedIn <http://www.linkedin.com/in/jamescooke>`_ (not maintained and I
+  shall be removing myself from this site soon)
