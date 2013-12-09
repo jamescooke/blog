@@ -80,6 +80,22 @@ someone else who's improving their knowledge of decorators too.
         wrapper.__doc__ = func.__doc__
         return wrapper
 
+  **Update** This is actually far better done with the `wraps` decorator from
+  the `functools` modules, which fixes the `__name__` and `__doc__` attributes
+  to what we'd expect them to be.
+
+  .. code-block:: python
+
+    from functools import wraps
+
+    def my_decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+        return wrapper
+
+  Found on `Improve your Python <http://www.jeffknupp.com/blog/2013/11/29/improve-your-python-decorators-explained/>`_.
+
 
 * When unit testing decorators, one strategy can be to manually call the
   decorator on a mocked object and inspect how it interacts with it.
