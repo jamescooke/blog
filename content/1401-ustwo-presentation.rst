@@ -4,7 +4,7 @@ Seinfeld method and coding
 :date: 2014-01-31 16:00
 :category: Code
 :summary: A presentation I made at ustwo's Tech Thursday about Seinfeld
-          Techniqueand how it can help coders to get their personal projects
+          Technique and how it can help coders to get their personal projects
           moving.
 
 
