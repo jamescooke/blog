@@ -39,5 +39,5 @@ at their Tech Thursday.
 
 Read more on `Seinfeld Technique
 <http://lifehacker.com/281626/jerry-seinfelds-productivity-secret>`_ and
-`Pomorodo Technique <http://en.wikipedia.org/wiki/Pomodoro_Technique>`_. I'm
+`Pomodoro Technique <http://en.wikipedia.org/wiki/Pomodoro_Technique>`_. I'm
 currently using `tomatoist <http://tomatoi.st/>`_ as my online pomodoro timer.
