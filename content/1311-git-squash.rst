@@ -8,6 +8,9 @@ Git: To squash or not to squash?
           where?
 
 
+It started with a Tweet
+-----------------------
+
 Over the weekend I spotted a tweet from `Oliver <http://oli.me.uk/>`_...
 
 .. raw:: html

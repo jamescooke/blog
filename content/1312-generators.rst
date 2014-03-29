@@ -8,6 +8,9 @@ Python generators and yield
           expressions and the yield statement.
 
 
+It started with an interview
+----------------------------
+
 Last week in an interview for a Django developer job, I was asked:
 
 .. code-block:: python
