@@ -30,3 +30,13 @@ Commit content and images as required, push to master. Then...
     $ make github
 
 All good in the hood.
+
+
+License
+-------
+
+Content in this repository is covered by the same license as the content when
+published in the blog at [jamescooke.info](http://jamescooke.info/).
+
+Licensed under [Creative Commons Attribution-ShareAlike 3.0 Unported
+License](http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB).
