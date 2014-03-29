@@ -30,13 +30,22 @@ Now we're each persuing different careers working on various sites, but still
 all based in London.
 
 
+Current work
+------------
+
+Currently I'm working as a Python contractor, mainly on web projects. You can
+find my online work profile on `Stack Overflow Careers
+<http://careers.stackoverflow.com/jamescooke/>`_.
+
+
 Contact
 -------
 
-If you have any questions or need information about Fublo, you can reach me via
-email on `hi AT jamescooke DOT info`.
+If you have any questions or need information about Fublo, or you'd like to
+discuss contract work, you can reach me via email on `hi AT jamescooke DOT
+info`.
 
-There is also a `Fublo GitHub account <https://github.com/fublo>`_ and `Twitter
-<http://twitter.com/fublo/>`_ which I shall be cleaning up going forwards.
+There is also an old `Fublo Twitter account <http://twitter.com/fublo/>`_
+which I shall be cleaning up going forwards.
 
 Thanks for stopping by.
