@@ -153,7 +153,6 @@ site. Any time that I've worked on a project where developers and stakeholders
 have been involved in the design stages early on have always been successful.
 
 If there are items you think should be added you can contribute on `GitHub
-<https://github.com/jamescooke/blog/blob/master/content/1403-spec-checklist.rst>`_,
-or mention them in the comments below.
+<https://github.com/jamescooke/blog/blob/master/content/1403-spec-checklist.rst>`_.
 
 Thanks for reading.

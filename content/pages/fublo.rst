@@ -26,7 +26,7 @@ My name is James, and I was previously an owner and a director of Fublo.
 `Oliver <https://twitter.com/OliverCaldwell>`_ and I did for clients like
 Fallon London, Time Out and We Are Social.
 
-Now we're each persuing different careers working on various sites, but still
+Now we're each pursuing different careers working on various sites, but still
 all based in London.
 
 
@@ -44,8 +44,5 @@ Contact
 If you have any questions or need information about Fublo, or you'd like to
 discuss contract work, you can reach me via email on `hi AT jamescooke DOT
 info`.
-
-There is also an old `Fublo Twitter account <http://twitter.com/fublo/>`_
-which I shall be cleaning up going forwards.
 
 Thanks for stopping by.

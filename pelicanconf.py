@@ -19,7 +19,6 @@ LINKS = ()
 SOCIAL = (
     ('Twitter', 'https://twitter.com/jamesfublo'),
     ('GitHub', 'https://github.com/jamescooke'),
-    ('LinkedIn', 'https://www.linkedin.com/in/jamescooke'),
     ('Stack Overflow', 'http://stackoverflow.com/users/1286705/jamesc'),
 )
 
@@ -29,4 +28,4 @@ DISPLAY_PAGES_ON_MENU = False
 TYPOGRIFY = True
 
 THEME = '/home/james/active/droidstrap'
-DISQUS_SITENAME = "jamescookedotinfo"
+# DISQUS_SITENAME = "jamescookedotinfo"
