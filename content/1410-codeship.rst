@@ -22,7 +22,7 @@ Delivery <http://en.wikipedia.org/wiki/Continuous_delivery>`_, but more focused
 on Codeship's offering currently, compared to other CI services I've used over
 the last 6 months or so.
 
-TLDR;
+TL;DR
 =====
 
 Codeship is relatively new and working hard to stabilise the system while
