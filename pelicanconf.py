@@ -24,8 +24,8 @@ SOCIAL = (
 
 MENUITEMS = [('Home', '/'), ('About', '/pages/hello-my-name-is-james.html'),]
 DISPLAY_PAGES_ON_MENU = False
+DISPLAY_CATEGORIES_ON_MENU = False
 
 TYPOGRIFY = True
 
 THEME = '/home/james/active/droidstrap'
-# DISQUS_SITENAME = "jamescookedotinfo"
