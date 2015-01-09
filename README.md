@@ -1,39 +1,55 @@
-Getting up and running
-----------------------
+# jamescooke.info site
 
-Pull down the repo and build the virtualenv.
+This repository contains content and site generation scripts for my blog at
+http://jamescooke.info
 
-    $ git clone git@github.com:jamescooke/blog
-    $ virtualenv env
-    $ source env/bin/activate
-    $ pip install -r requirements.txt
+The rest of this README is mainly notes to myself to install the required
+packages, build and deploy the generated HTML pages to GitHub's static sites.
 
+## Getting up and running
 
-Writing and testing
--------------------
+Pull down this blog repository as well as the
+[Droidstrap](https://github.com/jamescooke/droidstrap) theme.
+
+```sh
+git clone git@github.com:jamescooke/blog
+git clone git@github.com:jamescooke/droidstrap
+```
+
+Make an output folder and then set up the virtualenv.
+
+```sh
+cd blog
+mkdir output
+virtualenv env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+## Writing and testing
 
 While **still in the virtualenv**, build the HTML and run dev server.
 
-    $ mkdir output
-    $ make html
-    $ make devserver
+```sh
+make html
+make devserver
+```
 
-Hit localhost - http://localhost:8000/
+Hit [localhost](http://localhost:8000/).
 
-
-Publishing
-----------
+## Publishing
 
 Commit content and images as required, push to master. Then...
 
-    $ make publish
-    $ make github
+```sh
+make publish
+make github
+```
 
 All good in the hood.
 
 
-License
--------
+# License
 
 Content in this repository is covered by the same license as the content when
 published in the blog at [jamescooke.info](http://jamescooke.info/).
