@@ -14,6 +14,13 @@ DEFAULT_DATE_FORMAT = u'%b %d, %Y'
 DEFAULT_LANG = u'en'
 DEFAULT_CATEGORY = u'ZZZ Misc...'
 
+# Turn off all feeds
+FEED_ALL_ATOM = None
+CATEGORY_FEED_ATOM = None
+TRANSLATION_FEED_ATOM = None
+AUTHOR_FEED_ATOM = None
+AUTHOR_FEED_RSS = None
+
 # Blogroll
 LINKS = ()
 SOCIAL = (
@@ -29,3 +36,8 @@ DISPLAY_CATEGORIES_ON_MENU = False
 TYPOGRIFY = True
 
 THEME = '/home/james/active/droidstrap'
+
+# Droidstrap specific config:
+SHOW_SCM_LINKS = True
+SCM_LINK_TEXT = 'View, comment, edit source on GitHub'
+SCM_BASE_URL = 'https://github.com/jamescooke/blog/tree/master/'
