@@ -6,6 +6,7 @@ Django Contexts and `get`
 :summary: Found that tests on a recent project started breaking for no clear
           reason, and it turned out it was because I'd used ``get`` to retrieve
           values from Contexts.
+:scm_path: content/1411-django-contextlist.rst
 
 Background
 ==========

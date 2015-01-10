@@ -6,6 +6,7 @@ Python generators and yield
 :category: Code
 :summary: Notes to myself on generators and how to create them with generator
           expressions and the yield statement.
+:scm_path: content/1312-generators.rst
 
 
 It started with an interview

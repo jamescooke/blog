@@ -4,6 +4,7 @@ A water pouring problem sketched in Python
 :date: 2015-01-09 10:00
 :category: Code
 :summary: A small Python 3 sketch of a solution to a water pouring problem.
+:scm_path: content/1501-sketch-water-pouring.rst
 
 The problem
 ===========

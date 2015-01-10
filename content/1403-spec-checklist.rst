@@ -7,6 +7,7 @@ Flat designs to website specification - a checklist
           specification, but these only scratch the surface of a true website
           functional specification. This is a check-list of features which can
           be fleshed out to start the journey towards a full functional spec.
+:scm_path: content/1403-spec-checklist.rst
 
 
 Isolated design has problems

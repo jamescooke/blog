@@ -5,6 +5,7 @@ Things to remember about decorators
 :tags: python
 :category: Code
 :summary: Notes to myself about Python decorators with a focus on making them testable.
+:scm_path: content/1310-decorators.rst
 
 After an interview question about Python decorators which I stumbled over, I
 promised myself that I would improve my knowledge of this metaprogramming

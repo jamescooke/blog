@@ -6,6 +6,7 @@ Git: To squash or not to squash?
 :category: Code
 :summary: Should detailed history be kept for development features, if so,
           where?
+:scm_path: content/1311-git-squash.rst
 
 
 It started with a Tweet

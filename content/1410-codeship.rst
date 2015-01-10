@@ -7,6 +7,7 @@ Current state of Codeship
           Integration on my current client project. These are my current
           thoughts on this hosted service that works with Github and BitBucket
           repositories.
+:scm_path: content/1410-codeship.rst
 
 Background
 ==========
