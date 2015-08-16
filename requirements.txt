@@ -10,7 +10,7 @@ feedgenerator==1.7        # via pelican
 ghp-import==0.4.1
 jinja2==2.8               # via pelican
 markupsafe==0.23          # via jinja2
-pelican==3.5.0
+pelican==3.6.3
 pygments==2.0.2           # via pelican
 python-dateutil==2.4.2    # via pelican
 pytz==2015.4              # via feedgenerator, pelican
