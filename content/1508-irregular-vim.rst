@@ -44,27 +44,27 @@ Here are the five behaviours looked at in this talk, each one linked to its
 section in the slides on Github.
 
 - `Linewise motions always include the start and end position
-  <https://github.com/jamescooke/irregular-vim-slides/blob/master/10a_motion_exceptions.rst>`_
+  <https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/10a_motion_exceptions.rst>`_
 
   **Except** when the end of the motion is in column 1.
 
 - `Change is equivalent to Delete Insert
-  <https://github.com/jamescooke/irregular-vim-slides/blob/master/15a_change_is_delete_insert.rst>`_
+  <https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/15a_change_is_delete_insert.rst>`_
 
   **Except** when motion is ``w``.
 
 - `Pasting from registers is easily repeatable
-  <https://github.com/jamescooke/irregular-vim-slides/blob/master/20a_pasting_and_registers.rst>`_
+  <https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/20a_pasting_and_registers.rst>`_
 
   **Except** when in visual modes.
 
 - `Incrementing number after cursor is predictable
-  <https://github.com/jamescooke/irregular-vim-slides/blob/master/25a_add_number.rst>`_
+  <https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/25a_add_number.rst>`_
 
   **Except** when the number starts with a ``0``.
 
 - `CTRL-O goes back to old cursor position
-  <https://github.com/jamescooke/irregular-vim-slides/blob/master/30a_ctrl_o_goes_jump_older.rst>`_
+  <https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/30a_ctrl_o_goes_jump_older.rst>`_
 
   **Except** when in visual modes.
 
