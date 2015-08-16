@@ -22,7 +22,7 @@ Make an output folder and then set up the virtualenv.
 cd blog
 mkdir output
 virtualenv env
-source env/bin/activate
+. env/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -48,6 +48,9 @@ make github
 
 All good in the hood.
 
+## Requirements
+
+Requirements are managed with ``pip-tools``.
 
 # License
 
