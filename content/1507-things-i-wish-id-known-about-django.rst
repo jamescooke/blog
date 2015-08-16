@@ -2,7 +2,8 @@ Things I wish I'd known about Django
 ####################################
 
 :date: 2015-07-18 20:00
-:category: talk, django
+:category: Talks
+:tags: django
 :summary: Django has been my go-to web framework for about three years. But I
           wish I'd started with it sooner. This became a talk which I gave at
           the London Django meetup in July this year.

@@ -2,7 +2,8 @@ vi-nature everywhere - lightning talk
 #####################################
 
 :date: 2013-11-1 20:00
-:tags: vim, talk
+:tags: vim
+:category: Talks
 :summary: This week I presented at Vim-London about vi nature and the benefits
           for using it in more than vim.
 
