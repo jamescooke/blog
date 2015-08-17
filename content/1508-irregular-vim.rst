@@ -102,7 +102,7 @@ One of my annoyances that started this journey arose when attempting to delete
 everything up to but not including a character. As you'll see at the end of the
 talk, I learned a new movement command ``t`` (thanks Audience!).
 
-``t`` is like ``d`` but not inclusive. From the help ``:help t`` file:
+``t`` is like ``f`` but not inclusive. From the help ``:help t`` file:
 
     Till before [count]'th occurrence of {char} to the right. The cursor is
     placed on the character left of {char} inclusive. {char} can be entered
