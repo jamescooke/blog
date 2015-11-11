@@ -6,7 +6,7 @@ SITENAME = u'James Cooke'
 TAGLINE = u'London based Python developer'
 SITEURL = ''
 # LAZY TODO should move this to content.
-PROFILE_IMG_URL = u'http://userserve-ak.last.fm/serve/126/5888928.jpg'
+PROFILE_IMG_URL = u'https://avatars1.githubusercontent.com/u/781059?v=3&s=200'
 
 TIMEZONE = u'Europe/London'
 DEFAULT_DATE_FORMAT = u'%b %d, %Y'
