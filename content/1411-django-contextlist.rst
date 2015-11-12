@@ -2,7 +2,8 @@ Django Contexts and `get`
 #########################
 
 :date: 2014-11-17 20:00
-:category: Testing
+:category: Code
+:tags: python, django
 :summary: Found that tests on a recent project started breaking for no clear
           reason, and it turned out it was because I'd used ``get`` to retrieve
           values from Contexts.

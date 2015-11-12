@@ -2,7 +2,7 @@ jsFiddle documentation update
 #############################
 
 :date: 2013-01-25 19:40
-:tags: github, documentation
+:tags: documentation
 :category: GitHub Contributions
 :summary: A newly structured documentation site and tutorial for the online editor.
 

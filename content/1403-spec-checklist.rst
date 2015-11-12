@@ -3,6 +3,7 @@ Flat designs to website specification - a checklist
 
 :date: 2014-03-29 16:00
 :category: Code
+:tags: work
 :summary: Agencies often provide flat designs to web developers as a
           specification, but these only scratch the surface of a true website
           functional specification. This is a check-list of features which can

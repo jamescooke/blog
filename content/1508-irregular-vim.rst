@@ -3,7 +3,7 @@ Irregular Vim
 
 :date: 2015-08-16 21:00
 :tags: vim
-:category: Talks
+:category: Talk
 :summary: At July's Vim London I gave a talk about some of Vim's irregular
           behaviours. Using bare-bones Vim to present and demonstrate from is a
           risky business!

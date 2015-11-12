@@ -2,8 +2,9 @@ Setting up this homepage with Pelican
 #####################################
 
 :date: 2013-01-20 17:25:00
-:tags: github, python, pelican
-:summary: Using Pelican to generate this blog, a move away from Jekyll and to some pure Python.
+:tags: pelican
+:summary: Using Pelican to generate this blog, a move away from Jekyll and to
+          some pure Python.
 
 This page has been through a lot in the last ten years.
 

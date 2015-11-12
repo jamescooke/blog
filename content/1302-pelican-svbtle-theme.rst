@@ -2,7 +2,7 @@ Pelican Svbtle theme tweaks
 ###########################
 
 :date: 2013-02-21 19:40
-:tags: github, python, pelican, theme
+:tags: pelican
 :category: Code
 :summary: A tweaked fork of the Pelican Svbtle theme with some cleaned CSS and HTML.
 

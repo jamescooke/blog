@@ -2,7 +2,8 @@ Pyramid London talk - A testing strategy for Pyramid Applications
 #################################################################
 
 :date: 2013-06-16 21:00
-:tags: pyramid, talk
+:category: Talk
+:tags: pyramid
 :summary: Talk at Pyramid London meetup about testing strategies for Pyramid applications.
 
 Pyramid London meetup `returned in June <http://www.meetup.com/The-London-Pyramid-Group/events/119944802/>`_ to `Skills Matter <http://skillsmatter.com>`_. This time I spoke about testing strategies for Pyramid applications.
