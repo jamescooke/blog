@@ -5,7 +5,6 @@ AUTHOR = u'James'
 SITENAME = u'James Cooke'
 TAGLINE = u'London based Python developer'
 SITEURL = ''
-# LAZY TODO should move this to content.
 PROFILE_IMG_URL = u'https://avatars1.githubusercontent.com/u/781059?v=3&s=200'
 
 TIMEZONE = u'Europe/London'
@@ -21,21 +20,15 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-# Blogroll
-LINKS = ()
-SOCIAL = (
-    ('Twitter', 'https://twitter.com/jamesfublo'),
-    ('GitHub', 'https://github.com/jamescooke'),
-    ('Stack Overflow', 'http://stackoverflow.com/users/1286705/jamesc'),
-)
-
 MENUITEMS = [('Home', '/'), ('About', '/pages/hello-my-name-is-james.html'),]
 DISPLAY_PAGES_ON_MENU = False
 DISPLAY_CATEGORIES_ON_MENU = False
 
 TYPOGRIFY = True
 
-THEME = '/home/james/active/droidstrap'
+THEME = '../droidstrap'
+PLUGIN_PATHS = ['../pelican-plugins']
+PLUGINS = ['related_posts']
 
 # Droidstrap specific config:
 SHOW_SCM_LINKS = True

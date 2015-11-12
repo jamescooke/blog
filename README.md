@@ -1,19 +1,34 @@
-# jamescooke.info site
+# jamescooke.info blog
 
 This repository contains content and site generation scripts for my blog at
-http://jamescooke.info
+http://jamescooke.info/
+
+## Blog post comments
+
+My blog doesn't run a commenting system, but feedback and conversation are very
+welcome. There are three main channels:
+
+* Drop me an email on `hi AT jamescooke DOT info`.
+* [Tweet me](https://twitter.com/intent/user?screen_name=jamesfublo).
+* Drop a github comment on the content. All blog posts are in the [content
+    folder](content). Alternatively raise an Issue and I'll reply as soon as I
+    can.
+
+***
 
 The rest of this README is mainly notes to myself to install the required
 packages, build and deploy the generated HTML pages to GitHub's static sites.
 
 ## Getting up and running
 
-Pull down this blog repository as well as the
-[Droidstrap](https://github.com/jamescooke/droidstrap) theme.
+In addition to this repository,
+[Droidstrap](https://github.com/jamescooke/droidstrap) theme and [Pelican
+plugins](https://github.com/getpelican/pelican-plugins) are required.
 
 ```sh
 git clone git@github.com:jamescooke/blog
 git clone git@github.com:jamescooke/droidstrap
+git clone --recursive https://github.com/getpelican/pelican-plugins
 ```
 
 Make an output folder and then set up the virtualenv.
