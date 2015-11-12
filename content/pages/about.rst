@@ -16,6 +16,7 @@ jamescooke DOT info`.
 Elsewhere on the web
 --------------------
 
+* `CV on SO Careers <http://careers.stackoverflow.com/jamescooke/>`_
 * `GitHub <https://github.com/jamescooke>`_
-* `Twitter <https://twitter.com/jamesfublo>`_
+* `Twitter <https://twitter.com/intent/user?screen_name=jamesfublo>`_
 * `StackOverflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
