@@ -28,6 +28,7 @@ help:
 	@echo '   make publish                     generate using production settings '
 	@echo '   make serve                       serve site at http://localhost:8000'
 	@echo '   make devserver                   start/restart develop_server.sh    '
+	@echo '   make devserverstop               kill develop_server.sh    '
 	@echo '   ssh_upload                       upload the web site via SSH        '
 	@echo '   rsync_upload                     upload the web site via rsync+ssh  '
 	@echo '   dropbox_upload                   upload the web site via Dropbox    '
@@ -53,6 +54,9 @@ serve:
 
 devserver:
 	$(BASEDIR)/develop_server.sh restart
+
+devserverstop:
+	$(BASEDIR)/develop_server.sh stop
 
 publish:
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
