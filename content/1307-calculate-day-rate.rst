@@ -5,7 +5,7 @@ Calculating your day rate for spare time freelance work
 :tags: work
 :summary: So you want to earn some extra cash on your weekends, what should you
           charge?
-
+:scm_path: content/1307-calculate-day-rate.rst
 
 So you want to do some freelance work and you're not sure how much to charge
 your new client. The most important thing is to not underestimate your value -
