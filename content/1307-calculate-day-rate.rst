@@ -15,11 +15,11 @@ short.
 The calculation
 ---------------
 
-So when you work for yourself, it'll be like your day-job, except you keep the
+When you work for yourself, it'll be like your day job, except you keep the
 profit and take the additional time and cost overheads.
 
 This calculation has worked well for me in the past, so I'm sharing it here.
-It's so simple, I hope it can work for you.
+It's so simple. I hope it can work for you.
 
 
 .. math::
@@ -47,14 +47,14 @@ would be in the kind of business you'll be selling your services to is.
 "Why is the multiplier 2?"
 --------------------------
 
-Remember - the value of the work that you provide a company is greater than the
+Remember, the value of the work that you provide a company is greater than the
 amount that you are paid:
 
 * In the UK, your employer pays an employment tax - `Employers' National
   Insurance Contributions
   <http://www.hmrc.gov.uk/payerti/getting-started/ni-basics.htm#2>`_.
 
-* Your employer paids overheads as part of your employment which you might not
+* Your employer pays overheads as part of your employment which you might not
   be exposed to. The cost of your equipment, heating and lighting your work
   space, insuring you at work, payroll costs... All these overheads mount up
   and you will be taking these on when you're working freelance.
@@ -64,15 +64,15 @@ amount that you are paid:
   immediate value of your contribution should be greater than your input for a
   business to be making a profit from you.
 
-You can play with this number of course. A factor of 2 has worked for me in the
-past.
+You can play with this number of course, but a factor of 2 has worked for me in
+the past.
 
 One assumption is that you're going to do this new project in your free time,
 probably on the weekends and evenings. Usually this would earn an overtime rate
 for someone on an hourly wage - usually double time or time and a half.
 
-If you're in the UK, then more free time will be taken up managing a
-tax-return, paying `HMRC for additional National Insurance Contributions
+If you're in the UK, more free time will be taken up managing a tax-return,
+paying `HMRC for additional National Insurance Contributions
 <http://www.hmrc.gov.uk/working/intro/selfemployed.htm>`_, invoicing and
 keeping records. You need to ensure that this time is covered in some way by
 the income from your freelance work.
@@ -82,19 +82,20 @@ the income from your freelance work.
 ------------------------------------------------------------
 
 Of course, you're perfectly allowed to adjust this if you want to give away
-some of your work at less than the market rate. Remember that your employer is
+some of your work at less than the market rate. Remember, your employer is
 already paying something along the lines of what you've just calculated for
-your time - ensure you carefully consider how much you should adjust that for
-someone else.
+your time. Carefully consider how much you should adjust that for someone else.
 
-In my previous businesses I've charged all clients the same basic rate simply
-for the reason that it's easier on the books and my brain.
+In my previous businesses I've charged all clients the same basic rate for the
+simple reason that it's easier on the books and my brain.
 
 
 In the end
 ----------
 
 As you work more freelance jobs you'll get a feel for what's suitable and
-what's not - I hope this has been helpful.
+what's not.
+
+I hope this has been helpful.
 
 Good luck!
