@@ -5,7 +5,7 @@
 #    pip-compile requirements.in
 #
 blinker==1.4              # via pelican
-click==5.1                # via pip-tools
+click==6.2                # via pip-tools
 docutils==0.12            # via pelican
 feedgenerator==1.7        # via pelican
 first==2.0.1              # via pip-tools
@@ -13,11 +13,11 @@ ghp-import==0.4.1
 jinja2==2.8               # via pelican
 markupsafe==0.23          # via jinja2
 pelican==3.6.3
-pip-tools==1.1.6
-pygments==2.0.2           # via pelican
+pip-tools==1.5
+pygments==2.1             # via pelican
 python-dateutil==2.4.2    # via pelican
 pytz==2015.7              # via feedgenerator, pelican
 six==1.10.0               # via feedgenerator, pelican, pip-tools, python-dateutil
 smartypants==1.8.6        # via typogrify
 typogrify==2.0.7
-unidecode==0.4.18         # via pelican
+unidecode==0.4.19         # via pelican
