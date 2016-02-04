@@ -28,7 +28,7 @@ TYPOGRIFY = True
 
 THEME = '../droidstrap'
 PLUGIN_PATHS = ['../pelican-plugins']
-PLUGINS = ['related_posts']
+PLUGINS = ['related_posts', 'render_math']
 RELATED_POSTS_MAX = 3
 
 # Droidstrap specific config:

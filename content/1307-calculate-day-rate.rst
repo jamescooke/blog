@@ -3,7 +3,9 @@ Calculating your day rate for spare time freelance work
 
 :date: 2013-07-14 20:00
 :tags: work
-:summary: So you want to earn some extra cash on your weekends, what should you charge?
+:summary: So you want to earn some extra cash on your weekends, what should you
+          charge?
+
 
 So you want to do some freelance work and you're not sure how much to charge
 your new client. The most important thing is to not underestimate your value -
@@ -20,14 +22,9 @@ This calculation has worked well for me in the past, so I'm sharing it here.
 It's so simple, I hope it can work for you.
 
 
-.. raw:: html
-
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
-
-
 .. math::
 
-    Your Day Rate = \frac {2*Your Annual Salary} {252 - Number Of Days Holiday}
+    Your Day Rate = \frac {2\times Your Annual Salary} {252 - Number Of Days Holiday}
 
 
 Where:
