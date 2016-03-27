@@ -36,8 +36,8 @@ Make an output folder and then set up the virtualenv.
 ```sh
 cd blog
 mkdir output
-virtualenv env
-. env/bin/activate
+virtualenv venv
+. venv/bin/activate
 pip install -r requirements.txt
 ```
 
