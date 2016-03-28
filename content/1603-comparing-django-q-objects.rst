@@ -134,7 +134,7 @@ This would mean that:
 
     # Negation on expression would work
     >>> a = ~(Q(x=1) & Q(x=2))
-    >>> b = ~Q(x=1) & ~Q(x=2)
+    >>> b = ~Q(x=1) | ~Q(x=2)
     >>> a == b
     True
 
@@ -142,7 +142,7 @@ This would mean that:
 
 This is probably never going to be implemented in Django, because it would be
 functionality only used (as far as I can see) for testing. In addition, without
-a special implementation for rending Q objects which could show the differences
+a special implementation for rendering Q objects which could show the differences
 in it would start to make it hard to distinguish differences between objects
 when mismatches are found.
 
