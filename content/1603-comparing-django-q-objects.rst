@@ -1,7 +1,7 @@
 Comparing Django Q Objects
 ==========================
 
-:date: 2016-03-27 20:00
+:date: 2016-03-28 12:00
 :tags: django
 :category: Code
 :summary: A super simple assertion helper for comparing instances of Django's Q
@@ -31,13 +31,13 @@ Unfortunately, that means that comparison of Q objects that are equal fails.
     ...
     Assertion Error:
 
-This means that writing unittests that assert that correct Q objects have been
+This means that writing unit tests that assert that correct Q objects have been
 created is hard.
 
 A simple solution
 -----------------
 
-Q objects generate great Unicode representations of themselves.
+Q objects generate great Unicode representations of themselves:
 
 .. code-block:: python
 
@@ -45,8 +45,10 @@ Q objects generate great Unicode representations of themselves.
     >>> unicode(a)
     u"(AND: ('place', 'Residential'), ('people__gt', 5))"
 
-Plus, I like to write assertion helpers whenever I have something complicated
-to test frequently in a test suite.
+In addition, it is "good" testing practice to write assertion helpers whenever
+a test suite has complicated assertions to make frequently. This provides an
+opportunity to DRY out test code and expand on any error messages that are
+raised on failure.
 
 Therefore a really simple solution is an assertion helper that would compare Q
 objects by:
@@ -55,8 +57,8 @@ objects by:
 
 * Asserting that the Unicode for the left and right sides are identical.
 
-So here's a mixin that does that which can be added to any
-``unittest.TestCase`` (such as Django's default ``TestCase``):
+So here's a mixin containing the assertion helper. It can be added to any class
+that extends ``unittest.TestCase`` (such as Django's default ``TestCase``):
 
 .. code-block:: python
 
@@ -136,9 +138,28 @@ This would mean that:
     >>> a == b
     True
 
-This is probably never going to be implemented in Django, because it would be
-functionality only used (as far as I can see) for testing. In addition, it
-would start to make it hard to distinguish differences between objects when
-mismatches are found.
+    # END IMAGINATION SECTION
 
-Therefore I'd vote for the simple option most times.
+This is probably never going to be implemented in Django, because it would be
+functionality only used (as far as I can see) for testing. In addition, without
+a special implementation for rending Q objects which could show the differences
+in it would start to make it hard to distinguish differences between objects
+when mismatches are found.
+
+Final testing related notes
+---------------------------
+
+* When a suite has complicated assertions to test regularly, create an
+  assertion helper. Write tests to show that your helper works correctly under
+  various conditions.
+
+* Tests for ``assertQEqual`` are `in this gist
+  <https://gist.github.com/jamescooke/b9bd5afba3a7253d53bd>`_. (If you spot
+  something missing, please let me know!)
+
+* Always consider the output of failing tests - the complexity of managing a
+  test suite for a software project can be greatly influenced by how
+  informative assertion errors are when they occur.
+
+* A secondary assertion helper could be created to check for inequality
+  ``assertQNotEquals``.
