@@ -142,9 +142,8 @@ This would mean that:
 
 This is probably never going to be implemented in Django, because it would be
 functionality only used (as far as I can see) for testing. In addition, without
-a special implementation for rendering Q objects which could show the differences
-in it would start to make it hard to distinguish differences between objects
-when mismatches are found.
+a special implementation for rendering Q objects diffs, it would be hard to
+understand the source of errors when mismatches occur.
 
 Final testing related notes
 ---------------------------
