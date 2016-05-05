@@ -50,13 +50,13 @@ Past experience of Communications Illusions
 -------------------------------------------
 
 In conversations with other developers about my process it's been called
-"tedious". I can agree that it seems like extra effort as first, however, I
+"tedious". I can agree that it seems like extra effort at first, however, I
 believe that it pays off in the long run and that belief is based on my past
 experience at my old web development business, Fublo.
 
 At Fublo, we often produced `brochureware
 <https://en.wiktionary.org/wiki/brochureware>`_ sites on top of a simple CMS
-systems. When starting a new project, conversation within our team would often
+system. When starting a new project, conversation within our team would often
 happen like this:
 
     We know the solution to the problem, so instead of drawing out the design,
@@ -92,8 +92,8 @@ that the "tedious" way of producing flat designs before starting coding was
 often the most efficient, even though it felt like it wasn't. It provided the
 quickest route to a communication feedback loop, within ourselves, our team and
 with our clients and that destroys the Communication Illusion. On top of that
-it meant that we were not making any accidental, hard to refactor, architecture
-decisions on the fly without all the required information to hand.
+it meant that we were not making any accidental, hard to refactor, architectural
+decisions on the fly without all the required information.
 
 Applying this to API design
 ---------------------------
@@ -103,7 +103,7 @@ of code or writing a single test is the most efficient way of destroying the
 potential Communications Illusions when creating APIs.
 
 This means that providing static API documentation first is the most efficient
-path to place where API producers and consumers have a joint shared opinion
+path to a place where API producers and consumers have a joint shared opinion
 about how the API will operate and perform.
 
 Tooling wishlist
@@ -144,7 +144,7 @@ my APIs read and understand what's in the documentation before coding starts.
 That's a second layer of Communication Illusion that I'll maybe get to tackle
 another day.
 
-One thing I'm happy to say is that I still believe agree with `this Tweet
+Happily, I still agree with `this Tweet
 <https://twitter.com/jamesfublo/status/518017851224227840>`_ that I posted more
 than 18 months ago:
 
