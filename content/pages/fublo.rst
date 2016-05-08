@@ -3,6 +3,9 @@ Fublo Ltd
 
 :summary: Fublo was a digital agency that's now closed.
 
+.. image:: |filename|/images/fublo.jpg
+    :alt: Fublo Ltd (Dissolved) logo - "Goal Driven Digital"
+
 
 ... previously a digital agency
 -------------------------------
