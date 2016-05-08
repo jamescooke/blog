@@ -29,23 +29,15 @@ My name is James, and I was previously an owner and a director of Fublo.
 `Oliver <https://twitter.com/OliverCaldwell>`_ and I did for clients like
 Fallon London, Time Out and We Are Social.
 
-Now we're each pursuing different careers working on various sites, but still
-all based in London.
+Now we're each pursuing different careers working on various projects, but
+still all based in London.
 
 
 Current work
 ------------
 
-Currently I'm working as a Python contractor, mainly on web projects. You can
-find my online work profile on `Stack Overflow Careers
-<http://careers.stackoverflow.com/jamescooke/>`_.
-
-
-Contact
--------
-
-If you have any questions or need information about Fublo, or you'd like to
-discuss contract work, you can reach me via email on `hi AT jamescooke DOT
-info`.
+Currently I'm working as a Python contractor, mainly on web projects. There's
+more information and my contact details on the `About page
+</pages/hello-my-name-is-james.html>`_.
 
 Thanks for stopping by.
