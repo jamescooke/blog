@@ -22,19 +22,25 @@ Here's what the `unittest module documentation
 currently notes about ``assertTrue`` and ``assertFalse``, with the appropriate
 code highlighted:
 
-    Note that this is equivalent to 
+    ``assertTrue(expr, msg=None)``
 
-    .. code-block:: python
+    ``assertFalse(expr, msg=None)``
 
-        bool(expr) is True
+        Test that *expr* is true (or false).
 
-    and not to
+        Note that this is equivalent to 
 
-    .. code-block:: python
+        .. code-block:: python
 
-        expr is True
+            bool(expr) is True
 
-    (use ``assertIs(expr, True)`` for the latter).
+        and not to
+
+        .. code-block:: python
+
+            expr is True
+
+        (use ``assertIs(expr, True)`` for the latter).
 
 `Mozilla Developer Network defines truthy <https://developer.mozilla.org/en-US/docs/Glossary/Truthy>`_ as:
 
