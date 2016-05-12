@@ -2,7 +2,7 @@ Django's model save vs full_clean
 =================================
 
 :date: 2015-11-15 17:00
-:tags: django
+:tags: topic:django
 :category: Code
 :summary: Confirming that Django can screw up your data when saving, and
           exploring why this is still the case.

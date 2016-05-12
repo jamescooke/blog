@@ -2,7 +2,7 @@ Password cases and test fixes on pyramid_simpleauth
 ###################################################
 
 :date: 2012-11-30 12:00:00
-:tags: pyramid
+:tags: topic:pyramid
 :category: GitHub Contributions
 :summary: Updates to pyramid_simpleauth to allow for uppercase passwords and some bug fixes.
 

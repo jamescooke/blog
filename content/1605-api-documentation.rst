@@ -2,7 +2,7 @@ API Documentation and the Communication Illusion
 ================================================
 
 :date: 2016-05-04 12:00
-:tags: api, documentation
+:tags: topic:api, topic:documentation
 :category: Code
 :summary: How can documenting an API help us to communicate with our team and
           API consumer developers efficiently?

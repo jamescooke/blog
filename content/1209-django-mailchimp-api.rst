@@ -2,7 +2,7 @@ Django-mailchimp compatability with v1.3 API
 ############################################
 
 :date: 2012-09-25 07:14
-:tags: django, mailchimp
+:tags: topic:django
 :category: GitHub Contributions
 :summary: Some small updates to the django-mailchimp library to upgrade to the latest Mailchimp API.
 

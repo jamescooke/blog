@@ -2,7 +2,8 @@ Current state of Codeship
 #########################
 
 :date: 2014-10-12 18:00
-:category: Testing
+:tags: topic:testing
+:category: Code
 :summary: For the last month I've been using Codeship for Continuous
           Integration on my current client project. These are my current
           thoughts on this hosted service that works with Github and BitBucket

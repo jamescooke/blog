@@ -2,7 +2,7 @@ Fixing exception in django-menu
 ###############################
 
 :date: 2012-05-05 19:40
-:tags: django
+:tags: topic:django
 :category: GitHub Contributions
 :summary: A tiny pull request to stop django-menu from throwing exceptions on
           new unconfigured sites.

@@ -2,7 +2,7 @@ Comparing Django Q Objects
 ==========================
 
 :date: 2016-03-28 12:00
-:tags: django
+:tags: topic:testing, language:python, topic:django
 :category: Code
 :summary: A super simple assertion helper for comparing instances of Django's Q
           objects.

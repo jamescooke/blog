@@ -2,7 +2,7 @@ Python generators and yield
 ###########################
 
 :date: 2013-12-14 16:00
-:tags: python
+:tags: language:python
 :category: Code
 :summary: Notes to myself on generators and how to create them with generator
           expressions and the yield statement.

@@ -2,7 +2,7 @@ Things to remember about decorators
 ###################################
 
 :date: 2013-10-22 20:00
-:tags: python
+:tags: language:python
 :category: Code
 :summary: Notes to myself about Python decorators with a focus on making them testable.
 :scm_path: content/1310-decorators.rst
