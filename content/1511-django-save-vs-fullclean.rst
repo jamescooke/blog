@@ -1,5 +1,5 @@
-Django's model save vs full_clean
-=================================
+Django's model `save` vs `full_clean`
+=====================================
 
 :date: 2015-11-15 17:00
 :tags: topic:django

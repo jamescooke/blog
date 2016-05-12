@@ -1,5 +1,5 @@
-Python generators and yield
-###########################
+Python generators and `yield`
+#############################
 
 :date: 2013-12-14 16:00
 :tags: language:python
@@ -23,9 +23,9 @@ Last week in an interview for a Django developer job, I was asked:
     What is the type of thing?
 
 
-Although I was able to identify that the type is dependent on the `()` around
+Although I was able to identify that the type is dependent on the ``()`` around
 the list-comprehension-like-construction, I didn't know the exact type that
-`thing` would be.
+``thing`` would be.
 
 The answer is a **generator**.
 
@@ -38,7 +38,7 @@ Generator expressions
 
 Generators can be created with generator expressions. A generator expression is
 a bit like a list comprehension. List Comprehension uses square brackets
-`[]`. In Python...
+``[]``. In Python...
 
 .. code-block:: python
 
@@ -50,7 +50,7 @@ a bit like a list comprehension. List Comprehension uses square brackets
 
 
 A generator expression is a shortcut that allows generators to be created
-easily with a similar syntax - this time it's using parentheses `()`.
+easily with a similar syntax - this time it's using parentheses ``()``.
 
 .. code-block:: python
 
@@ -77,7 +77,7 @@ functions:
     >>> my_gen.__iter__
     <generator object <genexpr> at 0x293c3c0>
 
-`__iter__` is there and returns the generator, now for `next`...
+``__iter__`` is there and returns the generator, now for ``next``...
 
 .. code-block:: python
 
@@ -86,7 +86,7 @@ functions:
     >>> my_gen.next()
     1
 
-Therefore `next` works. We can keep hitting until...
+Therefore ``next`` works. We can keep hitting until...
 
 .. code-block:: python
 
@@ -100,7 +100,7 @@ Therefore `next` works. We can keep hitting until...
 
     StopIteration: 
 
-A `StopIteration` is raised - so the generator does everything we'd expect it
+A ``StopIteration`` is raised - so the generator does everything we'd expect it
 to by the iterator protocol.
 
 
@@ -122,7 +122,7 @@ In this way, only the values required for each iteration need to be computed.
 The yield keyword - simple example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Adding `yield` to a function allows for generators to be constructed
+Adding ``yield`` to a function allows for generators to be constructed
 'manually'.
 
 At its very simplest, a function could be written just to generate a single
@@ -150,7 +150,7 @@ And we can ask for next value.
     >>> my_things.next()
     1
 
-Now when we call `next` again, our generator continues from the state of the
+Now when we call ``next`` again, our generator continues from the state of the
 last yield.
 
 .. code-block:: python
@@ -160,7 +160,7 @@ last yield.
 
 So you see how different values can be returned, one after the other.
 
-And after that second thing, the generator now raises a `StopIteration`, since
+And after that second thing, the generator now raises a ``StopIteration``, since
 it has no further values to return.
 
 Since a generator implements the iterator protocol, it can be used in a `for`
@@ -178,8 +178,8 @@ More complex example with yield
 So let's write Fibonacci as a generator. I'm going to start with doctests to
 create the definition of the function, then put the code at the end.
 
-What I like about the doctests in this example is that in 3 `fib` is tested
-with `next`, but in 4 it's tested using a list comprehension.
+What I like about the doctests in this example is that in 3 ``fib`` is tested
+with ``next``, but in 4 it's tested using a list comprehension.
 
 .. code-block:: python
 
