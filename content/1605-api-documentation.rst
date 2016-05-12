@@ -157,3 +157,5 @@ than 18 months ago:
 believe it's even more true than before.
 
 Happy API building!
+
+* `Read comments on Hacker News <https://news.ycombinator.com/item?id=11666301>`_
