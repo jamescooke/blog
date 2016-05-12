@@ -4,11 +4,10 @@ Python unittest: `assertTrue` is truthy, `assertFalse` is falsy
 :date: 2016-05-12 14:00
 :tags: language:python, topic:testing
 :category: Code
-:summary: Exploring Python's unittest module boolean assert methods and how
+:summary: Exploring Python's ``unittest`` module boolean assert methods and how
           they can be misleading in certain situations, but not if you RTFM of
           course.
 :scm_path: content/1605-api-documentation.rst
-:status: draft
 
 In this post, I explore the differences between the unittest boolean assert
 methods ``assertTrue`` and ``assertFalse`` and the ``assertIs`` identity
