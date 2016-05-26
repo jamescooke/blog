@@ -29,7 +29,7 @@ written on Github by emailing me on `hi AT jamescooke DOT info`.
 Elsewhere on the web
 --------------------
 
-* `Developer Story (CV) <http://stackoverflow.com/story-beta/jamescooke>`_
+* `Developer CV <http://stackoverflow.com/cv/jamescooke>`_
 * `GitHub <https://github.com/jamescooke>`_
 * `Twitter <https://twitter.com/intent/user?screen_name=jamesfublo>`_
-* `StackOverflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
+* `Stack Overflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
