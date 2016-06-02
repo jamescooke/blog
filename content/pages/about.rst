@@ -13,8 +13,8 @@ Python, vim, whiteboards and hopefully as many excellent people as possible.
 
 During my time with web, I've worked in a number of different roles focused on
 development - from the specification and design, to implementation, management
-and test. A full breakdown is on my `StackOverflow Developer Story
-<http://stackoverflow.com/story-beta/jamescooke>`_.
+and test. A full breakdown is on my `Stack Overflow CV
+<http://stackoverflow.com/cv/jamescooke>`_.
 
 Contact
 -------
