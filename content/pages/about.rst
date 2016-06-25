@@ -8,28 +8,35 @@ Hello, my name is James
 About
 -----
 
-I'm a London-based web development contractor, working mainly with Linux,
-Python, vim, whiteboards and hopefully as many excellent people as possible.
+I'm a server-side development contractor based in London. I work mainly with
+`Linux <https://en.wikipedia.org/wiki/Linux>`_, `Python
+<https://www.python.org/>`_, `vim
+<https://en.wikipedia.org/wiki/Vim_(text_editor)>`_, whiteboards and hopefully
+as many excellent people as possible.
 
-During my time with web, I've worked in a number of different roles focused on
-development - from the specification and design, to implementation, management
-and test. A full breakdown is on my `Stack Overflow CV
-<http://stackoverflow.com/cv/jamescooke>`_.
+During my time working in the web development field I've held in a number of
+different development roles - from specification and design, to implementation,
+management and testing. A full breakdown is on my `CV
+<https://www.dropbox.com/s/t7b29yoh401nu2k/1605_James_Cooke.pdf?dl=1>`_.
+
 
 Contact
 -------
 
-You can contact me about any potential projects, posts on the blog or code I've
+You can contact me about any potential projects, posts on my blog or code I've
 written on Github by emailing me on `hi AT jamescooke DOT info`.
 
-    **Note:** No agency emails please. In the last 2 years of working as a
-    contractor agencies have provided 0 days of work.
+    **Note:** No recruitment agency emails please. In the last 2 years of
+    working as a contractor recruitment agencies have provided me with 0 days
+    of work.
 
 
 Elsewhere on the web
 --------------------
 
-* `Developer CV <http://stackoverflow.com/cv/jamescooke>`_
 * `GitHub <https://github.com/jamescooke>`_
-* `Twitter <https://twitter.com/intent/user?screen_name=jamesfublo>`_
+* `Twitter <https://twitter.com/jamesfublo>`_
 * `Stack Overflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
+
+You can also download a `PDF version of my CV
+<https://www.dropbox.com/s/t7b29yoh401nu2k/1605_James_Cooke.pdf?dl=1>`_.
