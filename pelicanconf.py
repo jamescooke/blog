@@ -13,6 +13,8 @@ DEFAULT_DATE_FORMAT = u'%b %d, %Y'
 DEFAULT_LANG = u'en'
 DEFAULT_CATEGORY = u'ZZZ Misc...'
 
+STATIC_PATHS = ['images', 'docs']
+
 # Turn off all feeds
 FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None

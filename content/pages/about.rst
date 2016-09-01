@@ -17,7 +17,7 @@ as many excellent people as possible.
 During my time working in the web development field I've held in a number of
 different development roles - from specification and design, to implementation,
 management and testing. A full breakdown is on my `CV
-<https://www.dropbox.com/s/t7b29yoh401nu2k/1605_James_Cooke.pdf?dl=1>`_.
+<{filename}/docs/james_cooke_cv.pdf>`_.
 
 
 Contact
@@ -39,4 +39,4 @@ Elsewhere on the web
 * `Stack Overflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
 
 You can also download a `PDF version of my CV
-<https://www.dropbox.com/s/t7b29yoh401nu2k/1605_James_Cooke.pdf?dl=1>`_.
+<{filename}/docs/james_cooke_cv.pdf>`_.
