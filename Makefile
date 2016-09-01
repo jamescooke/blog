@@ -75,7 +75,7 @@ ftp_upload: publish
 	lftp ftp://$(FTP_USER)@$(FTP_HOST) -e "mirror -R $(OUTPUTDIR) $(FTP_TARGET_DIR) ; quit"
 
 clean_github:
-	git branch -D gh-pages
+	- git branch -D gh-pages
 	git push origin :gh-pages
 
 github: publish
