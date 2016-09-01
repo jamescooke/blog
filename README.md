@@ -57,11 +57,11 @@ Hit [localhost](http://localhost:8000/).
 Commit content and images as required, push to master. Then...
 
 ```sh
-make publish
 make github
 ```
 
-All good in the hood.
+The GitHub pages plugin does some funky stuff with the `gh-pages` branch. This
+can be cleaned up using `make clean_github`.
 
 ## Requirements
 
