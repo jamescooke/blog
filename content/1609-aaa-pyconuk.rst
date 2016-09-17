@@ -9,8 +9,16 @@ Cleaner unit testing with the Arrange Act Assert pattern
 :slug: pyconuk
 :status: draft
 
+
 Resources
 ---------
+
+* `PEP08 <https://www.python.org/dev/peps/pep-0008/>`_ and `PEP20
+  <https://www.python.org/dev/peps/pep-0020/>`_.
+
+* `Kent Beck: Test Driven Development: By Example
+  <http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ - a
+  great book which references the AAA pattern (page 97).
 
 * `Google-style docstrings
   <http://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`_:
