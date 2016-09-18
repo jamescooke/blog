@@ -9,6 +9,14 @@ Cleaner unit testing with the Arrange Act Assert pattern
 :slug: pyconuk
 :status: draft
 
+At `PyConUK 2016
+<http://2016.pyconuk.org/talks/cleaner-unit-testing-with-the-arrange-act-assert-pattern/>`_
+I spoke about the Arrange Act Assert pattern and how it can help clean up unit
+tests.
+
+.. raw:: html
+
+    <script async class="speakerdeck-embed" data-id="d25e0e15acef4ccc8fe70abba5adce03" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
 
 Resources
 ---------
