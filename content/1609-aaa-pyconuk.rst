@@ -16,6 +16,29 @@ tests. I plan to write a short guide to AAA for Python developers and will
 link to that from here when done - meanwhile, below are my slides and links
 to some of the resources that have helped me.
 
+Original proposal
+-----------------
+
+PyConUK ask that we provide an explanation of why we think that attendees
+will be interested in our talk. This was my original proposal's reasoning.
+
+    This talk focuses on developers that practise TDD, or want to use it
+    more in their coding.
+
+    My assumption is that our community feels a lot of pain from testing.
+    I've heard fellow developers talk about the difficulty with managing
+    complicated test suites; issues with reading and understanding others'
+    tests; and struggles when updating others' tests. I hope that the
+    PyConUK attendees will have felt some of this pain be interested in a
+    talk that demonstrates the use of a pattern that can (hopefully)
+    mitigate some of it and help us all to be "cleaner" testers.
+
+    Although I've marked "moderately experienced" I think that my talk
+    would have a broad appeal: Those who are new to testing and would like
+    a "template" to follow. And those who are expert because of the
+    discussion about when to DRY out tests and how to assert that our test
+    refactors are safe.
+
 Slides
 ------
 
