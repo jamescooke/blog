@@ -4,15 +4,20 @@ Cleaner unit testing with the Arrange Act Assert pattern
 :date: 2016-09-18 20:00
 :tags: language:python, topic:testing
 :category: Talk
-:summary: TODO
+:summary: My PyConUK 2016 talk about the AAA pattern for unit tests and how
+          using it can help us all make our tests cleaner, easier to read
+          and as Pythonic as possible.
 :scm_path: content/1609-aaa-pyconuk.rst
-:slug: pyconuk
-:status: draft
 
 At `PyConUK 2016
 <http://2016.pyconuk.org/talks/cleaner-unit-testing-with-the-arrange-act-assert-pattern/>`_
 I spoke about the Arrange Act Assert pattern and how it can help clean up unit
-tests.
+tests. I plan to write a short guide to AAA for Python developers and will
+link to that from here when done - meanwhile, below are my slides and links
+to some of the resources that have helped me.
+
+Slides
+------
 
 .. raw:: html
 
