@@ -46,19 +46,43 @@ the system:
 * Test suites will be execute using model instances that *should* not be
   created during the "normal" lifetime of the application.
 
+Possible solutions
+------------------
+
 We could argue that way in which Django does not call ``full_clean`` before it
 writes instances to the database is the root of the problem - I've previously
 `written about this <{filename}/1511-django-save-vs-fullclean.rst>`_ and spoken
 about it too. However, this is more a "condition of the environment" and
 therefore something that we need to manage, rather than fix.
 
-So let's wage war on this ``D/V`` set - the white of the fried egg in the
-diagram.
+However, look at it the other way. Any factory that integrates with Django can
+inspect the model that it is building instances of and immediately find the
+constraints on each field. In the case of ``Item`` that means a ``name`` field
+with a single unique character. This means that the factory has all the
+information it needs to build a strategy for creating valid data. On top of
+that, Django provides the ``full_clean`` function so any generated data can
+also be checked for validity.
+
+So let's explore how different factory libraries deal with this problem of
+instances in the ``D/V`` set - the white of the fried egg in the diagram.
 
 Factory libraries
 -----------------
 
-COPY FROM repo WHEN DONE
+The following factory libraries have been explored:
+
+* `Factory Boy <https://github.com/FactoryBoy/factory_boy>`_
+
+* `Factory Djoy <https://github.com/jamescooke/factory_djoy>`_
+
+* `Hypothesis[django] <https://hypothesis.readthedocs.io/en/latest/django.html>`_
+
+* `Mixer <https://github.com/klen/mixer>`_
+
+* `Model Mommy <https://github.com/vandersonmota/model_mommy>`_
+
+Disclosure: Factory Djoy is my factory library. It's a thin wrapper around
+Factory Boy which does the hard work.
 
 Test conditions
 ---------------
@@ -88,6 +112,9 @@ save instances of:
   ``django.contrib.auth`` User Model.
 
 The goal is that each factory should generate 10 valid instances of each model.
+
+Wherever possible I've tried to be as explicit as possible and import the
+target model, rather than refer to it by name as some factories allow.
 
 Gradings
 --------
