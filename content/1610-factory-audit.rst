@@ -46,7 +46,7 @@ Where:
 The main issue is the set ``D/V`` of instances. These are all the instances
 which can be saved into the database but are considered invalid by Django.
 
-When factories create instances that reside in this set, they create
+When factories create instances that reside in this ``D/V`` set, they create
 instability in the system:
 
 * If a user attempts to edit that instance through the Django Admin system,
@@ -67,14 +67,13 @@ writes instances to the database is the root of the problem - I've previously
 rather than fix.
 
 Also, look at it another way. Any factory that integrates with Django can
-inspect the target model and immediately find the constraints on each field. In
-the case of ``Item`` that means a ``name`` field with a single unique
-character. Therefore with Django, factory libraries have all the information
-they need to build a strategy for creating valid data. On top of that, Django
-provides the ``full_clean`` function so any generated data can also be checked
-for validity before it's sent to the database. Why should we have to re-code
-the constraints already created for our models into our factories? This looks
-like duplication of work.
+inspect the target model and immediately find the constraints on each field.
+Therefore with Django, factory libraries have all the information they need to
+build a strategy for creating valid data. On top of that, Django provides the
+``full_clean`` function so any generated data can also be checked for validity
+before it's sent to the database. Why should we have to re-code the constraints
+already created for our models into our factories? This looks like duplication
+of work.
 
 So let's explore how different factory libraries deal with this problem of
 instances in the ``D/V`` set - the white of the fried egg in the diagram.
@@ -105,8 +104,8 @@ Test conditions
 
 The code used to test the factory libraries is available in the `Factory Audit
 repository <https://github.com/jamescooke/factory_audit>`_. For each factory
-library, two factories have been created in the default state to create and
-save instances of:
+library, two factories have been created in a default state, one targeting each
+of the test Models:
 
 * ``ItemFactory``: to create and save instances of ``plant.models.Item``, a
   test model defined `in the 'plant' app
@@ -295,18 +294,28 @@ And the winner is?
 
 What is the best factory to use? This is a really hard question.
 
-These factories consist of two parts and different libraries do each part well.
+These factory libraries generally consist of two parts and different libraries
+do each part well.
 
 * Control / API: Personally I really like the Factory Boy API and how it
-  interfaces with Django. I'm happy with my own Factory Djoy library because it
-  provides me with the certainly of ``full_clean`` for every created instance,
+  interfaces with Django. I'm happy with the Factory Djoy library because it
+  provides the certainly of calling ``full_clean`` for every created instance
   on top of the Factory Boy API.
 
 * Data strategy: I'm excited by Hypothesis and its ability to generate test
   data.
 
-I think that if Hypothesis can improve its interface to Django it could be the
-winner.
+My current advice is use the factory library you currently prefer, but ensure
+that either you call ``full_clean`` on any instance that it creates, or that
+it's calling it for you.
+
+Yes, there is a performance overhead to calling ``full_clean`` but my opinion
+is that eliminating the ``D/V`` set of invalid instances is worth the effort
+and makes the test suite `fundamentally simpler
+<https://twitter.com/jamesfublo/status/778528014665654272>`_.
+
+My future thinking is that if Hypothesis can improve its interface to Django it
+could be the winner.
 
 
 Resources
@@ -321,6 +330,8 @@ Resources
   presentation of these results at the London Django October meetup.
 
 * Video: coming soon.
+
+Happy fabricating!
 
 
 .. |red_circle| image:: |filename|/images/red_circle.png
