@@ -169,16 +169,16 @@ and `is therefore YELLOW grade
 Results
 -------
 
-======================  ======================  ======================
-Library                 ItemFactory             UserFactory
-======================  ======================  ======================
-**Django Fakery**       |red_circle| RED        |yellow_heart| YELLOW
-**Factory Boy**         |red_circle| RED        |red_circle| RED
-**Factory Djoy**        |yellow_heart| YELLOW   |green_heart| GREEN
-**Hypothesis[django]**  |red_circle| RED        |red_circle| RED
-**Mixer**               |green_heart| GREEN     |green_heart| GREEN
-**Model Mommy**         |yellow_heart| YELLOW   |green_heart| GREEN
-======================  ======================  ======================
+======================  ======================  ====================== ===================== ======================
+Library                 ItemFactory             UserFactory            Uses ``full_clean``   Ease of use
+======================  ======================  ====================== ===================== ======================
+**Django Fakery**       |red_circle| RED        |yellow_heart| YELLOW  |red_circle| RED      |green_heart| GREEN
+**Factory Boy**         |red_circle| RED        |red_circle| RED       |red_circle| RED      |green_heart| GREEN
+**Factory Djoy**        |yellow_heart| YELLOW   |green_heart| GREEN    |green_heart| GREEN   |green_heart| GREEN
+**Hypothesis[django]**  |red_circle| RED        |red_circle| RED       |yellow_heart| YELLOW |green_heart| GREEN
+**Mixer**               |green_heart| GREEN     |green_heart| GREEN    |red_circle| RED      |yellow_heart| YELLOW
+**Model Mommy**         |yellow_heart| YELLOW   |green_heart| GREEN    |red_circle| RED      |green_heart| GREEN
+======================  ======================  ====================== ===================== ======================
 
 Update
 ......
