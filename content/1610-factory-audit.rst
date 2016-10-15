@@ -319,18 +319,18 @@ Hypothesis[django]
 
 * **UserFactory** |red_circle| RED
 
-Hypothesis's Django extra does not reliably create instances of either model
-because it's ``example`` function does `not reliably generate valid data
-<https://github.com/jamescooke/factory_audit/pull/4>`_. In the case that an
-invalid example is generated it is skipped and the previous example is used.
+  Hypothesis's Django extra does not reliably create instances of either model
+  because it's ``example`` function does `not reliably generate valid data
+  <https://github.com/jamescooke/factory_audit/pull/4>`_. In the case that an
+  invalid example is generated it is skipped and the previous example is used.
 
-Interestingly, Hypothesis creates ``User`` instances that Django considers to
-have invalid email addresses.
+  Interestingly, Hypothesis creates ``User`` instances that Django considers to
+  have invalid email addresses.
 
 * **Uses ``full_clean``** |yellow_heart| YELLOW
 
-  Hypothesis's code base currently includes the `single use of ``full_clean``
-  <https://github.com/HypothesisWorks/hypothesis-python/blob/f6230a6f72ea8c89543e8c56a44d0510fb662f5d/tests/django/toystore/test_given_models.py#L112>`_.
+  Hypothesis's code base currently includes a `single instance
+  <https://github.com/HypothesisWorks/hypothesis-python/blob/f6230a6f72ea8c89543e8c56a44d0510fb662f5d/tests/django/toystore/test_given_models.py#L112>`_ of ``full_clean``.
   This is in its test suite to assert that instances built are valid. However,
   it doesn't call ``full_clean`` on generated instances during its normal
   operation.
