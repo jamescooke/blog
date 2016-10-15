@@ -194,7 +194,8 @@ generating valid data, their generated instances should still be run through
 ``full_clean`` before save.
 
 I agree with this opinion and think that calling ``full_clean`` on every
-instance creates the opportunity for two benefits:
+instance creates the opportunity for two benefits, over and above asserting
+that every instance is valid:
 
 * If a factory raises ``ValidationError`` with information on what failed it
   will always be helpful to the developer who is fixing the broken test run.
@@ -392,9 +393,8 @@ do each part well.
 * Data strategy: I'm excited by Hypothesis and its ability to generate test
   data.
 
-My current advice is use the factory library you currently prefer, but ensure
-that either you call ``full_clean`` on any instance that it creates, or that
-it's calling it for you.
+My current advice is to use Factory Djoy, or wrap your favourite factory in a
+call to ``full_clean``.
 
 Yes, there is a performance overhead to calling ``full_clean`` but my opinion
 is that eliminating the ``D/V`` set of invalid instances is worth the effort
