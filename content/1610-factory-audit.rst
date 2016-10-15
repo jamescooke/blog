@@ -184,8 +184,9 @@ Update
 ......
 
 Thanks to Piotr and Adam who pointed out some issues with my grading system.
-I've updated the results table to add two extra metrics "Uses ``full_clean``"
-and "Ease of use".
+I've `updated the results table to add two extra metrics
+<https://github.com/jamescooke/blog/pull/4>`_: "Uses ``full_clean``" and "Ease
+of use".
 
 I hope that these additions will clarify the following:
 
