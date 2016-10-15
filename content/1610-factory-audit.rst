@@ -180,6 +180,30 @@ Library                 ItemFactory             UserFactory
 **Model Mommy**         |yellow_heart| YELLOW   |green_heart| GREEN
 ======================  ======================  ======================
 
+Update
+......
+
+Thanks to Piotr and Adam who pointed out some issues with my grading system.
+I've updated the results table to add two extra metrics "Uses ``full_clean``"
+and "Ease of use".
+
+I hope that these additions will clarify the following:
+
+* Adam pointed out that collisions are still collisions, even if they are
+  unlikely. Therefore, even if factories are employing fantastic strategies for
+  generating valid data, their generated instances should still be run through
+  ``full_clean`` before save. If invalid data is found, this would create an
+  opportunity for a factory to adjust failing fields so that valid data can be
+  saved and the test run will not be interrupted. I've added the "Uses
+  ``full_clean``" field to capture this information.
+
+* Piotr pointed out that the results of the grading are inconclusive since I
+  don't agree with the results. For example, in the original results Mixer is
+  the only library that has GREEN GREEN and therefore we would assume that it
+  is the best of the factories tested. However, that's not the case, since I
+  found it hard to use and its exception bubbling was also intrusive. I've
+  added the "Ease of use" grading to capture this information.
+
 Notes about each library
 ------------------------
 
@@ -331,6 +355,11 @@ Resources
 
 * Video: Available via the `Skills Matter website
   <https://skillsmatter.com/skillscasts/9137-full-clean-factories>`.
+
+* Thanks to Adam for pointing out the collisions issue (you can hear this
+  around 20:00 in the video)- even if they are unlikely, they can still be a
+  problem. `Check out his Factory Boy post
+  <https://adamj.eu/tech/2014/09/03/factory-boy-fun/>`_.
 
 Happy fabricating!
 
