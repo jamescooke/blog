@@ -329,7 +329,8 @@ Resources
 * `Slides <https://speakerdeck.com/jamescooke/full-clean-factories>`_: From my
   presentation of these results at the London Django October meetup.
 
-* Video: coming soon.
+* Video: Available via the `Skills Matter website
+  <https://skillsmatter.com/skillscasts/9137-full-clean-factories>`.
 
 Happy fabricating!
 
