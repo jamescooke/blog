@@ -169,6 +169,9 @@ and `is therefore YELLOW grade
 Results
 -------
 
+Original results
+................
+
 ======================  ======================  ======================
 Library                 ItemFactory             UserFactory
 ======================  ======================  ======================
@@ -179,6 +182,79 @@ Library                 ItemFactory             UserFactory
 **Mixer**               |green_heart| GREEN     |green_heart| GREEN
 **Model Mommy**         |yellow_heart| YELLOW   |green_heart| GREEN
 ======================  ======================  ======================
+
+Update
+......
+
+Thanks to Piotr and Adam who pointed out some issues with my grading system.
+
+**Adam** pointed out that collisions are still collisions, even if they are
+unlikely. Therefore, even if factories are employing fantastic strategies for
+generating valid data, their generated instances should still be run through
+``full_clean`` before save.
+
+I agree with this opinion and think that calling ``full_clean`` on every
+instance creates the opportunity for two benefits, over and above asserting
+that every instance is valid:
+
+* If a factory raises ``ValidationError`` with information on what failed it
+  will always be helpful to the developer who is fixing the broken test run.
+
+* If invalid data is found, this would create an opportunity for a factory to
+  adjust failing fields so that valid data can be saved and the test run will
+  not be interrupted.
+
+I've added a "Uses ``full_clean``" field to evaluate each factory and capture
+this information.
+
+**Piotr** pointed out that the results of the grading are inconclusive since I
+don't agree with the results. For example, in the original results Mixer is the
+only library that has GREEN GREEN and therefore we would assume that it is the
+best of the factories tested. However, that's not the case, since I found it
+hard to use and its exception bubbling was also intrusive.
+
+I've added the "Ease of use" grading to capture this information based on my
+experience working with each factory.
+
+
+New gradings
+............
+
+* Uses ``full_clean``:
+
+  - |red_circle| RED - Not instance of ``full_clean`` in the factory code base.
+
+  - |yellow_heart| YELLOW - Factory code base includes ``full_clean`` in the
+    test suite only.
+
+  - |green_heart| GREEN - Factory tests every generated instance with
+    ``full_clean``.
+
+* Ease of use:
+
+  - |red_circle| RED - Do not bother trying. Too difficult to use.
+
+  - |yellow_heart| YELLOW - Some pain may be experienced. You might struggle to
+    install, need to adjust your workflow, packages, etc.
+
+  - |green_heart| GREEN - Easy to install. Clean API.
+
+
+Updated results
+...............
+
+Results with additional "Uses ``full_clean`` and "Ease of use" information:
+
+======================  ======================  ====================== ===================== ======================
+Library                 ItemFactory             UserFactory            Uses ``full_clean``   Ease of use
+======================  ======================  ====================== ===================== ======================
+**Django Fakery**       |red_circle| RED        |yellow_heart| YELLOW  |red_circle| RED      |green_heart| GREEN
+**Factory Boy**         |red_circle| RED        |red_circle| RED       |red_circle| RED      |green_heart| GREEN
+**Factory Djoy**        |yellow_heart| YELLOW   |green_heart| GREEN    |green_heart| GREEN   |green_heart| GREEN
+**Hypothesis[django]**  |red_circle| RED        |red_circle| RED       |yellow_heart| YELLOW |green_heart| GREEN
+**Mixer**               |green_heart| GREEN     |green_heart| GREEN    |red_circle| RED      |yellow_heart| YELLOW
+**Model Mommy**         |yellow_heart| YELLOW   |green_heart| GREEN    |red_circle| RED      |green_heart| GREEN
+======================  ======================  ====================== ===================== ======================
 
 Notes about each library
 ------------------------
@@ -251,6 +327,14 @@ invalid example is generated it is skipped and the previous example is used.
 Interestingly, Hypothesis creates ``User`` instances that Django considers to
 have invalid email addresses.
 
+* **Uses ``full_clean``** |yellow_heart| YELLOW
+
+  Hypothesis's code base currently includes the `single use of ``full_clean``
+  <https://github.com/HypothesisWorks/hypothesis-python/blob/f6230a6f72ea8c89543e8c56a44d0510fb662f5d/tests/django/toystore/test_given_models.py#L112>`_.
+  This is in its test suite to assert that instances built are valid. However,
+  it doesn't call ``full_clean`` on generated instances during its normal
+  operation.
+
 Mixer
 .....
 
@@ -262,12 +346,16 @@ Mixer
 
 * **UserFactory** |green_heart| GREEN
 
-Mixer helpfully raises ``Runtime`` error if a strategy can't generate a valid
-instance. However, it echoes this to the standard out, which is annoying.
+* **Ease of use** |yellow_heart| YELLOW
 
-It uses an old version of Fake Factory which meant that its tests had to be
-extracted into a second test run that occurs after a ``pip-sync`` has taken
-place. I found this the hardest factory library to work with.
+  Mixer helpfully raises ``Runtime`` error if a strategy can't generate a valid
+  instance. However, it echoes this to the standard out, which is annoying and
+  really confused me when I was first using it because exceptions appear on the
+  terminal even though all tests have passed.
+
+  It uses an old version of Fake Factory which meant that its tests had to be
+  extracted into a second test run that occurs after a ``pip-sync`` has taken
+  place. I found this the hardest factory library to work with.
 
 Model Mommy
 ...........
@@ -305,9 +393,8 @@ do each part well.
 * Data strategy: I'm excited by Hypothesis and its ability to generate test
   data.
 
-My current advice is use the factory library you currently prefer, but ensure
-that either you call ``full_clean`` on any instance that it creates, or that
-it's calling it for you.
+My current advice is to use Factory Djoy, or wrap your favourite factory in a
+call to ``full_clean``.
 
 Yes, there is a performance overhead to calling ``full_clean`` but my opinion
 is that eliminating the ``D/V`` set of invalid instances is worth the effort
@@ -330,7 +417,16 @@ Resources
   presentation of these results at the London Django October meetup.
 
 * Video: Available via the `Skills Matter website
-  <https://skillsmatter.com/skillscasts/9137-full-clean-factories>`.
+  <https://skillsmatter.com/skillscasts/9137-full-clean-factories>`_.
+
+* Thanks to Adam for pointing out the collisions issue which you can hear in
+  the video around 20 minutes in. Even if collisions are unlikely, they can
+  still be a problem. `Check out his Factory Boy post
+  <https://adamj.eu/tech/2014/09/03/factory-boy-fun/>`_.
+
+* The `15th October update <#update>`_ to the post is visible as a `Pull
+  Request on the blog's repository
+  <https://github.com/jamescooke/blog/pull/4>`_.
 
 Happy fabricating!
 
