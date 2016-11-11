@@ -1,5 +1,13 @@
-Using pip-tools and multiple requirements files
-===============================================
+A successful `pip-tools` workflow
+=================================
+
+:date: 2016-11-11 20:00
+:tags: language:python
+:category: Code
+:summary: Using pip-tools with multiple requirements files can be difficult.
+    This post describes my current workflow that manages the complexity with a
+    ``Makefile``.
+:scm_path: content/1611-pip-tools-recursion.rst
 
 Use a Makefile
 --------------
@@ -32,8 +40,39 @@ Now you can build all requirements with:
     cd requirements
     make
 
+If you want to roll forwards all your dependencies you can do make clean all
+and it'll make sure that you've got pip-tools installed, then remove all the
+txt files, then rebuild them in the order you've told it
+
++If in doubt about what ``make`` is about to run at any stage, it can be helpful
++to ask for a dry-run and inspect the commands that were planned::
++
++    make -n requirements
+
+Processes
+---------
+
+Adding a dependency
+
+To add a dependency, locate the appropriate ``*.in`` file and add just the name
++of it there. The version number is only required if a particular version of the
++library is required. The latest version will be chosen by default when
++compiling.
+
+In order to update a single package version, remove its lines from the compiled
++corresponding ``.txt`` files. The next call to ``make requirements`` will
++reevaluate the latest version for packages that do not have corresponding lines
++in the ``.txt`` file and they will be updated as required.
++
++To update all requirements to the latest version (including updating all
++packages that are not pinned in the ``.in`` file with a particular version
++number), the ``clean`` recipe will clean out all ``*.txt`` files if you have
++``pip-tools`` installed. Then the ``all`` recipe can be used to rebuild them
++all::
+
+
 Recursion using ``txt`` files, not ``in`` files
-===============================================
+-----------------------------------------------
 
     When one requirements file depends on another, should I do ``-r base.in``
     or ``-r base.txt``?
@@ -55,3 +94,6 @@ When adding ``-r base.txt`` to the top of ``test.in`` it means that
 requirements set by compiling ``base.txt`` will be observed by compiling
 ``test.txt``. It means that requirements specified in the test file will have
 to match the requirements in your base - which is what you want for testing.
+
+
+Happy requirements packing!
