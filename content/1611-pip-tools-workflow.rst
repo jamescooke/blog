@@ -15,6 +15,19 @@ Make <https://www.gnu.org/software/make/manual/make.html>`_ Makefile to provide
 recipes for managing requirements and specifying the dependencies between the
 requirements files.
 
+Keep requirements files in their own folder
+-------------------------------------------
+
+In order to preserve sanity, I keep my project requirements in their own folder
+directly inside the project.
+
+.. code-block:: bash
+
+    $ cd project
+    $ ls requirements/
+    base.in  base.txt  Makefile  test.in  test.txt
+
+
 Store ``in`` and ``txt`` files in version control
 -------------------------------------------------
 
@@ -33,11 +46,15 @@ Set ``in`` files to depend on ``txt`` files
 
 Given a project with two requirements files:
 
-* ``base.in``::
+* ``base.in`` compiles to ``base.txt``::
+
+* ``test.in`` compiles to ``test.txt``::
+
+``base.in`` contains::
 
       project-packages
 
-* ``test.in``::
+``test.in`` contains::
 
       -r base.txt
 
@@ -50,11 +67,12 @@ needed by the main project.
 Use a Makefile for common tasks
 -------------------------------
 
-Here's `an example
-<https://github.com/jamescooke/prlint/blob/master/requirements/Makefile>`_
-``Makefile`` from a recent project.
+On each project that has multiple requirements files, I use `this Makefile 
+<https://github.com/jamescooke/prlint/blob/master/requirements/Makefile>`_ and
+place it in the requirements folder.
 
-.. code-block:: make
+
+.. code-block::
 
     .PHONY: all check clean
 
@@ -99,8 +117,10 @@ Now you can build all requirements with:
 
 .. code-block:: bash
 
-    cd requirements
-    make
+    $ cd requirements
+    $ make
+
+TODO find out what the default recipe is
 
 If you want to roll forwards all your dependencies you can do make clean all
 and it'll make sure that you've got pip-tools installed, then remove all the
@@ -123,6 +143,16 @@ In order to update a single package version, remove its lines from the compiled
 corresponding ``.txt`` files. The next call to ``make requirements`` will
 reevaluate the latest version for packages that do not have corresponding lines
 in the ``.txt`` file and they will be updated as required.
+
+If ``base.in`` is updated, then ``make`` knows that it will need to recompile
+``base.txt`` in order to make ``test.txt``. We can see that here:
+
+.. code-block:: bash
+
+    $ touch base.in       # update timestamp on base.in
+    $ make -n test.txt  # ask make what commands it will run for the test.txt recipe
+    pip-compile -v --output-file base.txt base.in
+    pip-compile -v --output-file test.txt test.in
 
 Update all requirements
 -----------------------
