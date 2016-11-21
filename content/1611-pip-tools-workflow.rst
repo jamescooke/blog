@@ -331,4 +331,19 @@ planned:
     $ make -n all
 
 
+Update Nov 21
+-------------
+
+For more information on the advantages and disadvantages of setting recursive
+requirements to point at ``.in`` files or ``.txt`` files please see `this Issue
+<https://github.com/nvie/pip-tools/issues/398>`_ on the ``pip-tools``
+repository.
+
+In particular, `my comment
+<https://github.com/nvie/pip-tools/issues/398#issuecomment-261313647>`_
+illustrates how development requirements can become out of sync with base
+requirements when ``.in`` files are used in recursion which does not happen
+when ``.txt`` files are used. It's for this reason, that I continue to
+recommend pointing at ``.txt`` files with ``-r``.
+
 Happy requirements packing!
