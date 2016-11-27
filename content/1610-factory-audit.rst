@@ -305,9 +305,12 @@ Factory Djoy
 
 * **UserFactory** |green_heart| GREEN
 
-  Creates valid instances using a very simple strategy which uses Faker
-  Factory already a requirement of Factory Boy. Calls ``full_clean`` on the
-  generated instance to catch any collisions in the strategy.
+  Creates valid instances using a `simple strategy
+  <https://factory-djoy.readthedocs.io/en/latest/userfactory.html#unique-usernames>`_
+  Unique ``usernames`` are generated via Faker Factory which is already a
+  requirement of Factory Boy. ``full_clean`` is called on the generated
+  instance to catch any collisions in the strategy and on collision, a new name
+  is generated and retried.
 
 Factory Djoy contains only one simple strategy for creating ``Users``. It has
 no inspection ability to create strategies of its own based on Models.
