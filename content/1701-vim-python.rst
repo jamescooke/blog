@@ -20,8 +20,8 @@ find that I don't have a large number of plug-ins or configuration lines
 compared to other more famous Vim users (cough) `Drew
 <https://github.com/nelstrom/dotfiles/blob/master/bundles.vim>`_ (cough). That
 is a direct result of `Kris Jenkins's Bare Bones Navigation Vim talk
-<https://vimeo.com/65250028>`_ at Vim London, As a result, I have always run a
-very simple Vim setup.
+<https://vimeo.com/65250028>`_ at Vim London. The main result of which has been
+that I have always run a very simple Vim setup.
 
 My relatively recent use of FZF and Ctags listed below are a direct result of
 attending the most recent `Vim London meetup
