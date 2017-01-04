@@ -2,7 +2,7 @@ My Vim setup for Python development
 ===================================
 
 :date: 2017-01-04 14:30
-:tags: vim
+:tags: topic:vim
 :category: Code
 :summary: My current Vim setup for Python development.
 :scm_path: content/1701-vim-python.rst
@@ -95,7 +95,8 @@ setup using `fzf.vim <https://github.com/junegunn/fzf.vim>`_:
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
 
-I've mapped my most common FZF searches to leader commands:
+I've mapped my most common FZF searches to `leader commands
+<http://stevelosh.com/blog/2010/09/coming-home-to-vim/#using-the-leader>`_:
 
 .. code-block:: vim
 
@@ -117,9 +118,10 @@ line.
 Ctags
 -----
 
-I was definitely slow to get on the `Ctags <http://ctags.sourceforge.net/>`_
+I was definitely slow to get on the `Ctags <https://en.wikipedia.org/wiki/Ctags>`_
 bandwagon, only adding them to my workflow in the last couple of months, but
-along with FZF, they have been a revelation.
+along with FZF, they have been a revelation. I've been using `Exhuberant Ctags
+<https://en.wikipedia.org/wiki/Ctags>`_ as my index generator.
 
 TPope has published a neat trick of stashing the ``ctags`` script inside the
 ``.git`` folder, outlined in `his blog post here
