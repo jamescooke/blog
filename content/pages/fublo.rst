@@ -11,8 +11,9 @@ Fublo Ltd
 -------------------------------
 
 Hi. You're looking at this page because you've followed a link to a page on
-`fublo.net` - this was previously the website of Fublo Ltd, a small digital
-agency in London that closed in August 2012.
+``fublo.net`` - this was previously the website of `Fublo Ltd
+<https://beta.companieshouse.gov.uk/company/07469469>`_, a small digital agency
+in London that closed in August 2012.
 
 
 Previous work
@@ -20,12 +21,8 @@ Previous work
 
 My name is James, and I was previously an owner and a director of Fublo.
 
-"Soon" I'll write up the work that `Mark <https://twitter.com/markjenkins>`_,
-`Oliver <https://twitter.com/OliverCaldwell>`_ and I did for clients like
-Fallon London, Time Out and We Are Social.
-
-Now we're each pursuing different careers working on various projects, but
-still all based in London.
+`Mark <http://www.theluckystrike.co.uk/>`_, `Oliver <http://oli.me.uk/>`_ and I
+did great work for clients like Fallon London, Time Out and We Are Social.
 
 
 Current work
