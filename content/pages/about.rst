@@ -1,23 +1,10 @@
 Hello, my name is James
-#######################
+=======================
 
-.. image:: |filename|/images/scoota_work.jpg
-    :alt: James Cooke working on Amazon Redshift warehouse designs while at
-        Scoota.
+Thanks for visiting my site - the content here is primarily technical.
 
-About
------
+I currently work as a `web development contractor </pages/coding-cooke.html>`_.
 
-I'm a server-side development contractor based in London. I work mainly with
-`Linux <https://en.wikipedia.org/wiki/Linux>`_, `Python
-<https://www.python.org/>`_, `vim
-<https://en.wikipedia.org/wiki/Vim_(text_editor)>`_, whiteboards and hopefully
-as many excellent people as possible.
-
-During my time working in the web development field I've held in a number of
-different development roles - from specification and design, to implementation,
-management and testing. A full breakdown is on my `CV
-<{filename}/docs/james_cooke_cv.pdf>`_.
 
 
 Contact
