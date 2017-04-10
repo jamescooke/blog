@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 
-AUTHOR = u'James'
-SITENAME = u'James Cooke'
-TAGLINE = u'London based Python developer'
+AUTHOR = 'James'
+SITENAME = 'James Cooke'
+TAGLINE = 'Brighton based Python developer'
 SITEURL = ''
-PROFILE_IMG_URL = u'https://avatars1.githubusercontent.com/u/781059?v=3&s=200'
+PROFILE_IMG_URL = '/images/coding_cooke_ltd.png'
 
-TIMEZONE = u'Europe/London'
-DEFAULT_DATE_FORMAT = u'%b %d, %Y'
+TIMEZONE = 'Europe/London'
+DEFAULT_DATE_FORMAT = '%b %d, %Y'
 
-DEFAULT_LANG = u'en'
-DEFAULT_CATEGORY = u'ZZZ Misc...'
+DEFAULT_LANG = 'en'
+DEFAULT_CATEGORY = 'ZZZ Misc...'
 
 STATIC_PATHS = ['images', 'docs']
 
@@ -22,7 +22,11 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-MENUITEMS = [('Home', '/'), ('About', '/pages/hello-my-name-is-james.html'),]
+MENUITEMS = [
+    ('Home', '/'),
+    ('About', '/pages/hello-my-name-is-james.html'),
+    ('Coding Cooke', '/pages/coding-cooke.html'),
+]
 DISPLAY_PAGES_ON_MENU = False
 DISPLAY_CATEGORIES_ON_MENU = False
 
