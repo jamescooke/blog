@@ -1,7 +1,5 @@
 Fublo Ltd
-#########
-
-:summary: Fublo was a digital agency that's now closed.
+=========
 
 .. image:: |filename|/images/fublo.gif
     :alt: Fublo Ltd (Dissolved) logo - "Goal Driven Digital"
@@ -28,8 +26,7 @@ did great work for clients like Fallon London, Time Out and We Are Social.
 Current work
 ------------
 
-Currently I'm working as a Python contractor, mainly on web projects. There's
-more information and my contact details on the `About page
-</pages/hello-my-name-is-james.html>`_.
+Currently I'm working as a `Python contractor
+<{filename}/pages/coding-cooke.rst>`_, mainly on web projects.
 
 Thanks for stopping by.
