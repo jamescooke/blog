@@ -8,6 +8,7 @@ the third company that I've been a director of.
     :alt: James Cooke working on Amazon Redshift warehouse designs while at
         Scoota.
 
+
 Web development
 ---------------
 
@@ -28,15 +29,18 @@ management and testing. A full breakdown is on my `CV
 Coding Cooke is part of a Brighton based tribe of creative micro-businesses
 called `Studio Awkward <https://studioawkward.co.uk>`_.
 
+
 Contact
 -------
 
-You can contact me about any potential projects by emailing me on `hi AT
-jamescooke DOT info`.
+* **Email**
 
-    **Note:** No recruitment agency emails please.
+  You can contact me about any potential projects by emailing me on `hi
+  AT jamescooke DOT info`.
 
-If you would like to send post then please use:
+  Note: No recruitment agency emails please.
+
+* **Post**
 
     Coding Cooke Ltd
 
@@ -46,9 +50,22 @@ If you would like to send post then please use:
 
     Brighton BN1 1AL
 
-Elsewhere on the web
---------------------
 
-* `Coding Cooke on Companies House <https://beta.companieshouse.gov.uk/company/08820873>`_
+Coding Cooke elsewhere on the web
+---------------------------------
+
+* `Companies House <https://beta.companieshouse.gov.uk/company/08820873>`_
 
 * `Studio Awkward <https://studioawkward.co.uk>`_
+
+
+Work related links
+------------------
+
+* `GitHub <https://github.com/jamescooke>`_
+
+* `Stack Overflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
+
+* `Stack Overflow developer story <http://stackoverflow.com/story/jamescooke>`_
+
+* `PDF version of my CV <{filename}/docs/james_cooke_cv.pdf>`_
