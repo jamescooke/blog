@@ -3,7 +3,7 @@
 
 AUTHOR = 'James'
 SITENAME = 'James Cooke'
-TAGLINE = 'Brighton based Python developer'
+TAGLINE = 'Brighton-based Python developer'
 SITEURL = ''
 PROFILE_IMG_URL = '/images/coding_cooke_ltd.png'
 
