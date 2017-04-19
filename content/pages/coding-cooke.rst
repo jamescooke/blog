@@ -2,7 +2,7 @@ Coding Cooke
 ============
 
 All my contracting work goes through Coding Cooke Ltd. Founded in 2013, it's
-the third company that I've been a director of.
+the third company I've been Director of.
 
 .. image:: |filename|/images/scoota_work.jpg
     :alt: James Cooke working on Amazon Redshift warehouse designs while at
@@ -12,21 +12,21 @@ the third company that I've been a director of.
 Web development
 ---------------
 
-My work focuses primarily on server-side development - that means that day to
-day I'm mainly developing code that creates, validates and manages data,
-usually serving it to a web or mobile app.
+My core work focus is on server-side development, so day to day I'm
+predominantly developing code that creates, validates and manages data, usually
+serving it to a web or mobile app.
 
 Currently my preferred tools are `Linux
 <https://en.wikipedia.org/wiki/Linux>`_, `Python <https://www.python.org/>`_,
 `vim <https://en.wikipedia.org/wiki/Vim_(text_editor)>`_, Bic Medium black
 ballpoint pens, notebooks and whiteboards.
 
-During my time working in the web development field I've held in a number of
-different development roles - from specification and design, to implementation,
-management and testing. A full breakdown is on my `CV
+During my time in the web development field, I've held a number of different
+roles, from specification and design, to implementation, management and
+testing. A full breakdown is available on my `CV
 <{filename}/docs/james_cooke_cv.pdf>`_.
 
-Coding Cooke is part of a Brighton based tribe of creative micro-businesses
+Coding Cooke is part of a Brighton-based tribe of creative micro-businesses
 called `Studio Awkward <https://studioawkward.co.uk>`_.
 
 
