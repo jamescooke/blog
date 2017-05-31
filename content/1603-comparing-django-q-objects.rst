@@ -11,6 +11,11 @@ Comparing Django Q Objects
 Background
 ----------
 
+    **Note:** A newer version of this post exists with an assertion helper for
+    `Python 3 and pytest
+    <{filename}/1705-comparing-django-q-objects-python3.rst>`_. Read on for
+    Python 2 and unittest and general background on Q objects...
+
 When programmatically building complex queries in Django ORM, it's helpful
 to be able to test the resulting `Q object instances
 <https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q>`_
@@ -105,6 +110,10 @@ Gives output:
     ?                  ^  +++
 
 Which can be very helpful when trying to track down errors.
+
+    See this `updated post
+    <{filename}/1705-comparing-django-q-objects-python3.rst>`_ for a version of
+    this assertion helper for Python 3 with pytest.
 
 The perfect world: Predicate Logic
 ----------------------------------

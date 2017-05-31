@@ -11,9 +11,9 @@ Comparing Django Q Objects in Python 3 with pytest
 Background
 ----------
 
-In a `previous post <1603-comparing-django-q-objects.rst>`_ I wrote about
-comparing Django's Q object instances. The original code was Python 2 with
-unittest and was `due for an update
+In a `previous post <{filename}/1603-comparing-django-q-objects.rst>`_ I wrote
+about comparing Django's Q object instances. The original code was Python 2
+with unittest and was `due for an update
 <https://github.com/jamescooke/blog/issues/6>`_.
 
 The previous issue with comparing Django's Q objects remains the same:
