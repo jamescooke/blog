@@ -4,20 +4,19 @@ Comparing Django Q Objects in Python 3 with pytest
 :date: 2017-05-30 22:00
 :tags: topic:testing, language:python, topic:django
 :category: Code
-:summary: An updated super simple assertion helper for comparing instances of
-          Django's Q objects using pytest in Python 3.
+:summary: An updated simple assertion helper for comparing instances of
+    Django's Q objects using pytest in Python 3.
 :scm_path: content/1705-comparing-django-q-objects-python3.rst
 
 Background
 ----------
 
 In a `previous post <1603-comparing-django-q-objects.rst>`_ I wrote about
-comparing Django's Q object instances. This original post's code was Python 2,
-used unittest and was `due for an update
+comparing Django's Q object instances. The original code was Python 2 with
+unittest and was `due for an update
 <https://github.com/jamescooke/blog/issues/6>`_.
 
-The previous issue with comparing Django's Q objects remains the same as when I
-wrote the original post:
+The previous issue with comparing Django's Q objects remains the same:
 
     Django's Q object does not implement ``__cmp__`` and neither does
     ``Node`` which it extends (``Node`` is in the ``django.utils.tree`` module).
@@ -28,9 +27,8 @@ wrote the original post:
 A Python 3 simple solution
 --------------------------
 
-Using the same strategy of using the string version of the Q object for
-comparison, I've created an updated assertion helper. (This time it's simply a
-function rather than a mixin, which is far simpler.)
+The following is a Python 3 assertion helper for use with pytest that uses the
+original strategy of comparing the string versions of the Q objects.
 
 .. code-block:: python
 
@@ -55,9 +53,12 @@ function rather than a mixin, which is far simpler.)
         if str(left) != str(right):
             raise AssertionError('Q{} != Q{}'.format(left, right))
 
+This time the helper is just a function rather than a mixin for
+``unittest.TestCase``.
 
-I've made the choice of raising my own ``AssertionError`` in the case that the
-left and right sides do not match, the output looks like::
+I've made the choice of raising a custom ``AssertionError`` in the case that
+the left and right sides do not match. This means that the output when two Q
+objects do not match looks like::
 
     ____________________________ test_neq_simple ______________________________
     test_assert_q_equal.py:61: in test_neq_simple
@@ -66,9 +67,17 @@ left and right sides do not match, the output looks like::
         raise AssertionError('Q{} != Q{}'.format(left, right))
     E   AssertionError: Q(AND: ('location', '北京市')) != Q(AND: ('location', '北京'))
 
-If I had used a simple ``assert str(left) == str(right)`` then the output would
-look as follows, which is far less clean because it shows the string
-comparison::
+This is a nice simple output which reflects what is being compared and is
+suitable for my usual testing purposes.
+
+Alternatively, if we use ``assert`` and do not raise an ``AssertionError``,
+then the comparison would be:
+
+.. code-block:: python
+
+    assert str(left) == str(right)
+
+And this gives failure output that shows the string comparison::
 
     ______________________ test_neq_multi_not_commutative ______________________
     test_assert_q_equal.py:83: in test_neq_multi_not_commutative
@@ -79,9 +88,15 @@ comparison::
     E     - (AND: ('speed', 12), ('direction', 'north'))
     E     + (AND: ('direction', 'north'), ('speed', 12))
 
+Although there might be some situations where this string comparison output is
+more helpful, I've gone for the custom Q object representation in my own
+projects. The important thing is to adjust your assertion helpers to best fit
+the needs of your test suite and team.
 
 Final testing related note
 --------------------------
 
-TODO Tests for ``assert_q_equal`` are `in this gist
-  <https://gist.github.com/jamescooke/b9bd5afba3a7253d53bd>`_.
+Tests for ``assert_q_equal`` and its original code are `in this gist
+<https://gist.github.com/jamescooke/1bed3414fee7d5c72540e567bcd63887>`_.
+
+Happy testing!
