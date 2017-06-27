@@ -13,7 +13,7 @@ At `PyConUK 2016
 <http://2016.pyconuk.org/talks/cleaner-unit-testing-with-the-arrange-act-assert-pattern/>`_
 I spoke about the Arrange Act Assert pattern and how it can help clean up unit
 tests. I plan to write a short guide to AAA for Python developers and will
-link to that from here when done - meanwhile, below are my slides and links
+link to that from here when done - meanwhile, below is the video of the talk, my slides and links
 to some of the resources that have helped me.
 
 Original proposal
@@ -39,8 +39,15 @@ will be interested in our talk. This was my original proposal's reasoning.
     discussion about when to DRY out tests and how to assert that our test
     refactors are safe.
 
-Slides
-------
+Slides and video
+----------------
+
+The video of the talk does not capture much of the screen, so the slides are
+posted here too.
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/GGw5T1mw9vU" frameborder="0" allowfullscreen></iframe>
 
 .. raw:: html
 
@@ -74,5 +81,4 @@ Finally
 -------
 
 Thanks again to `Carles <https://github.com/txels>`_ for introducing me to the
-AAA pattern. Check out his `data driven tests library
-<https://github.com/txels/ddt>`_.
+AAA pattern.
