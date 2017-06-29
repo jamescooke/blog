@@ -40,4 +40,4 @@ RELATED_POSTS_MAX = 3
 # Droidstrap specific config:
 SHOW_SCM_LINKS = True
 SCM_LINK_TEXT = 'View, comment, edit source on GitHub'
-SCM_BASE_URL = 'https://github.com/jamescooke/blog/tree/master/'
+SCM_BASE_URL = 'https://github.com/jamescooke/blog/blob/master/'

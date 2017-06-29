@@ -7,7 +7,7 @@ A successful `pip-tools` workflow for managing Python package requirements
 :summary: Using pip-tools with multiple requirements files can be difficult.
     This post describes my current workflow that manages the complexity with a
     ``Makefile``.
-:scm_path: content/1611-pip-tools-recursion.rst
+:scm_path: content/1611-pip-tools-workflow.rst
 
 In this post I present the ``pip-tools`` workflow I've been using over a number
 of projects to manage multiple inherited requirements files. At its core is a
