@@ -7,6 +7,7 @@ Arrange Act Assert pattern for Python developers
 :summary: A short guide to using the Arrange Act Assert pattern of testing with
           Python.
 :scm_path: content/1706-arrange-act-assert-for-python.rst
+:status: draft
 
 
 In this post, I present a guide on how to use the Arrange Act Assert pattern in
@@ -35,7 +36,8 @@ The shape of a test
 
 Here is a test that I was working on recently. I've extracted it from Vim and
 blocked out the code with the colour that Vim assigns for Python code.
-Hopefully, in this rough image you will see three sections to the test:
+Hopefully, in this rough image you will see three sections to the test
+separated by a clear white line:
 
 .. image:: |filename|/images/test_shape.png
     :alt: The shape of a test in Python built with Arrange Act Assert.
@@ -43,17 +45,35 @@ Hopefully, in this rough image you will see three sections to the test:
 
 * First there is the test definition, docstring and Arrangement.
 
+* White line.
+
 * In the middle, there is a single line of code - this is the most important
   part: The Act.
+
+* White line.
 
 * Finally there are the Assertions. You can see that the Assert block code
   lines all start with the orange / brown colour - that is because the Python
   keyword ``assert`` is marked with this colour in Vim with my current
   configuration.
 
+Background
+----------
+
 I'll now go into detail on each of these parts using Pytest and a simple toy
 test example. We'll write a simple happy-path test for Python's builtin
-``list.reverse`` function.
+``list.reverse`` function. As we go through I'll assume that:
+
+* We all want code that passes linking with ``flake8``. PEP008 is beneficial to
+  our way of working.
+
+* PEP020 is also something we work towards. I will use some of it's "mantras"
+  when I justify some of the suggestions in this guide.
+
+* Simplicity trumps performance. We want a test suite that is easy to maintain
+  and manage and may in some cases pay for that with some performance loss.
+  This is a reasonable trade off because the tests are run much less frequently
+  than the SUT in production.
 
 
 Definition
@@ -140,6 +160,10 @@ the test.
 
 Extraction of common code
 :::::::::::::::::::::::::
+
+Ideally, when there is duplicate code in different Arrange blocks, then this
+should be extracted into a separate function or fixture. How to manage that
+extraction and test the fixture will be part of a separate post.
 
 
 Resources
