@@ -11,46 +11,49 @@ Arrange Act Assert pattern for Python developers
 
 
 In this post, I present a guide on how to use the Arrange Act Assert pattern in
-Python unit tests. It focuses on a recognisable and reusable Python test
-template which I've developed over the last couple of years, both on my own
-projects and within teams.
+Python unit tests. It focuses on a recognisable and reusable test template
+which I've developed over the last couple of years, both on my own projects and
+within teams.
 
 
 What is Arrange Act Assert?
 ---------------------------
 
-The "Arrange-Act-Assert" pattern of testing was observed and named by Bill Wake
-in 2001. I first came across it in Kent Beck's book "Test Driven Development:
-By Example".
+The "Arrange-Act-Assert" (also AAA and 3A) pattern of testing was observed and
+named by Bill Wake in 2001. I first came across it in Kent Beck's book "Test
+Driven Development: By Example".
 
-The pattern helps by focusing each test on a single Action and clearly
-organising the arrangement of the System Under Test (SUT) and the assertions
-that are made on it after the Action.
+The pattern helps by focusing each test on a single action. It clearly
+separates the arrangement of the System Under Test (SUT) and the assertions
+that are made on it after the action.
 
-In this way, the pattern helps by unifying the structure of tests in a suite
-and improving the understanding of those working on the tests.
+On multiple projects I've worked on I've experienced organised and "clean" code
+in the main codebase, but complete disorganisation and inconsistency in the
+test suite. However when applying AAA I've found it helps by unifying and
+clarifying the structure of tests which helps make the test suite much more
+understandable and manageable.
 
 
 The shape of a test
 -------------------
 
-Here is a test that I was working on recently. I've extracted it from Vim and
-blocked out the code with the colour that Vim assigns for Python code.
-Hopefully, in this rough image you will see three sections to the test
-separated by a clear white line:
+Here is a test that I was working on recently - I've extracted it from Vim and
+blocked out the code with the colour that Vim assigns.
 
 .. image:: |filename|/images/test_shape.png
     :alt: The shape of a test in Python built with Arrange Act Assert.
 
+Hopefully in this rough image you will see three sections to the test separated
+by an empty line:
 
 * First there is the test definition, docstring and Arrangement.
 
-* White line.
+* Empty line.
 
 * In the middle, there is a single line of code - this is the most important
   part: The Act.
 
-* White line.
+* Empty line.
 
 * Finally there are the Assertions. You can see that the Assert block code
   lines all start with the orange / brown colour - that is because the Python
@@ -64,8 +67,8 @@ I'll now go into detail on each of these parts using Pytest and a simple toy
 test example. We'll write a simple happy-path test for Python's builtin
 ``list.reverse`` function. As we go through I'll assume that:
 
-* We all want code that passes linking with ``flake8``. PEP008 is beneficial to
-  our way of working.
+* We all want all test code that passes linking with ``flake8``. PEP008 is
+  beneficial to our way of working.
 
 * PEP020 is also something we work towards. I will use some of it's "mantras"
   when I justify some of the suggestions in this guide.
@@ -98,10 +101,15 @@ Docstring
 
 * A short single line statement about the behaviour under test.
 
+* Follow the existing Docstring style of your project so that the tests are
+  consistent with the code base you are testing.
+
 * Keep the language positive - state clearly what the expected behaviour is.
   Positive docstrings read similar to:
 
       X does Y when Z
+
+  Or...
 
       Given Z, then X does Y
 
@@ -110,11 +118,12 @@ Docstring
 
       X should do Y if Z
 
-  OK, so X should do Y... Is it doing it right at the moment? Is this a
-  ``TODO`` note?
+  In this case the reader could be left with questions. Is X doing it right at
+  the moment? Is this a ``TODO`` note? Is this a test for an expected failure?
 
-  We're aiming for simplicity and clarity in our tests, so definitely clear out
-  any indefinite language.
+  Since we have "Explicit is better than implicit" (`PEP20
+  <https://www.python.org/dev/peps/pep-0020/>`_), then definitely clear out any
+  indefinite language in your test docstrings.
 
 
 Arrange
@@ -124,10 +133,16 @@ Arrange
 
         arrangement()
 
+* Single block of code.
+
 * Do not use ``assert`` in the Arrange block. If you need to make an assertion
   about your arrangement, then this is a smell that your arrangement is too
   complicated and should be extracted to a fixture or setup function and tested
   in its own right.
+
+* Only prepare non-deterministic results not available after action.
+
+* Should not require comments.
 
 
 Act
@@ -137,7 +152,11 @@ Act
 
         result = action()
 
-* This is a single line 
+* Use ``result =`` format.
+
+* This is a single line.
+
+* Can be wrapped in ``with ... raises`` for expected exceptions.
 
 Assert
 ------
@@ -146,9 +165,21 @@ Assert
 
         assert result is valid()
 
+* Single block of code.
+
+* No actions should happen.
+
+* Test ``result`` first then side effects.
+
+* Use simple blocks of assertions.
+
 
 Caveats
 -------
+
+Assertions in Arrange
+:::::::::::::::::::::
+
 
 Complicated tests and comments
 ::::::::::::::::::::::::::::::
