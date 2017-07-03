@@ -9,19 +9,24 @@ Arrange Act Assert pattern for Python developers
 :scm_path: content/1706-arrange-act-assert-for-python.rst
 :status: draft
 
+This is the first post in a series exploring the Arrange Act Assert pattern and
+how to apply it to Python unit tests. The series will present a recognisable
+and reusable test template along with strategies for test writing which I've
+developed over the last couple of years, both on my own projects and within
+teams.
 
-In this post, I present a guide on how to use the Arrange Act Assert pattern in
-Python unit tests. It focuses on a recognisable and reusable test template
-which I've developed over the last couple of years, both on my own projects and
-within teams.
+In this part I will introduce the Arrange Act Assert pattern and show how it
+can be applied to Python unit tests.
 
 
 What is Arrange Act Assert?
 ---------------------------
 
-The "Arrange-Act-Assert" (also AAA and 3A) pattern of testing was observed and
-named by Bill Wake in 2001. I first came across it in Kent Beck's book "Test
-Driven Development: By Example".
+The "Arrange-Act-Assert" (also AAA and 3A) pattern of testing was `observed and
+named by Bill Wake in 2001
+<http://xp123.com/articles/3a-arrange-act-assert/>`_. I first came across it in
+`Kent Beck's book "Test Driven Development: By Example"
+<http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_.
 
 The pattern helps by focusing each test on a single action. It clearly
 separates the arrangement of the System Under Test (SUT) and the assertions
@@ -60,6 +65,7 @@ by an empty line:
   keyword ``assert`` is marked with this colour in Vim with my current
   configuration.
 
+
 Background
 ----------
 
@@ -67,10 +73,10 @@ I'll now go into detail on each of these parts using Pytest and a simple toy
 test example. We'll write a simple happy-path test for Python's builtin
 ``list.reverse`` function. As we go through I'll assume that:
 
-* We all want all test code that passes linking with ``flake8``. PEP008 is
+* We want test code that passes linking with ``flake8`` because PEP008 is
   beneficial to our way of working.
 
-* PEP020 is also something we work towards. I will use some of it's "mantras"
+* PEP020 is also something we work towards - I will use some of it's "mantras"
   when I justify some of the suggestions in this guide.
 
 * Simplicity trumps performance. We want a test suite that is easy to maintain
@@ -78,13 +84,19 @@ test example. We'll write a simple happy-path test for Python's builtin
   This is a reasonable trade off because the tests are run much less frequently
   than the SUT in production.
 
+This post is only an introduction to the AAA pattern. Where certain topics will
+be covered in more detail in future posts in this series, I have marked them
+with a footnote.
+
 
 Definition
 ----------
 
+The definition of the test function.
+
 .. code-block:: python
 
-    def test_reverse()
+    def test_reverse():
 
 * Name your function something descriptive because the function name will be
   shown when the test fails in Pytest output.
@@ -93,13 +105,13 @@ Definition
 Docstring
 ---------
 
+A short single line statement about the behaviour under test.
+
 .. code-block:: python
 
     """
     list.reverse inverts the order of items in a list, in place
     """
-
-* A short single line statement about the behaviour under test.
 
 * Follow the existing Docstring style of your project so that the tests are
   consistent with the code base you are testing.
@@ -129,20 +141,30 @@ Docstring
 Arrange
 -------
 
+The single block of code that sets up the conditions for the test action.
+
 .. code-block:: python
 
         arrangement()
 
-* Single block of code.
+* Use a single block of code with no empty lines.
 
 * Do not use ``assert`` in the Arrange block. If you need to make an assertion
   about your arrangement, then this is a smell that your arrangement is too
   complicated and should be extracted to a fixture or setup function and tested
-  in its own right.
+  in its own right [#fixture]_.
 
-* Only prepare non-deterministic results not available after action.
+* Only prepare non-deterministic results not available after action [#nd]_.
 
-* Should not require comments.
+* The arrange section should not require comments. If you have a large
+  arrangement in your tests which is complex enough to require detailed
+  comments then consider:
+
+  - Extracting the comments into a larger docstring [#doc]_.
+
+  - Extracting the arrangement code into a fixture and testing that the fixture
+    is establishing the expected conditions as previously mentioned
+    [#fixture]_.
 
 
 Act
@@ -157,6 +179,11 @@ Act
 * This is a single line.
 
 * Can be wrapped in ``with ... raises`` for expected exceptions.
+
+* Even when there is no result from the action, capture it with ``result =``
+  and assert that ``result is None``. In this way, the SUT's behaviour is
+  pinned.
+
 
 Assert
 ------
@@ -174,30 +201,28 @@ Assert
 * Use simple blocks of assertions.
 
 
-Caveats
--------
+Next in this series
+-------------------
 
-Assertions in Arrange
-:::::::::::::::::::::
+I have not been able to cover all the common cases in the guide above. The
+following are planned topics for follow up posts:
 
+.. [#fixture] **Extraction of common or complicated arrangement code:**
+              Fixtures should be extracted when arrangement code is complicated
+              or duplicated between tests.
 
-Complicated tests and comments
-::::::::::::::::::::::::::::::
+.. [#nd] When data required for assertions is destroyed by the action being
+         tested, then arrangement must also prepare this data for use later.
+         Alternatively, the test might be restructured so that this data is
+         predictable or not required.
 
-Ideally every test should be simple and compact enough that a one line
-docstring is sufficient to describe the test. However, this is not always the
-case and sometimes a larger docstring is appropriate to help others understand
-the test.
-
-Extraction of common code
-:::::::::::::::::::::::::
-
-Ideally, when there is duplicate code in different Arrange blocks, then this
-should be extracted into a separate function or fixture. How to manage that
-extraction and test the fixture will be part of a separate post.
+.. [#doc] Docstrings can be multiple lines. Ideally every test should be simple
+    and compact enough that a one line docstring is sufficient to describe the
+    test. However, this is not always the case and sometimes a larger docstring
+    is appropriate to help others understand the test.
 
 
-Resources
----------
+Thanks for reading
+------------------
 
-* http://xp123.com/articles/3a-arrange-act-assert/
+Happy testing!
