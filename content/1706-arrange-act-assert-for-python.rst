@@ -10,10 +10,12 @@ Arrange Act Assert pattern for Python developers
 :status: draft
 
 This is the first post in a series exploring the Arrange Act Assert pattern and
-how to apply it to Python unit tests. The series will present a recognisable
-and reusable test template along with strategies for test writing which I've
-developed over the last couple of years, both on my own projects and within
-teams.
+how to apply it to Python unit tests.
+
+The goal of the series is to present a recognisable and reusable test template
+following the Arrange Act Assert pattern of testing. In addition, I aim to
+present strategies for test writing and refactoring which I've developed over
+the last couple of years, both on my own projects and within teams.
 
 In this part I will introduce the Arrange Act Assert pattern and show how it
 can be applied to Python unit tests.
@@ -28,9 +30,9 @@ named by Bill Wake in 2001
 `Kent Beck's book "Test Driven Development: By Example"
 <http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_.
 
-The pattern helps by focusing each test on a single action. It clearly
-separates the arrangement of the System Under Test (SUT) and the assertions
-that are made on it after the action.
+The pattern focuses each test on a single action. The advantage of this focus
+is that it clearly separates the arrangement of the System Under Test (SUT) and
+the assertions that are made on it after the action.
 
 On multiple projects I've worked on I've experienced organised and "clean" code
 in the main codebase, but complete disorganisation and inconsistency in the
@@ -39,11 +41,12 @@ clarifying the structure of tests which helps make the test suite much more
 understandable and manageable.
 
 
-The shape of a test
--------------------
+TL;DR: The shape of an AAA test
+-------------------------------
 
-Here is a test that I was working on recently - I've extracted it from Vim and
-blocked out the code with the colour that Vim assigns.
+Here is a test that I was working on recently that follows the AAA pattern.
+I've extracted it from Vim and blocked out the code with the colour that Vim
+assigns.
 
 .. image:: |filename|/images/test_shape.png
     :alt: The shape of a test in Python built with Arrange Act Assert.
@@ -65,24 +68,34 @@ by an empty line:
   keyword ``assert`` is marked with this colour in Vim with my current
   configuration.
 
+While working on test suites that employ this pattern, my experience has been
+that I've found it easier to understand each test. My eye has definitely got
+used to the test "shape". Want to know what is being tested? Just look at the
+clear line above the assertion block.
+
+Follow this pattern across your tests and your suite will be much improved.
+
 
 Background
 ----------
 
 I'll now go into detail on each of these parts using Pytest and a simple toy
 test example. We'll write a simple happy-path test for Python's builtin
-``list.reverse`` function. As we go through I'll assume that:
+``list.reverse`` function.
 
-* We want test code that passes linking with ``flake8`` because PEP008 is
-  beneficial to our way of working.
+I've made the following assumptions:
 
-* PEP020 is also something we work towards - I will use some of it's "mantras"
-  when I justify some of the suggestions in this guide.
+* We all love `PEP008 <https://www.python.org/dev/peps/pep-0008/>`_, so we want
+  tests to pass ``flake8`` linting.
+
+* `PEP020 <https://www.python.org/dev/peps/pep-0020/>`_ is also something we
+  work towards - I will use some of it's "mantras" when I justify some of the
+  suggestions in this guide.
 
 * Simplicity trumps performance. We want a test suite that is easy to maintain
-  and manage and may in some cases pay for that with some performance loss.
-  This is a reasonable trade off because the tests are run much less frequently
-  than the SUT in production.
+  and manage and can pay for that with some performance loss. I've assumed this
+  is a reasonable trade off because the tests are run much less frequently than
+  the SUT in production.
 
 This post is only an introduction to the AAA pattern. Where certain topics will
 be covered in more detail in future posts in this series, I have marked them
@@ -94,9 +107,15 @@ Definition
 
 The definition of the test function.
 
+Example
+.......
+
 .. code-block:: python
 
     def test_reverse():
+
+Guidelines
+..........
 
 * Name your function something descriptive because the function name will be
   shown when the test fails in Pytest output.
@@ -107,11 +126,17 @@ Docstring
 
 A short single line statement about the behaviour under test.
 
+Example
+.......
+
 .. code-block:: python
 
     """
     list.reverse inverts the order of items in a list, in place
     """
+
+Guidelines
+..........
 
 * Follow the existing Docstring style of your project so that the tests are
   consistent with the code base you are testing.
@@ -125,27 +150,44 @@ A short single line statement about the behaviour under test.
 
       Given Z, then X does Y
 
-* Be careful with using uncertain language in the docstring. Words like
-  "should" and "if" introduce uncertainty. For example:
+* Be careful with using uncertain language in the docstring and follow the
+  mantra "Explicit is better than implicit" (`PEP20
+  <https://www.python.org/dev/peps/pep-0020/>`_)
+
+  Words like "should" and "if" introduce uncertainty. For example:
 
       X should do Y if Z
 
   In this case the reader could be left with questions. Is X doing it right at
   the moment? Is this a ``TODO`` note? Is this a test for an expected failure?
 
-  Since we have "Explicit is better than implicit" (`PEP20
-  <https://www.python.org/dev/peps/pep-0020/>`_), then definitely clear out any
-  indefinite language in your test docstrings.
+  In a similar vein, avoid future case.
+
+      X will do Y when Z
+
+  Again, this reads like a ``TODO``.
+
 
 
 Arrange
 -------
 
-The single block of code that sets up the conditions for the test action.
+The block of code that sets up the conditions for the test action.
+
+Example
+.......
+
+There's not much work to do in this example to build a list, so the arrangement
+block is just one line.
 
 .. code-block:: python
 
-        arrangement()
+    greek = ['alpha', 'beta', 'gamma', 'delta']
+
+
+
+Guidelines
+..........
 
 * Use a single block of code with no empty lines.
 
@@ -160,7 +202,7 @@ The single block of code that sets up the conditions for the test action.
   arrangement in your tests which is complex enough to require detailed
   comments then consider:
 
-  - Extracting the comments into a larger docstring [#doc]_.
+  - Extracting the comments into a multi-line docstring [#doc]_.
 
   - Extracting the arrangement code into a fixture and testing that the fixture
     is establishing the expected conditions as previously mentioned
@@ -170,36 +212,86 @@ The single block of code that sets up the conditions for the test action.
 Act
 ---
 
+The line of code where the Action is taken on the SUT.
+
+Example
+.......
+
 .. code-block:: python
 
-        result = action()
+        result = greek.reverse()
 
-* Use ``result =`` format.
+Guidelines
+..........
 
-* This is a single line.
+* Start every Action line with ``result =``.
 
-* Can be wrapped in ``with ... raises`` for expected exceptions.
+  This makes it easier to distinguish test actions and means you can avoid the
+  hardest job in programming: naming. When every result is called ``result``,
+  then you do not need to waste brain power wondering if it should be ``item =``
+  or ``response =`` etc. An added benefit is that you can find test actions
+  easily with a tool like ``grep``.
 
 * Even when there is no result from the action, capture it with ``result =``
-  and assert that ``result is None``. In this way, the SUT's behaviour is
+  and then ``assert result is None``. In this way, the SUT's behaviour is
   pinned.
+
+* If you struggle to write a single line action, then consider extracting some
+  of that code into your arrangement.
+
+* The action can be wrapped in ``with ... raises`` for expected exceptions. In
+  this case your action will be two lines surrounded by empty lines.
 
 
 Assert
 ------
 
+The block of code that performs the assertions on the state of the SUT after
+the action.
+
+Example
+.......
+
 .. code-block:: python
 
-        assert result is valid()
+        assert result is None
+        assert greek == ['delta', 'gamma', 'beta', 'alpha']
 
-* Single block of code.
+Guidelines
+..........
 
-* No actions should happen.
+* Use a single block of code with no empty lines.
 
-* Test ``result`` first then side effects.
+* First test ``result``, then side effects.
 
-* Use simple blocks of assertions.
+* Limit the actions that you make in this block. Ideally, no actions should
+  happen, but that is not always possible.
 
+* Use simple blocks of assertions. If you find that you are repeatedly writing
+  the same code to extract information from the SUT and perform assertions on
+  it, then consider extracting an assertion helper [#ah]_.
+
+
+The final test
+--------------
+
+Here's the example test in full:
+
+.. code-block:: python
+
+    def test_reverse():
+        """
+        list.reverse inverts the order of items in a list, in place
+        """
+        greek = ['alpha', 'beta', 'gamma', 'delta']
+
+        result = greek.reverse()
+
+        assert result is None
+        assert greek == ['delta', 'gamma', 'beta', 'alpha']
+
+I hope that this introduction has been helpful and you will return for the next
+post in the series.
 
 Next in this series
 -------------------
@@ -207,19 +299,36 @@ Next in this series
 I have not been able to cover all the common cases in the guide above. The
 following are planned topics for follow up posts:
 
-.. [#fixture] **Extraction of common or complicated arrangement code:**
-              Fixtures should be extracted when arrangement code is complicated
-              or duplicated between tests.
+.. [#fixture] **Extraction of common or complicated arrangement code**
 
-.. [#nd] When data required for assertions is destroyed by the action being
-         tested, then arrangement must also prepare this data for use later.
-         Alternatively, the test might be restructured so that this data is
-         predictable or not required.
+    Fixtures should be extracted when arrangement code is complicated or
+    duplicated between tests. This post will explore how to extract arrangement
+    code and test it so that it can be used with certainty across the test
+    suite.
 
-.. [#doc] Docstrings can be multiple lines. Ideally every test should be simple
-    and compact enough that a one line docstring is sufficient to describe the
-    test. However, this is not always the case and sometimes a larger docstring
-    is appropriate to help others understand the test.
+.. [#nd] **Non-deterministic data**
+
+    When data required for assertions is destroyed by the action being
+    tested, then arrangement must also prepare this data for use later.
+    Alternatively, the test might be restructured so that this data is
+    predictable or not required.
+
+.. [#doc] **Multi-line docstrings**
+
+    Although not covered here, docstrings can be multiple lines. Ideally every
+    test should be simple and compact enough that a one line docstring is
+    sufficient to describe the test. However this is not always the case and
+    sometimes a larger docstring is appropriate to help others understand the
+    test and the conditions that are required for the SUT.
+
+.. [#ah] **Assertion helpers**
+
+    In an ideal world, assertions would always be small and simple. However,
+    complex systems often require larger assertions. In this follow up post I
+    will explore strategies for extracting common assertion code and testing it
+    in its own right.
+
+Links will appear above when I complete these follow up posts.
 
 
 Thanks for reading
