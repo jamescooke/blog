@@ -1,24 +1,23 @@
 Arrange Act Assert pattern for Python developers
 ================================================
 
-:date: 2017-06-27 22:00
+:date: 2017-07-06 23:00
 :tags: language:python, topic:testing
 :category: Code
 :summary: A short guide to using the Arrange Act Assert pattern of testing with
           Python.
 :scm_path: content/1706-arrange-act-assert-for-python.rst
-:status: draft
 
 This is the first post in a series exploring the Arrange Act Assert pattern and
-how to apply it to Python unit tests.
+how to apply it to Python tests.
 
 The goal of the series is to present a recognisable and reusable test template
 following the Arrange Act Assert pattern of testing. In addition, I aim to
 present strategies for test writing and refactoring which I've developed over
 the last couple of years, both on my own projects and within teams.
 
-In this part I will introduce the Arrange Act Assert pattern and show how it
-can be applied to Python unit tests.
+In this part I will introduce the Arrange Act Assert pattern and discuss its
+constituent parts.
 
 
 What is Arrange Act Assert?
@@ -28,15 +27,16 @@ The "Arrange-Act-Assert" (also AAA and 3A) pattern of testing was `observed and
 named by Bill Wake in 2001
 <http://xp123.com/articles/3a-arrange-act-assert/>`_. I first came across it in
 `Kent Beck's book "Test Driven Development: By Example"
-<http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_.
+<http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ and I
+spoke about it at `PyConUK 2016 <{filename}/1609-aaa-pyconuk.rst>`_.
 
 The pattern focuses each test on a single action. The advantage of this focus
 is that it clearly separates the arrangement of the System Under Test (SUT) and
 the assertions that are made on it after the action.
 
 On multiple projects I've worked on I've experienced organised and "clean" code
-in the main codebase, but complete disorganisation and inconsistency in the
-test suite. However when applying AAA I've found it helps by unifying and
+in the main codebase, but disorganisation and inconsistency in the
+test suite. However when AAA is applied, I've found it helps by unifying and
 clarifying the structure of tests which helps make the test suite much more
 understandable and manageable.
 
@@ -79,8 +79,8 @@ Follow this pattern across your tests and your suite will be much improved.
 Background
 ----------
 
-I'll now go into detail on each of these parts using Pytest and a simple toy
-test example. We'll write a simple happy-path test for Python's builtin
+I'll now go into detail on each of these parts using Pytest and a toy
+test example - a simple happy-path test for Python's builtin
 ``list.reverse`` function.
 
 I've made the following assumptions:
@@ -88,9 +88,9 @@ I've made the following assumptions:
 * We all love `PEP008 <https://www.python.org/dev/peps/pep-0008/>`_, so we want
   tests to pass ``flake8`` linting.
 
-* `PEP020 <https://www.python.org/dev/peps/pep-0020/>`_ is also something we
-  work towards - I will use some of it's "mantras" when I justify some of the
-  suggestions in this guide.
+* `PEP020, The Zen of Python <https://www.python.org/dev/peps/pep-0020/>`_, is
+  also something we work towards - I will use some of it's "mantras" when I
+  justify some of the suggestions in this guide.
 
 * Simplicity trumps performance. We want a test suite that is easy to maintain
   and manage and can pay for that with some performance loss. I've assumed this
@@ -120,11 +120,14 @@ Guidelines
 * Name your function something descriptive because the function name will be
   shown when the test fails in Pytest output.
 
+* Good test method names can make docstrings redundant in simple tests (`thanks
+  Adam! <https://github.com/jamescooke/blog/pull/10#discussion_r125855056>`_).
+
 
 Docstring
 ---------
 
-A short single line statement about the behaviour under test.
+An optional short single line statement about the behaviour under test.
 
 Example
 .......
@@ -138,6 +141,11 @@ Example
 Guidelines
 ..........
 
+Docstrings are not part of the AAA pattern. Consider if your test needs one or
+if you are best to omit it for simplicity.
+
+If you do include a docstring, then I recommend that you:
+
 * Follow the existing Docstring style of your project so that the tests are
   consistent with the code base you are testing.
 
@@ -150,7 +158,7 @@ Guidelines
 
       Given Z, then X does Y
 
-* Be careful with using uncertain language in the docstring and follow the
+* Be cautious when using any uncertain language in the docstring and follow the
   mantra "Explicit is better than implicit" (`PEP20
   <https://www.python.org/dev/peps/pep-0020/>`_)
 
@@ -168,7 +176,6 @@ Guidelines
   Again, this reads like a ``TODO``.
 
 
-
 Arrange
 -------
 
@@ -183,7 +190,6 @@ block is just one line.
 .. code-block:: python
 
     greek = ['alpha', 'beta', 'gamma', 'delta']
-
 
 
 Guidelines
@@ -331,7 +337,10 @@ following are planned topics for follow up posts:
 Links will appear above when I complete these follow up posts.
 
 
-Thanks for reading
-------------------
+Thanks
+------
 
-Happy testing!
+Thanks to `Adam <https://adamj.eu/>`_ for reviewing this post and his helpful
+feedback.
+
+Thanks for reading and happy testing!

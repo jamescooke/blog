@@ -12,9 +12,13 @@ Cleaner unit testing with the Arrange Act Assert pattern
 At `PyConUK 2016
 <http://2016.pyconuk.org/talks/cleaner-unit-testing-with-the-arrange-act-assert-pattern/>`_
 I spoke about the Arrange Act Assert pattern and how it can help clean up unit
-tests. I plan to write a short guide to AAA for Python developers and will
-link to that from here when done - meanwhile, below is the video of the talk, my slides and links
-to some of the resources that have helped me.
+tests.
+
+    **Note:** A newer post `Arrange Act Assert pattern for Python developers
+    <{filename}/1706-arrange-act-assert-for-python.rst>`_ is available. It has
+    much clearer examples and guidelines for using AAA than the video and
+    slides below.
+
 
 Original proposal
 -----------------
@@ -56,7 +60,7 @@ posted here too.
 Resources
 ---------
 
-* `PEP08 <https://www.python.org/dev/peps/pep-0008/>`_ and `PEP20
+* `PEP08 <https://www.python.org/dev/peps/pep-0008/>`_ and `PEP20, The Zen of Python
   <https://www.python.org/dev/peps/pep-0020/>`_.
 
 * `Kent Beck: Test Driven Development: By Example
