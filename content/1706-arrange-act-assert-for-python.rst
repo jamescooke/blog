@@ -4,8 +4,9 @@ Arrange Act Assert pattern for Python developers
 :date: 2017-07-06 23:00
 :tags: language:python, topic:testing
 :category: Code
-:summary: A short guide to using the Arrange Act Assert pattern of testing with
-          Python.
+:summary: The first in a series of posts about the Arrange Act Assert pattern
+          of testing with Python. This post introduces the pattern and its
+          constituent parts.
 :scm_path: content/1706-arrange-act-assert-for-python.rst
 
 This is the first post in a series exploring the Arrange Act Assert pattern and
@@ -335,6 +336,9 @@ following are planned topics for follow up posts:
     in its own right.
 
 Links will appear above when I complete these follow up posts.
+
+Don't miss out: `subscribe and receive an email when I post the next part of
+this series <http://eepurl.com/cVkaTj>`_.
 
 
 Thanks
