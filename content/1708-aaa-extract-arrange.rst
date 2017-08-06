@@ -1,5 +1,5 @@
-AAA Part 2: Extracting common arrangement code to make fixtures
-===============================================================
+AAA Part 2: Extract Arrange code to make fixtures
+=================================================
 
 :date: 2017-08-04 00:00
 :tags: language:python, topic:testing
@@ -9,21 +9,20 @@ AAA Part 2: Extracting common arrangement code to make fixtures
           across the test suite.
 :scm_path: content/1708-aaa-extract-arrange.rst
 
-This post is part two of a series on the Arrange Act Assert pattern for Python
-developers. `Part 1 is here
-</arrange-act-assert-pattern-for-python-developers.html#the-final-test>`_.
+* This post is Part 2 of a series on the Arrange Act Assert pattern for Python
+  developers.
+
+* `Part 1: Arrange Act Assert pattern for Python developers is here
+  </arrange-act-assert-pattern-for-python-developers.html#the-final-test>`_.
+
 
 .. image:: |filename|/images/test_shape.png
     :alt: The shape of a test in Python built with Arrange Act Assert.
 
-Not like "how to draw an owl". Instead the test suite, like the software it's
-testing, is a living, dynamic and growing code base.
-
-Extraction is just a tool for handling duplicated code between tests.
-`Kent Beck's book "Test Driven Development: By Example"
-<http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ really
-turned me on to the value in eliminating duplicated code between the test and
-the SUT [#sut]_.
+The test suite, like the software it's testing, is a living, dynamic and
+growing code base. As it grows, like the software it's testing, there will be
+duplication. In this post, I will explore duplication in the Arrange block and
+show how one way to use extraction to reduce that duplication.
 
 
 Sources of Duplication
@@ -37,6 +36,15 @@ Arrange
 
 Duplication in this section happens when tests share common setup code - this
 post deals with this situation.
+
+There are two routes I've found that result in duplication in different Arrange
+blocks. I've given them my own names: "Complicated setup" and "Test
+duplication" - if you know a more common name for these scenarios, then please
+share.
+
+* Complicated setup happens as a test suite grows and the complexity of the
+  tests "on the outside" of the code increases. Tests will often need to
+  combine a number of objects in increasingly complex states to build the SUT.
 
 Act
 ...
@@ -55,28 +63,37 @@ Assert
 
 When multiple tests need to make the same or similar assertions, then assert
 code can become duplicated between tests. Extracting those common assertions
-into an assertion helper can be beneficial, and I'll write about this in my
-next post. (TODO)
+into an assertion helper can be beneficial, and I'll write about this in a
+follow up post.
 
-Extraction in Arrange
----------------------
+Let's move on and explore duplication in Arrange and solve it with Extract
+Method.
 
-There are two routes that I've found that create duplication in Arrangement.
-I've given them my own names: "Complicated setup" and "Test duplication" - if
-you know a more common name for these scenarios, then please share.
+Extraction as a solution
+------------------------
+
+Extract Method [#em]_ is just a tool for handling duplicated code between
+tests. `Kent Beck's book "Test Driven Development: By Example"
+<http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ really
+turned me on to the value in eliminating duplicated code between the test and
+the SUT [#sut]_.
+
+* I'm using `pytest <https://docs.pytest.org/en/latest/>`_ in this example
+  which means that fixtures are marked with the ``@pytest.fixture`` decorator.
+  If you're using ``unittest`` then you could extract the set up code into the
+  ``TestCase.setUp`` method.
+
+* If you can, perform Extract Method while your test suite is GREEN [#green]_.
+  This means that you can be more assured that your refactoring has worked
+  without errors.
 
 Complicated setup
-.................
-
-As a test suite grows the complexity of the tests "on the outside" of the code
-increases. Tests will often need to combine a number of objects in increasingly
-complex states to build the SUT.
+-----------------
 
 During my work, I very often build permission systems that manage access to
 resources such as files, accounts, projects, etc, based on the connection
 between Users and those resources. Using an example from a project is the test
 below - it sets up a project on an Account: TODO
-
 
 You can see that the setup is long and complicated and before we take any
 actions on the SUT, there is some benefit in asserting that we've built
@@ -88,15 +105,30 @@ to be carried out on it. If we're about to assert that Homer can be granted
 permissions, then it makes sense to assert that he did not have those
 permissions already when the SUT was constructed.
 
+But adding these assertions before the Act section means breaking AAA - this is
+a smell the test has grown too complex and should be cut down.
 
-EXTRACT : only extract in GREEN [#green]_
+I've used a simplified example to illustrate how to solve this below. I've
+imagined a ``SUT`` class that must be called with some arrangement functions
+like ``arrange_a``, ``arrange_b``, etc.
 
-https://speakerdeck.com/jamescooke/extract-arrangement-code
+.. raw:: html
+
+    <script async class="speakerdeck-embed" data-id="da526efe5fb6445eadb71b7f4b66c2f5" data-ratio="1.82857142857143" src="//speakerdeck.com/assets/embed.js"></script>
+
+
+If the example does not load for you, you can `view it on speakerdeck
+<https://speakerdeck.com/jamescooke/extract-arrangement-code>`_.
+
+Test duplication
+----------------
+
+
+
 
 
 After this process we are back at a pair of tests with a single fixture that
 fit the AAA pattern that I advocated in Part 1 of this series:
-
 
 * We can continue to develop the SUT using TDD [#tdd]_ by adding new
   requirements to ``test_fixture()`` and then expanding the fixture to get back
@@ -105,13 +137,6 @@ fit the AAA pattern that I advocated in Part 1 of this series:
 * We are also left in a situation where we have a fixture that can be reused
   really easily. We can test the permutations of different actions on a
   particular SUT without having to depend on our power of copy and paste.
-
-
-Test duplication
-................
-
-
-
 
 Benefits of Extraction
 ----------------------
@@ -174,7 +199,8 @@ Tiny glossary
     Unit under test, there is no implication around the size of the "system" or
     "unit".
 
-.. [#em] `Extract Method <https://refactoring.com/catalog/extractMethod.html>`_
+.. [#em] Extract Method is a refactoring step `defined here
+    <https://refactoring.com/catalog/extractMethod.html>`_.
 
 .. [#tdd] Test Driven Development.
 
