@@ -10,10 +10,9 @@ AAA Part 2: Extracting Arrange code to make fixtures
 :scm_path: content/1708-aaa-extract-arrange.rst
 
 
-In this post I will describe the "Complicated Setup" problem that can happen in
-Arrange blocks as a test suite grows. This problem result from the increasingly
-complex nature of the tests that are required as the software being tested
-develops.
+In this post I will describe how code in tests' Arrange blocks can become
+over-complicated, break the AAA pattern and benefit from extraction.
+
 
 Background
 ----------
@@ -42,7 +41,7 @@ Background
 * During my work I often build permission systems that manage access to
   resources such as files, accounts, projects, etc, based on the connection
   between Users and those resources. The example test below is from one of
-  these projects. I often use Simpsons and Futurama characters in tests because
+  those projects. I often use Simpsons and Futurama characters in tests because
   I think it makes it easier to visualise the test conditions when characters
   are used that other programmers may be familiar with already.
 
@@ -50,13 +49,13 @@ Background
 The problem
 -----------
 
-I've found that the Complicated Setup problem occurs as a test suite grows and
-the complexity of the tests "on the outside" of the code increases.
+I've found that this problem, which I call "Complicated Setup", occurs as a test suite grows and
+the complexity of the tests on the outside of the code increases.
 
 Tests will often need to combine a number of objects in increasingly complex
 states to build the SUT [#sut]_. As a result, additional assertions are
-required before the Act to ensure that the test conditions are correctly
-established. The problem with these additional assertions as I see it is that
+required before the Act block to ensure that the test conditions are correctly
+established. The problem with these additional assertions is that
 they break the AAA pattern because there should be no assertions in the Arrange
 block.
 
@@ -99,22 +98,22 @@ block.
         project_couchbase = project_data['project']
         bender = project_data['person']
         # Check
-        assert len(bender.accounts) == 1
-        assert bender.accounts[0].owner == leela
-        assert len(bender.projects) == 1
-        assert bender.projects[0] != new_project
-        assert len(fry.messages) == 0
+        assert len(bender.accounts) == 1            # <
+        assert bender.accounts[0].owner == leela    # < Assertions in Arrange
+        assert len(bender.projects) == 1            # <
+        assert bender.projects[0] != new_project    # <
+        assert len(fry.messages) == 0               # <
 
         result = leela.new_project.invite(bender)
 
         assert result is True
         assert len(fry.messages) == 1
 
-Test of the setup of the SUT will often be informed by the tests that are about
-to be carried out on it. Here I want to ensure that Fry is notified with a new
-message so it's important that after Arrange, Fry has no messages waiting - so
-that's asserted. But adding these assertions before the Act section means
-breaking AAA - this is a smell the test has grown too complex and should be cut
+Tests on the arrangement of the SUT will often be informed by the tests that are about
+to be carried out on it in the Act. Here I want to ensure that Fry is notified with a new
+message so it is important that after Arrange Fry has no messages waiting.
+But adding these assertions before the Act section means
+breaking AAA and this is a smell the test has grown too complex and should be cut
 down.
 
 It is possible to use Extract Method to create a fixture that solves this issue
@@ -201,7 +200,7 @@ invite behaviour.
         assert result is True
         assert len(fry.messages) == 1
 
-Even though this example is long winded, but I hope you can see that the
+Even though this example is long winded, I hope you can see that the
 extraction of the set up code into its own fixture has simplified the tests and
 brought the code back into conformity with the AAA pattern.
 
@@ -209,8 +208,8 @@ brought the code back into conformity with the AAA pattern.
 Benefits of extraction
 ----------------------
 
-The extraction process results in a pair of tests with a single fixture that
-fit the AAA pattern that I advocated in Part 1 of this series. The resulting
+The result of the extraction process is a pair of tests with a single fixture. The tests
+fit the AAA pattern that I advocated in Part 1 of this series and the resulting
 code's structure has a number of advantages for the future of the test suite:
 
 * Continued development on the fixture can happen using TDD [#tdd]_ by adding
@@ -222,12 +221,12 @@ code's structure has a number of advantages for the future of the test suite:
   our power of copy and paste and without creating more duplicated code.
 
 * If a situation arises in the future where the arrangement of the SUT needs to
-  change in the fixture all the tests that use it might fail. However, the
+  change in the fixture all the tests that use it *might* fail. However, the
   payoff for the additional failure of the fixture's dedicated tests is that
   there is the opportunity to fix the problem in one place - the extracted code
   in the fixture.
 
-  On top of that, the fix can be performed in a TDD way because the fixture is
+  On top of that, the fix can be performed using TDD because the fixture is
   already extracted and under test - a potential double win.
 
 In this way the test suite remains dynamic, clear and able to adapt with the
@@ -243,8 +242,8 @@ When the fixture was arrived at via "Complicated setup" then my answer is
 "yes". As we've seen, the ``test_fixture()`` test remains to pin the fixture's
 behaviour and assert that the SUT is in the expected state.
 
-When the fixture has been extracted because of "Setup duplication" there will
-be a fixture created that does not have its own explicit test. Instead the
+When the fixture has been extracted because of "Setup duplication" [#sd]_ there will
+be a fixture created that does not have its own explicit test. Instead, the
 fixture is tested implicitly by the two tests but does not have a dedicated
 test of its own.
 
@@ -255,24 +254,30 @@ usual RED, GREEN, REFACTOR cycle.
 Next in this series
 -------------------
 
-Next I will write about extraction in the Assertion section to create assertion
-helpers.
+Thanks for reading this post. Next in my series of AAA posts I will write about
+extraction of code from Assertion blocks to create assertion helpers.
 
 Don't miss out: `subscribe and receive an email when I post the next part of
 this series <http://eepurl.com/cVkaTj>`_.
 
+Happy testing!
+
 
 Tiny glossary
 -------------
+
+.. [#em] Extract Method is a refactoring step `defined here
+    <https://refactoring.com/catalog/extractMethod.html>`_.
 
 .. [#sut] `System Under Test
     <https://en.wikipedia.org/wiki/System_under_test>`_ I've used this to mean the
     Unit under test, there is no implication around the size of the "system" or
     "unit".
 
-.. [#em] Extract Method is a refactoring step `defined here
-    <https://refactoring.com/catalog/extractMethod.html>`_.
+.. [#green] GREEN is the name for the state when all tests in your suite pass.
 
 .. [#tdd] Test Driven Development.
 
-.. [#green] GREEN is the name for the state when all tests in your suite pass.
+.. [#sd] Setup duplication: My name for the situation where there are large
+    chunks of Arrange code duplicated between tests. This topic warrants a
+    follow-up post.
