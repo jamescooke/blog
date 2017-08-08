@@ -313,6 +313,9 @@ following are planned topics for follow up posts:
     code and test it so that it can be used with certainty across the test
     suite.
 
+    * See `AAA Part 2: Extracting Arrange code to make fixtures
+      </aaa-part-2-extracting-arrange-code-to-make-fixtures.html>`_.
+
 .. [#nd] **Non-deterministic data**
 
     When data required for assertions is destroyed by the action being
