@@ -193,7 +193,7 @@ invite behaviour.
         """
         Leela can invite Bender to an additional Project, Fry is notified
         """
-        leela, fry, bender = result
+        leela, fry, bender = account_members
 
         result = leela.new_project.invite(bender)
 
