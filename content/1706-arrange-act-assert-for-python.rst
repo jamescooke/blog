@@ -4,20 +4,18 @@ Arrange Act Assert pattern for Python developers
 :date: 2017-07-06 23:00
 :tags: language:python, topic:testing
 :category: Code
-:summary: The first in a series of posts about the Arrange Act Assert pattern
-          of testing with Python. This post introduces the pattern and its
-          constituent parts.
+:summary: This post introduces the Arrange Act Assert pattern of testing and
+          shows how it can be used in a Python context with Pytest.
 :scm_path: content/1706-arrange-act-assert-for-python.rst
 
-This is the first post in a series exploring the Arrange Act Assert pattern and
+This is the first of two posts exploring the Arrange Act Assert pattern and
 how to apply it to Python tests.
-
-The goal of the series is to present a recognisable and reusable test template
+It presents a recognisable and reusable test template
 following the Arrange Act Assert pattern of testing. In addition, I aim to
 present strategies for test writing and refactoring which I've developed over
 the last couple of years, both on my own projects and within teams.
 
-In this part I will introduce the Arrange Act Assert pattern and discuss its
+In this first part I will introduce the Arrange Act Assert pattern and discuss its
 constituent parts.
 
 
@@ -201,19 +199,18 @@ Guidelines
 * Do not use ``assert`` in the Arrange block. If you need to make an assertion
   about your arrangement, then this is a smell that your arrangement is too
   complicated and should be extracted to a fixture or setup function and tested
-  in its own right [#fixture]_.
+  in its own right.
 
-* Only prepare non-deterministic results not available after action [#nd]_.
+* Only prepare non-deterministic results not available after action.
 
 * The arrange section should not require comments. If you have a large
   arrangement in your tests which is complex enough to require detailed
   comments then consider:
 
-  - Extracting the comments into a multi-line docstring [#doc]_.
+  - Extracting the comments into a multi-line docstring.
 
   - Extracting the arrangement code into a fixture and testing that the fixture
-    is establishing the expected conditions as previously mentioned
-    [#fixture]_.
+    is establishing the expected conditions as previously mentioned.
 
 
 Act
@@ -276,7 +273,7 @@ Guidelines
 
 * Use simple blocks of assertions. If you find that you are repeatedly writing
   the same code to extract information from the SUT and perform assertions on
-  it, then consider extracting an assertion helper [#ah]_.
+  it, then consider extracting an assertion helper.
 
 
 The final test
@@ -297,55 +294,13 @@ Here's the example test in full:
         assert result is None
         assert greek == ['delta', 'gamma', 'beta', 'alpha']
 
-I hope that this introduction has been helpful and you will return for the next
-post in the series.
-
-Next in this series
--------------------
-
-I have not been able to cover all the common cases in the guide above. The
-following are planned topics for follow up posts:
-
-.. [#fixture] **Extraction of common or complicated arrangement code**
-
-    Fixtures should be extracted when arrangement code is complicated or
-    duplicated between tests. This post will explore how to extract arrangement
-    code and test it so that it can be used with certainty across the test
-    suite.
-
-    * See `AAA Part 2: Extracting Arrange code to make fixtures
-      </aaa-part-2-extracting-arrange-code-to-make-fixtures.html>`_.
-
-.. [#nd] **Non-deterministic data**
-
-    When data required for assertions is destroyed by the action being
-    tested, then arrangement must also prepare this data for use later.
-    Alternatively, the test might be restructured so that this data is
-    predictable or not required.
-
-.. [#doc] **Multi-line docstrings**
-
-    Although not covered here, docstrings can be multiple lines. Ideally every
-    test should be simple and compact enough that a one line docstring is
-    sufficient to describe the test. However this is not always the case and
-    sometimes a larger docstring is appropriate to help others understand the
-    test and the conditions that are required for the SUT.
-
-.. [#ah] **Assertion helpers**
-
-    In an ideal world, assertions would always be small and simple. However,
-    complex systems often require larger assertions. In this follow up post I
-    will explore strategies for extracting common assertion code and testing it
-    in its own right.
-
-Links will appear above when I complete these follow up posts.
-
-Don't miss out: `subscribe and receive an email when I post the next part of
-this series <http://eepurl.com/cVkaTj>`_.
-
 
 Thanks
 ------
+
+I hope that this introduction has been helpful and you will return for part 2:
+`AAA Part 2: Extracting Arrange code to make fixtures
+</aaa-part-2-extracting-arrange-code-to-make-fixtures.html>`_.
 
 Thanks to `Adam <https://adamj.eu/>`_ for reviewing this post and his helpful
 feedback.

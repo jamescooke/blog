@@ -251,14 +251,6 @@ For me this is an "OK" situation and if it turns out that the fixture should be
 adjusted then a fixture test can be created to facilitate that change under the
 usual RED, GREEN, REFACTOR cycle.
 
-Next in this series
--------------------
-
-Thanks for reading this post. Next in my series of AAA posts I will write about
-extraction of code from Assertion blocks to create assertion helpers.
-
-Don't miss out: `subscribe and receive an email when I post the next part of
-this series <http://eepurl.com/cVkaTj>`_.
 
 Happy testing!
 
