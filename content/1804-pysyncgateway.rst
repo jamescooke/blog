@@ -45,3 +45,5 @@ Learnings
   ``install_requires`` list, I created a special install test environment in ``tox.ini``.
   It installs the package with `no other requirements present <https://github.com/constructpm/pysyncgateway/blob/8e287e4271fcbb61886de11cdd0819b46e595ab1/tox.ini#L12>`_ and gave me added confidence that I'd captured the install
   requirements correctly.
+  
+* It's very easy to break documentation but having an RST linter really helps. I've added a step to the code linting which uses ``restructuredtext-lint`` to ensure that all RST is valid - this means that it's much more likely that Github and Read The Docs will render it as expected. 
