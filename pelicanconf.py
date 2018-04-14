@@ -16,7 +16,7 @@ DEFAULT_CATEGORY = 'ZZZ Misc...'
 STATIC_PATHS = ['images', 'docs']
 
 # Turn off all feeds
-FEED_ALL_ATOM = None
+# FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
