@@ -1,3 +1,13 @@
+Packaging checklist
+===================
+
+:date: 2018-05-21 19:00
+:tags: language:python
+:category: Code
+:summary: Pack your Python bags before you ship to PyPI land.
+:scm_path: content/1805-packaging-checklist.rst
+:status: draft
+
 Tox is great for testing packages
 ---------------------------------
 
