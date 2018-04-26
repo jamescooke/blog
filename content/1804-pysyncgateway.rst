@@ -59,9 +59,9 @@ clarified:
   code remains responsible for managing its own tests conditions.
 
 * Synchronisation of Django's User object with Sync Gateway's User objects -
-  Responsibility of API server. The library is naive to the application that is
+  Responsibility of API server. The library is oblivious to the application that is
   using it - in the same way that the `requests libary
-  <http://docs.python-requests.org/en/master/>`_ is naive to the fact that is
+  <http://docs.python-requests.org/en/master/>`_ is oblivious to the fact that is
   it being used by ``pysyncgateway`` to communicate with Sync Gateway.
 
 
