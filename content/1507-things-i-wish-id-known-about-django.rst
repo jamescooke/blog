@@ -11,7 +11,7 @@ Things I wish I'd known about Django
 
 
 This month at `The London Django meetup
-<http://www.meetup.com/The-London-Django-Meetup-Group/events/223297765/>`_ I
+<https://www.meetup.com/The-London-Django-Meetup-Group/events/223297765/>`_ I
 gave a talk about some of the things I wish I'd known about Django (before I
 started).
 

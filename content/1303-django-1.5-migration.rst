@@ -8,7 +8,7 @@ Migrating from Django 1.4 to 1.5 - Lessons learned
 :scm_path: content/1303-django-1.5-migration.rst
 
 From `Ryan Kaskel <https://twitter.com/ryankask/>`_'s talk at `Django London
-<http://www.meetup.com/The-London-Django-Meetup-Group/>`_ in November last
+<https://www.meetup.com/The-London-Django-Meetup-Group/>`_ in November last
 year, I guessed that upgrading the `Action Guide code
 <https://github.com/jamescooke/actionguide>`_ from Django 1.4 to 1.5 might have
 created some issues with users (`user models have changed in Django 1.5 to
@@ -51,7 +51,7 @@ a single bit of debugging output it through `wsgi` on WebFaction - just a 500
 error on every page load when I took the site out of debug mode.
 
 I was so confused that I posted `this question on StackOverflow
-<http://stackoverflow.com/questions/15605185/django-1-5-url-deprecation-warning-causes-500-error-in-webfaction-apache-wsgi/15626247>`_,
+<https://stackoverflow.com/questions/15605185/django-1-5-url-deprecation-warning-causes-500-error-in-webfaction-apache-wsgi/15626247>`_,
 thinking the problem was `url` warnings being shown as errors and halting the
 `wsgi`. In the end, just adding `ALLOWED_HOSTS` fixed everything up great.
 

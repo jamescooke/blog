@@ -35,10 +35,17 @@ achieve your goal.
 
 Hope that's helpful!
 
-Thanks to `Victor at ustwo London <http://ustwo.com/>`_ for asking me to talk
+Thanks to `Victor at ustwo London <https://www.ustwo.com/>`_ for asking me to talk
 at their Tech Thursday.
 
 Read more on `Seinfeld Technique
-<http://lifehacker.com/281626/jerry-seinfelds-productivity-secret>`_ and
-`Pomodoro Technique <http://en.wikipedia.org/wiki/Pomodoro_Technique>`_. I'm
+<https://lifehacker.com/281626/jerry-seinfelds-productivity-secret>`_ and
+`Pomodoro Technique <https://en.wikipedia.org/wiki/Pomodoro_Technique>`_. I'm
 currently using `tomatoist <http://tomatoi.st/>`_ as my online pomodoro timer.
+
+Update 11/05/2018: I've been using a local install of this `HTML Pomodoro timer
+<https://github.com/bastibe/pomodoro-timer>`_ for the last couple of years now.
+Output the JSON report that it creates into a couple of processors that count
+my hours and measure my efficiency. This means that I can ensure that I'm
+working the right number of hours per week, but also taking a good number of
+breaks.

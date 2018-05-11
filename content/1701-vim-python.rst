@@ -125,7 +125,7 @@ along with FZF, they have been a revelation. I've been using `Exhuberant Ctags
 
 TPope has published a neat trick of stashing the ``ctags`` script inside the
 ``.git`` folder, outlined in `his blog post here
-<http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html>`_. My version
+<https://tbaggery.com/2011/08/08/effortless-ctags-with-git.html>`_. My version
 of the script is inside my `git hooks configuration
 <https://github.com/jamescooke/dotfiles/blob/master/store/.git_template/hooks/ctags.sh>`_
 and works in combination with my `ctags config

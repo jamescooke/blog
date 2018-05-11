@@ -1,0 +1,17 @@
+SHELL?=/bin/bash
+venv_folder=venv
+
+# If venv_folder does not exist:
+ifneq "$(wildcard $(venv_folder) )" ""
+	bin_prefix=$(venv_folder)/bin/
+endif
+
+# Make a python 2.7 virtual environment at venv
+.PHONY: venv
+venv:
+	virtualenv $(venv_folder) --python=python3
+	$(venv_folder)/bin/pip install -U pip
+
+.PHONY: install
+install:
+	$(bin_prefix)pip install -r requirements.txt

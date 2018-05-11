@@ -6,7 +6,7 @@ Pyramid London talk - Pyramid Router
 :tags: topic:pyramid
 :summary: Talk at the first Pyramid London meetup about the Pyramid Router, URL Traversal and Dispatch.
 
-Our first `Pyramid London meetup <http://www.meetup.com/The-London-Pyramid-Group/events/114457692/>`_ was kindly hosted at `Skills Matter <http://skillsmatter.com>`_, who have `posted the video of my talk on their page for the meetup <http://skillsmatter.com/podcast/home/routing-traversal-and-url-dispatch>`_.
+Our first Pyramid London meetup was kindly hosted at `Skills Matter <https://skillsmatter.com/>`_, who have `posted the video of my talk on their page for the meetup <https://skillsmatter.com/skillscasts/4189-routing-traversal-and-url-dispatch>`_.
 
 .. raw:: html
 

@@ -7,4 +7,4 @@ Sorry that page could not be found.
 
 `Please see my home page for the latest content </>`_.
 
-`Tweet me <https://twitter.com/intent/user?screen_name=jamesfublo>`_ if something's gone wrong with the internet.
+`Raise an issue on GitHub <https://github.com/jamescooke/blog/issues>`_ if you have found something wrong / missing. Thanks.

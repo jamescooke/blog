@@ -12,7 +12,7 @@ Git: To squash or not to squash?
 It started with a Tweet
 -----------------------
 
-Over the weekend I spotted a tweet from `Oliver <http://oli.me.uk/>`_...
+Over the weekend I spotted a tweet from `Oliver <https://oli.me.uk/>`_...
 
 .. raw:: html
 
@@ -30,7 +30,7 @@ Then, as part of our following `conversation <https://twitter.com/OliverCaldwell
 
 .. raw:: html
 
-    <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/OliverCaldwell">@OliverCaldwell</a> This is how I see it. Better to keep the direct route rather than the &quot;how we got here&quot;. <a href="http://t.co/X5FZQ1euoU">pic.twitter.com/X5FZQ1euoU</a></p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/statuses/402407321265274881">November 18, 2013</a></blockquote>
+    <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/OliverCaldwell">@OliverCaldwell</a> This is how I see it. Better to keep the direct route rather than the &quot;how we got here&quot;. <a href="https://t.co/X5FZQ1euoU">pic.twitter.com/X5FZQ1euoU</a></p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/statuses/402407321265274881">November 18, 2013</a></blockquote>
     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 But...
@@ -84,7 +84,7 @@ if required.
 
 So let's explore how much history is actually kept...
 
-`From the docs <http://git-scm.com/docs/git-reflog>`_:
+`From the docs <https://git-scm.com/docs/git-reflog>`_:
 
     Reflog is a mechanism to record when the tip of branches are updated.
 
@@ -431,7 +431,7 @@ A manual clean
 Just for experimention, I tried to clean the repository of the `B`, `C` and `D`
 hanging commits. This was challenging because my default settings prevented
 reflog and `gc` from performing the clean, however I found `this SO answer
-helpful <http://stackoverflow.com/a/14995269/1286705>`_.
+helpful <https://stackoverflow.com/a/14995269/1286705>`_.
 
 .. code-block:: bash
 

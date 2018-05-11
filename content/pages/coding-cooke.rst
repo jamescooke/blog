@@ -64,8 +64,8 @@ Work related links
 
 * `GitHub <https://github.com/jamescooke>`_
 
-* `Stack Overflow profile <http://stackoverflow.com/users/1286705/jamesc>`_
+* `Stack Overflow profile <https://stackoverflow.com/users/1286705/jamesc>`_
 
-* `Stack Overflow developer story <http://stackoverflow.com/story/jamescooke>`_
+* `Stack Overflow developer story <https://stackoverflow.com/story/jamescooke>`_
 
 * `PDF version of my CV <{filename}/docs/james_cooke_cv.pdf>`_

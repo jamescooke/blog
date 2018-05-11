@@ -19,7 +19,7 @@ interview:
     another make at least one of them contain exactly 4 oz of water.**
 
 *Source: A. Bogomolny,* `3 Glasses Puzzle from Interactive Mathematics
-Miscellany and Puzzles <http://www.cut-the-knot.org/water.shtml>`_, *Accessed
+Miscellany and Puzzles <https://www.cut-the-knot.org/water.shtml>`_, *Accessed
 09 January 2015*
 
 A solution using search, not algebra
@@ -75,7 +75,7 @@ A Python 3 sketch
 =================
 
 I've written some Python to solve this problems using a type of depth first
-`Tree Traversal <http://en.wikipedia.org/wiki/Tree_traversal>`_ and tree
+`Tree Traversal <https://en.wikipedia.org/wiki/Tree_traversal>`_ and tree
 generation strategy.
 
 The `code repository is available on GitHub
@@ -108,7 +108,7 @@ has three main properties:
   seen during the search.
 
 The Game's ``children`` property makes the Game class a `recursive data
-structure <http://en.wikipedia.org/wiki/Recursive_data_type>`_ because it can
+structure <https://en.wikipedia.org/wiki/Recursive_data_type>`_ because it can
 contain other instances of Games. This opens the door to the recursive search
 described below.
 
@@ -136,7 +136,7 @@ search, so here it is in full, comments removed.
         return self.solvable_child()
 
 There are two base cases to this `recursive function
-<http://en.wikipedia.org/wiki/Recursion_(computer_science)#Recursive_functions_and_algorithms>`_.
+<https://en.wikipedia.org/wiki/Recursion_(computer_science)#Recursive_functions_and_algorithms>`_.
 
 * ``self.is_goal()`` : Goal has been reached. This Game contains a Cup that
   has 4 oz of water, success, a goal state has been found! Return ``True``
@@ -164,7 +164,7 @@ Here is the helper function without comments:
 There are two "interesting" features of this function:
 
 * It operates like a `short circuited OR
-  <http://en.wikipedia.org/wiki/Short-circuit_evaluation>`_ reduction. This
+  <https://en.wikipedia.org/wiki/Short-circuit_evaluation>`_ reduction. This
   means that as soon as a solvable child is found, it stops searching and
   returns ``True``.
 * It has been split out from ``Game.is_solvable`` to assist with unit testing.
@@ -188,7 +188,7 @@ As much functional style as possible
 ------------------------------------
 
 Originally I intended to write this sketch with as much `functional style code
-<http://en.wikipedia.org/wiki/Functional_programming>`_ as possible. However,
+<https://en.wikipedia.org/wiki/Functional_programming>`_ as possible. However,
 there were certainly some functions that we not possible to achieve this
 without some serious hacking, and so I chose to keep those functions as simple
 and testable as possible.
@@ -246,12 +246,12 @@ for intelligence. In this example, the code has searched all possible Game
 states for one that meets the success criteria.
 
 My first introduction to this idea was via `Donald Michie
-<http://www.theguardian.com/science/2007/jul/10/uk.obituaries1>`_'s  MENACE
+<https://www.theguardian.com/science/2007/jul/10/uk.obituaries1>`_'s  MENACE
 machine. This was a noughts-and-crosses playing machine made from matchboxes.
 It used a very simple algorithm, which is effectively a weighted graph, to
 "learn" to play the game. `Uppsala University has an interesting project
 outline for building a code version
-<http://www.it.uu.se/edu/course/homepage/ai/menace>`_.
+<https://www.it.uu.se/edu/course/homepage/ai/menace>`_.
 
 Grab me on `Twitter <https://twitter.com/jamesfublo/>`_ to share any thoughts.
 
