@@ -24,9 +24,9 @@ What is Arrange Act Assert?
 
 The "Arrange-Act-Assert" (also AAA and 3A) pattern of testing was `observed and
 named by Bill Wake in 2001
-<http://xp123.com/articles/3a-arrange-act-assert/>`_. I first came across it in
+<https://xp123.com/articles/3a-arrange-act-assert/>`_. I first came across it in
 `Kent Beck's book "Test Driven Development: By Example"
-<http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ and I
+<https://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ and I
 spoke about it at `PyConUK 2016 <{filename}/1609-aaa-pyconuk.rst>`_.
 
 The pattern focuses each test on a single action. The advantage of this focus

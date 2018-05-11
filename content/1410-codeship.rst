@@ -16,11 +16,11 @@ Background
 In September I was introduced to `Codeship <https://www.codeship.io/>`_ at a
 presentation by `Paul Love <http://anglepoised.com/>`_.  These are some of the
 learnings I have from using their hosted service primarily for `Continuous
-Integration <http://en.wikipedia.org/wiki/Continuous_integration>`_ for the
+Integration <https://en.wikipedia.org/wiki/Continuous_integration>`_ for the
 last couple of weeks on a client project.
 
 This post isn't about advantages and disadvantages of CI or `Continuous
-Delivery <http://en.wikipedia.org/wiki/Continuous_delivery>`_, but more focused
+Delivery <https://en.wikipedia.org/wiki/Continuous_delivery>`_, but more focused
 on Codeship's offering currently, compared to other CI services I've used over
 the last 6 months or so.
 
@@ -135,7 +135,7 @@ results for the current Django project I'm building on Codeship:
 
 .. raw:: html
 
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
 
 .. math::
 

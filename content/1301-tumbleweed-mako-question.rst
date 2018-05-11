@@ -8,9 +8,9 @@ Got the Stack Overflow tumbleweed badge for Mako filters question
 
 Last week I posted a question on Stack Overflow - "`Mako template filter
 ordering
-<http://stackoverflow.com/questions/14215591/mako-template-filter-ordering>`_"
+<https://stackoverflow.com/questions/14215591/mako-template-filter-ordering>`_"
 - this week it earned the `Tumbleweed badge
-<http://stackoverflow.com/badges/63/tumbleweed>`_.
+<https://stackoverflow.com/help/badges/63/tumbleweed>`_.
 
 It's always a little concerning when libraries and toolkits you're using in a
 project have forums and message boards that are a little too quiet - is there a
@@ -23,7 +23,7 @@ comments like this about the library you're being asked to use:
           Don't use Mako. It's horrible. [...]"
 
 You should listen to a `Stack Overflow moderator who has 93K points
-<http://stackoverflow.com/questions/10870379/is-there-an-equivalent-to-django-template-filters-in-mako>`_
+<https://stackoverflow.com/questions/10870379/is-there-an-equivalent-to-django-template-filters-in-mako>`_
 at time of writing right?
 
 Meanwhile... I haven't found the reason for the template filter ordering being

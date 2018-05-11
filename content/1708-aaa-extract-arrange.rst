@@ -25,7 +25,7 @@ Background
 * When I mention "code extraction" I'm primarily referring to the Extract
   Method [#em]_ of refactoring. `Kent Beck's book "Test Driven Development: By
   Example"
-  <http://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ really
+  <https://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ really
   turned me on to the value in eliminating duplicated code between tests and
   between tests and the SUT [#sut]_.
 

@@ -10,7 +10,7 @@ Irregular Vim
 :scm_path: content/1508-irregular-vim.rst
 
 My frustrations with Vim arise when it makes actions that are unexpected. At
-`Vim London <http://www.meetup.com/Vim-London/events/223784891/>`_ I presented
+`Vim London <https://www.meetup.com/Vim-London/events/223784891/>`_ I presented
 some of my "pet misbehaviours" - these are the ones that affect my regular use
 of Vim.
 
@@ -33,7 +33,7 @@ because:
 My fear is that if Vim is hard to learn it will be overlooked by new users and
 it will cease to exist in the future. I think we should all be working on the
 maxim that Drew has put on the `Vim London meetup page
-<http://www.meetup.com/Vim-London/>`_:
+<https://www.meetup.com/Vim-London/>`_:
 
     Use Vim better, make Vim better.
 
@@ -120,10 +120,10 @@ I would like to improve these misbehaviours and make them more regular. My hope
 is that, if this could be achieved, it would make Vim's interface even more
 great and also easier to learn.
 
-The main thing for me going forwards is to use `Neovim <http://neovim.io/>`_. A
+The main thing for me going forwards is to use `Neovim <https://neovim.io/>`_. A
 project that is open to improving how Vim works. Here's a great post about `why
 Neovim is better than Vim
-<http://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/>`_ - thanks
+<https://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/>`_ - thanks
 `Geoff <https://twitter.com/ggreer>`_.
 
 From there I will check out how many of these irregularities can be improved

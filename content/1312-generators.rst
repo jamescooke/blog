@@ -67,7 +67,7 @@ Generators are iterators
 Generators "provide a convenient way to implement the iterator protocol".
 
 In Python, an `iterator
-<http://docs.python.org/2.7/library/stdtypes.html#typeiter>`_ provides two key
+<https://docs.python.org/2.7/library/stdtypes.html#typeiter>`_ provides two key
 functions, `__iter__` and `next`, so a generator itself must provide these two
 functions:
 

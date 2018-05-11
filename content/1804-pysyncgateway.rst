@@ -87,7 +87,7 @@ Document all the things
 -----------------------
 
 The documentation built by `sphinx <http://www.sphinx-doc.org/en/master/>`_ and
-hosted on `Read The Docs <http://pysyncgateway.readthedocs.io/en/stable/>`_ is
+hosted on `Read The Docs <https://pysyncgateway.readthedocs.io/en/stable/>`_ is
 great. I've found it much better than reading docs via a code editor or
 ``ipython`` and end up using the RTD site as the main point of reference.
 

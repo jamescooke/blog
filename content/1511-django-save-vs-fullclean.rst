@@ -49,7 +49,7 @@ Why is it like this?
 The `Django documentation of Validating Objects
 <https://docs.djangoproject.com/en/dev/ref/models/instances/#validating-objects>`_
 is quoted in `Django ticket #13100
-<http://code.djangoproject.com/ticket/13100>`_ as saying:
+<https://code.djangoproject.com/ticket/13100>`_ as saying:
 
   Note that full_clean() will NOT be called automatically when you call your
   model's save() method. You'll need to call it manually if you want to run
@@ -86,7 +86,7 @@ More warnings I guess:
   ``full_clean`` raises a ``ValidationError`` during migration.
 
 * Check out posts like `Why I sort of dislike Django
-  <http://nando.oui.com.br/2014/04/04/why_i_sort_of_dislike_django.html>`_. It
+  <http://dev.nando.audio/2014/04/04/why_i_sort_of_dislike_django.html>`_. It
   mentions things like backwards compatibility and the ``save`` function.
 
 Finally

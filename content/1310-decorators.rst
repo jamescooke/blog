@@ -95,7 +95,7 @@ someone else who's improving their knowledge of decorators too.
             return func(*args, **kwargs)
         return wrapper
 
-  Found on `Improve your Python <http://www.jeffknupp.com/blog/2013/11/29/improve-your-python-decorators-explained/>`_.
+  Found on `Improve your Python <https://jeffknupp.com/blog/2013/11/29/improve-your-python-decorators-explained/>`_.
 
 
 * When unit testing decorators, one strategy can be to manually call the

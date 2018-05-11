@@ -6,7 +6,7 @@ Password cases and test fixes on pyramid_simpleauth
 :category: GitHub Contributions
 :summary: Updates to pyramid_simpleauth to allow for uppercase passwords and some bug fixes.
 
-At `Quibly <http://quib.ly>`_ we're using Pyramid at the centre of a Python framework. Providing user functionality is the `pyramid_simpleauth <https://github.com/thruflo/pyramid_simpleauth>`_ library.
+At Quibly we're using Pyramid at the centre of a Python framework. Providing user functionality is the `pyramid_simpleauth <https://github.com/thruflo/pyramid_simpleauth>`_ library.
 
 While writing integration tests before we put the site live, I found that my test users we not able to authenticate with their testing passwords (usually just a simple string like 'Password'). Digging inside the simpleauth library, I found some fixes necessary to how cases are handled by the lib - plus also fixed some doctests while I was at it.
 

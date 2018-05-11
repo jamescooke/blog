@@ -52,7 +52,7 @@ amount that you are paid:
 
 * In the UK, your employer pays an employment tax - `Employers' National
   Insurance Contributions
-  <http://www.hmrc.gov.uk/payerti/getting-started/ni-basics.htm#2>`_.
+  <https://www.gov.uk/national-insurance-rates-letters#2>`_.
 
 * Your employer pays overheads as part of your employment which you might not
   be exposed to. The cost of your equipment, heating and lighting your work
@@ -73,7 +73,7 @@ for someone on an hourly wage - usually double time or time and a half.
 
 If you're in the UK, more free time will be taken up managing a tax-return,
 paying `HMRC for additional National Insurance Contributions
-<http://www.hmrc.gov.uk/working/intro/selfemployed.htm>`_, invoicing and
+<https://www.gov.uk/set-up-sole-trader>`_, invoicing and
 keeping records. You need to ensure that this time is covered in some way by
 the income from your freelance work.
 

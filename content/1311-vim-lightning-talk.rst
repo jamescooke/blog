@@ -15,7 +15,7 @@ So if we're investing so much time and energy in learning this language, then
 why not apply it to more tasks than just editing files?
 
 In this five minute lighting talk I gave at `Vim London
-<http://www.meetup.com/Vim-London/>`_ this week, I delved into some of the benefits
+<https://www.meetup.com/Vim-London/>`_ this week, I delved into some of the benefits
 and issues with using vi-nature for more than just editing.
 
 .. raw:: html
@@ -24,10 +24,10 @@ and issues with using vi-nature for more than just editing.
   
 The feedback after the talk was great - here are my take-aways:
 
-* Check out `uzbl <http://www.uzbl.org/>`_ - it provides an interface layer
+* Check out `uzbl <https://www.uzbl.org/>`_ - it provides an interface layer
   that can be programmed to different keybindings. Thanks Nestor.
 
-* Check out `Awesome Window Manager <http://awesome.naquadah.org/>`_ because it's completely operational without mouse. Thanks Nestor.
+* Check out `Awesome Window Manager <https://awesomewm.org/>`_ because it's completely operational without mouse. Thanks Nestor.
 
 * Write a blog post about 'vi-nature' because there's not much about it on the web - Yes I will do this, thanks for the suggestion Max.
 
