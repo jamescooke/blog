@@ -1,7 +1,7 @@
 # jamescooke.info blog
 
 This repository contains content and site generation scripts for my blog at
-http://jamescooke.info/
+https://jamescooke.info
 
 ## Blog post comments
 
@@ -9,7 +9,7 @@ My blog doesn't run a commenting system, but feedback and conversation are very
 welcome. There are three main channels:
 
 * Drop me an email on `hi AT jamescooke DOT info`.
-* [Tweet me](https://twitter.com/intent/user?screen_name=jamesfublo).
+* ~~[Tweet me](https://twitter.com/intent/user?screen_name=jamesfublo)~~ Twitter is deprecated.
 * Drop a github comment on the content. All blog posts are in the [content
     folder](content). Alternatively raise an Issue and I'll reply as soon as I
     can.
@@ -70,7 +70,7 @@ Requirements are managed with ``pip-tools``.
 # License
 
 Content in this repository is covered by the same license as the content when
-published in the blog at [jamescooke.info](http://jamescooke.info/).
+published in the blog at [jamescooke.info](https://jamescooke.info).
 
 Licensed under [Creative Commons Attribution-ShareAlike 3.0 Unported
-License](http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB).
+License](https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB).
