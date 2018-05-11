@@ -36,17 +36,16 @@ Make an output folder and then set up the virtualenv.
 ```sh
 cd blog
 mkdir output
-virtualenv venv --python=python3
-. venv/bin/activate
-pip install -r requirements.txt
+make -f Bakefile venv
+make -f Bakefile install
 ```
 
 ## Writing and testing
 
-While **still in the virtualenv**, build the HTML and run dev server.
+While in virtualenv, run dev server.
 
 ```sh
-make html
+. venv/bin/activate
 make devserver
 ```
 
