@@ -19,7 +19,7 @@ Previous work
 
 My name is James, and I was previously an owner and a director of Fublo.
 
-`Mark <http://www.theluckystrike.co.uk/>`_, `Oliver <http://oli.me.uk/>`_ and I
+`Mark <https://www.theluckystrike.co.uk/>`_, `Oliver <https://oli.me.uk/>`_ and I
 did great work for clients like Fallon London, Time Out and We Are Social.
 
 
