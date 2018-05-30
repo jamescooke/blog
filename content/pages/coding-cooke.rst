@@ -1,12 +1,10 @@
 Coding Cooke
 ============
 
-All my contracting work goes through Coding Cooke Ltd. Founded in 2013, it's
-the third company I've been Director of.
+All my contracting work goes through Coding Cooke Ltd, established in 2013.
 
-.. image:: |filename|/images/scoota_work.jpg
-    :alt: James Cooke working on Amazon Redshift warehouse designs while at
-        Scoota.
+.. image:: |filename|/images/whiteboard.jpg
+    :alt: James Cooke at a whiteboard
 
 
 Web development
@@ -26,9 +24,6 @@ roles, from specification and design, to implementation, management and
 testing. A full breakdown is available on my `CV
 <{filename}/docs/james_cooke_cv.pdf>`_.
 
-Coding Cooke is part of a Brighton-based tribe of creative micro-businesses
-called `Studio Awkward <https://studioawkward.co.uk>`_.
-
 
 Contact
 -------
@@ -44,19 +39,17 @@ Contact
 
     Coding Cooke Ltd
 
-    Studio Awkward
+    Bond Street Studios
 
-    68 Middle Street
+    18 Bond Street
 
-    Brighton BN1 1AL
+    Brighton BN1 1RD
 
 
 Coding Cooke elsewhere on the web
 ---------------------------------
 
 * `Companies House <https://beta.companieshouse.gov.uk/company/08820873>`_
-
-* `Studio Awkward <https://studioawkward.co.uk>`_
 
 
 Work related links
