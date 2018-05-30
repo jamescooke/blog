@@ -18,9 +18,6 @@ very welcome. There are three main channels:
 
   **Note:** No recruitment agency emails please.
 
-* Tweet me `@jamesfublo
-  <https://twitter.com/intent/user?screen_name=jamesfublo>`_.
-
 * Comment on the content via GitHub. All blog posts are in the `content folder
   <https://github.com/jamescooke/blog/tree/master/content>`_. Alternatively
   raise an `Issue on GitHub <https://github.com/jamescooke/blog/issues>`_ and
