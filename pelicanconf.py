@@ -25,7 +25,6 @@ AUTHOR_FEED_RSS = None
 MENUITEMS = [
     ('Home', '/'),
     ('About', '/pages/hello-my-name-is-james.html'),
-    ('Coding Cooke', '/pages/coding-cooke.html'),
     ('Atom Feed', '/feeds/all.atom.xml'),
 ]
 DISPLAY_PAGES_ON_MENU = False
