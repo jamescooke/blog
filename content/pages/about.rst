@@ -5,14 +5,29 @@ Thanks for visiting my site - the content here is primarily technical.
 
 I currently work as a back end developer for `Construct <https://construct.pm/>`_.
 
-I previously worked as a `web development contractor </pages/coding-cooke.html>`_.
+.. image:: |filename|/images/whiteboard.jpg
+    :alt: James Cooke at a whiteboard
+
+
+Tech
+----
+
+Python is my programming language of choice. I've worked with other programming
+languages, but Python has been my favourite for about the last five years.
+
+I love Linux. I've used other operating systems, but for the last 20 years I've
+been using one or another Linux distribution at home and work.
+
+At work, I usually focus on server-side development, so day to day I'm
+predominantly developing code that creates, validates and manages data, usually
+serving it to a web or mobile app.
 
 
 Contact
 -------
 
 This site does not run a commenting system, but feedback and conversation are
-very welcome. There are three main channels:
+very welcome:
 
 * Drop me an email on ``hi AT jamescooke DOT info``.
 
