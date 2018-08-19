@@ -81,6 +81,10 @@ Resources
   used extract method as defined by Martin Fowler. See also `Extract Variable
   <https://refactoring.com/catalog/extractVariable.html>`_.
 
+    **Update August 2018:** Check out `flake8-aaa
+    <https://flake8-aaa.readthedocs.io/en/stable/>`_ - a Flake8 plugin that
+    makes it easier to write tests that follow the Arrange Act Assert pattern.
+
 Finally
 -------
 

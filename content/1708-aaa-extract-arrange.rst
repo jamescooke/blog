@@ -251,9 +251,14 @@ For me this is an "OK" situation and if it turns out that the fixture should be
 adjusted then a fixture test can be created to facilitate that change under the
 usual RED, GREEN, REFACTOR cycle.
 
+flake8-aaa
+----------
+
+Check out `flake8-aaa <https://flake8-aaa.readthedocs.io/en/stable/>`_ - a
+Flake8 plugin that makes it easier to write tests that follow the Arrange Act
+Assert pattern.
 
 Happy testing!
-
 
 Tiny glossary
 -------------
