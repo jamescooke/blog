@@ -484,3 +484,17 @@ pushed to `origin`. It's this history that could save your bacon one day - so
 consider backing it up!
 
 Happy source code management!
+
+Update 23/08/2018
+-----------------
+
+See also `this comment on GitHub
+<https://github.com/jamescooke/blog/issues/17>`_ from Curt J. Sampson with some
+great points about when not to squash. One helpful excerpt:
+
+    I think of a set of commits I'm proposing for master branch as a story I'm
+    telling to the other developers. Make the story as clear as possible,
+    divided up into reasonably small chunks where you can do so. This will make
+    other developers love, rather than hate, reviewing your code.
+
+Thanks Curt - spread the love!
