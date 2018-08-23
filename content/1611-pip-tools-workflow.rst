@@ -330,9 +330,10 @@ planned:
 
     $ make -n all
 
+Happy requirements packing!
 
-Update Nov 21
--------------
+Update 21/11/2016
+-----------------
 
 For more information on the advantages and disadvantages of setting recursive
 requirements to point at ``.in`` files or ``.txt`` files please see `this Issue
@@ -346,4 +347,13 @@ requirements when ``.in`` files are used in recursion which does not happen
 when ``.txt`` files are used. It's for this reason, that I continue to
 recommend pointing at ``.txt`` files with ``-r``.
 
-Happy requirements packing!
+Update 30/06/2017
+-----------------
+
+See also `this comment on GitHub
+<https://github.com/jamescooke/blog/issues/9>`_ from Devin Fee for a
+``Makefile`` which:
+
+    ... corrects the annoyance ``-e file:///Users/dfee/code/zebra -> -e .``,
+    making the file useful for users who don't develop / deploy from your
+    directory.
