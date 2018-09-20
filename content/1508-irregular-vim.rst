@@ -145,5 +145,4 @@ Thanks
   do a high quality presentation from Vim. (I hope that one day I'll be able to
   meet your standard Kris).
 
-And thanks to you for reading! Grab me on `Twitter
-<https://twitter.com/jamesfublo/>`_ with any feedback.
+And thanks to you for reading!

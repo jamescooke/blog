@@ -54,6 +54,4 @@ Summary
 I wish I'd jumped into Django sooner. If you're thinking about transitioning to
 it, see what you can do today. I think it pays back in the long run.
 
-Grab me on `Twitter <https://twitter.com/jamesfublo/>`_ to share any thoughts.
-
 Thanks for reading.
