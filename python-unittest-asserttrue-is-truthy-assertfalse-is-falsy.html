@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Exploring Python’s unittest module boolean assert methods and how they can be misleading in certain situations, but not if you RTFM of course.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Python unittest: assertTrue is truthy, assertFalse is falsy // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</h1>
+                <p class="postdate" title="2016-05-12T14:00:00+01:00">- Posted May 12, 2016</p>
+            </header>
+            <div class='article-content'>
+                <p>In this post, I explore the differences between the unittest boolean assert
+methods <tt class="docutils literal">assertTrue</tt> and <tt class="docutils literal">assertFalse</tt> and the <tt class="docutils literal">assertIs</tt> identity&nbsp;assertion.</p>
+<div class="section" id="definitions">
+<h2>Definitions</h2>
+<p>Here&#8217;s what the <a class="reference external" href="https://docs.python.org/3/library/unittest.html#unittest.TestCase.assertTrue">unittest module documentation</a>
+currently notes about <tt class="docutils literal">assertTrue</tt> and <tt class="docutils literal">assertFalse</tt>, with the appropriate
+code&nbsp;highlighted:</p>
+<blockquote>
+<p><tt class="docutils literal">assertTrue(expr, msg=None)</tt></p>
+<p><tt class="docutils literal">assertFalse(expr, msg=None)</tt></p>
+<blockquote>
+<p>Test that <em>expr</em> is true (or&nbsp;false).</p>
+<p>Note that this is equivalent&nbsp;to</p>
+<div class="highlight"><pre><span></span><span class="nb">bool</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span>
+</pre></div>
+<p>and not&nbsp;to</p>
+<div class="highlight"><pre><span></span><span class="n">expr</span> <span class="ow">is</span> <span class="bp">True</span>
+</pre></div>
+<p>(use <tt class="docutils literal">assertIs(expr, True)</tt> for the&nbsp;latter).</p>
+</blockquote>
+</blockquote>
+<p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Glossary/Truthy">Mozilla Developer Network defines truthy</a>&nbsp;as:</p>
+<blockquote>
+A value that translates to true when evaluated in a Boolean context.</blockquote>
+<p>In Python this is equivalent&nbsp;to:</p>
+<div class="highlight"><pre><span></span><span class="nb">bool</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span>
+</pre></div>
+<p>Which exactly matches what <tt class="docutils literal">assertTrue</tt> is testing&nbsp;for.</p>
+<p>Therefore the documentation already indicates <tt class="docutils literal">assertTrue</tt> is truthy and
+<tt class="docutils literal">assertFalse</tt> is falsy. These assertion methods are creating a <tt class="docutils literal">bool</tt> from
+the received value and then evaluating it. It also suggests that we really
+shouldn&#8217;t use <tt class="docutils literal">assertTrue</tt> or <tt class="docutils literal">assertFalse</tt> for very much at&nbsp;all.</p>
+</div>
+<div class="section" id="what-does-this-mean-in-practice">
+<h2>What does this mean in&nbsp;practice?</h2>
+<p>Let&#8217;s use a very simple example - a function called <tt class="docutils literal">always_true</tt> that
+returns <tt class="docutils literal">True</tt>. We&#8217;ll write the tests for it and then make changes to the
+code and see how the tests&nbsp;perform.</p>
+<p>Starting with the tests, we&#8217;ll have two tests. One is &#8220;loose&#8221;, using
+<tt class="docutils literal">assertTrue</tt> to test for a truthy value. The other is &#8220;strict&#8221; using
+<tt class="docutils literal">assertIs</tt> as recommended by the&nbsp;documentation:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">func</span> <span class="kn">import</span> <span class="n">always_true</span>
+
+
+<span class="k">class</span> <span class="nc">TestAlwaysTrue</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        always_true returns a truthy value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">always_true</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_assertIs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        always_true returns True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">always_true</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p>Here&#8217;s the code for our simple function in <tt class="docutils literal">func.py</tt>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">always_true</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    I&#39;m always True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</pre></div>
+<p>When run, everything&nbsp;passes:</p>
+<pre class="literal-block">
+always_true returns True ... ok
+always_true returns a truthy value ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+OK
+</pre>
+<p>Happy&nbsp;days!</p>
+<p>Now, &#8220;someone&#8221; changes <tt class="docutils literal">always_true</tt> to the&nbsp;following:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">always_true</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    I&#39;m always True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s1">&#39;True&#39;</span>
+</pre></div>
+<p>Instead of returning <tt class="docutils literal">True</tt> (boolean), it&#8217;s now returning string <tt class="docutils literal">'True'</tt>.
+(Of course this &#8220;someone&#8221; hasn&#8217;t updated the docstring - we&#8217;ll raise a ticket&nbsp;later.)</p>
+<p>This time the result is not so&nbsp;happy:</p>
+<pre class="literal-block">
+always_true returns True ... FAIL
+always_true returns a truthy value ... ok
+
+======================================================================
+FAIL: always_true returns True
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File &quot;/tmp/assertttt/test.py&quot;, line 22, in test_is_true
+    self.assertIs(result, True)
+AssertionError: 'True' is not True
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+FAILED (failures=1)
+</pre>
+<p>Only <em>one</em> test failed! This means <tt class="docutils literal">assertTrue</tt> gave us a false-positive. It
+passed when it shouldn&#8217;t have. It&#8217;s lucky we wrote the second test with
+<tt class="docutils literal">assertIs</tt>.</p>
+<p>Therefore, just as we learned from the manual, to keep the functionality of
+<tt class="docutils literal">always_true</tt> pinned tightly the stricter <tt class="docutils literal">assertIs</tt> should be used rather
+than <tt class="docutils literal">assertTrue</tt>.</p>
+</div>
+<div class="section" id="use-assertion-helpers">
+<h2>Use assertion&nbsp;helpers</h2>
+<p>Writing out <tt class="docutils literal">assertIs</tt> to test for <tt class="docutils literal">True</tt> and <tt class="docutils literal">False</tt> values is not too
+lengthy. However, if you have a project in which you often need to check that
+values are exactly <tt class="docutils literal">True</tt> or exactly <tt class="docutils literal">False</tt>, then you can make yourself
+the <tt class="docutils literal">assertIsTrue</tt> and <tt class="docutils literal">assertIsFalse</tt> assertion&nbsp;helpers.</p>
+<p>This doesn&#8217;t save a particularly large amount of code, but it does improve
+readability in my&nbsp;opinion.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">assertIsTrue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">assertIsFalse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>In general, my recommendation is to keep tests as tight as possible. If you
+mean to test for the exact value <tt class="docutils literal">True</tt> or <tt class="docutils literal">False</tt>, then follow the
+<a class="reference external" href="https://docs.python.org/3/library/unittest.html#unittest.TestCase.assertTrue">documentation</a>
+and use <tt class="docutils literal">assertIs</tt>. Do not use <tt class="docutils literal">assertTrue</tt> or <tt class="docutils literal">assertFalse</tt> unless you
+really have&nbsp;to.</p>
+<p>If you are looking at a function that can return various types, for example,
+sometimes <tt class="docutils literal">bool</tt> sometimes <tt class="docutils literal">int</tt>, then consider refactoring. This is a code
+smell and in Python, that <tt class="docutils literal">False</tt> value for an error would probably be better
+raised as an&nbsp;exception.</p>
+<p>In addition, if you really need to assert the return value from a function
+under test is truthy, there might be a second code smell - is your code
+correctly encapsulated? If <tt class="docutils literal">assertTrue</tt> and <tt class="docutils literal">assertFalse</tt> are asserting
+that function return values will trigger <tt class="docutils literal">if</tt> statements correctly, then it
+might be worth sense-checking you&#8217;ve encapsulated everything you intended in
+the appropriate place. Maybe those <tt class="docutils literal">if</tt> statements should be encapsulated
+within the function under&nbsp;test.</p>
+<p>Happy&nbsp;testing!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1605-api-documentation.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
+                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
+using it can help us all make our tests cleaner, easier to read
+and as Pythonic as&nbsp;possible.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

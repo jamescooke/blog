@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="My PyConUK 2016 talk about the AAA pattern for unit tests and how using it can help us all make our tests cleaner, easier to read and as Pythonic as possible.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Cleaner unit testing with the Arrange Act Assert pattern // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</h1>
+                <p class="postdate" title="2016-09-18T20:00:00+01:00">- Posted Sep 18, 2016</p>
+            </header>
+            <div class='article-content'>
+                <p>At <a class="reference external" href="https://2016.pyconuk.org/talks/cleaner-unit-testing-with-the-arrange-act-assert-pattern/">PyConUK 2016</a>
+I spoke about the Arrange Act Assert pattern and how it can help clean up unit&nbsp;tests.</p>
+<blockquote>
+<strong>Note:</strong> A newer post <a class="reference external" href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python developers</a> is available. It has
+much clearer examples and guidelines for using <span class="caps">AAA</span> than the video and
+slides below.</blockquote>
+<div class="section" id="original-proposal">
+<h2>Original&nbsp;proposal</h2>
+<p>PyConUK ask that we provide an explanation of why we think that attendees
+will be interested in our talk. This was my original proposal&#8217;s&nbsp;reasoning.</p>
+<blockquote>
+<p>This talk focuses on developers that practise <span class="caps">TDD</span>, or want to use it
+more in their&nbsp;coding.</p>
+<p>My assumption is that our community feels a lot of pain from testing.
+I&#8217;ve heard fellow developers talk about the difficulty with managing
+complicated test suites; issues with reading and understanding others&#8217;
+tests; and struggles when updating others&#8217; tests. I hope that the
+PyConUK attendees will have felt some of this pain be interested in a
+talk that demonstrates the use of a pattern that can (hopefully)
+mitigate some of it and help us all to be &#8220;cleaner&#8221;&nbsp;testers.</p>
+<p>Although I&#8217;ve marked &#8220;moderately experienced&#8221; I think that my talk
+would have a broad appeal: Those who are new to testing and would like
+a &#8220;template&#8221; to follow. And those who are expert because of the
+discussion about when to <span class="caps">DRY</span> out tests and how to assert that our test
+refactors are&nbsp;safe.</p>
+</blockquote>
+</div>
+<div class="section" id="slides-and-video">
+<h2>Slides and&nbsp;video</h2>
+<p>The video of the talk does not capture much of the screen, so the slides are
+posted here&nbsp;too.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/GGw5T1mw9vU" frameborder="0" allowfullscreen></iframe><script async class="speakerdeck-embed" data-id="d25e0e15acef4ccc8fe70abba5adce03" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script></div>
+<div class="section" id="resources">
+<h2>Resources</h2>
+<ul>
+<li><p class="first"><a class="reference external" href="https://www.python.org/dev/peps/pep-0008/"><span class="caps">PEP08</span></a> and <a class="reference external" href="https://www.python.org/dev/peps/pep-0020/"><span class="caps">PEP20</span>, The Zen of Python</a>.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development">Kent Beck: Test Driven Development: By Example</a> - a
+great book which references the <span class="caps">AAA</span> pattern (page&nbsp;97).</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">Google-style docstrings</a>:
+In addition to using this style in my <span class="caps">AAA</span> tests, I&#8217;ve started to add a
+<tt class="docutils literal">Trusts</tt> section to indicate which other tests are trusted by any
+particular test and&nbsp;why.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://xp123.com/articles/3a-arrange-act-assert/">Bill Wake&#8217;s post about <span class="caps">AAA</span></a>: Bill Wake is cited by
+Kent Beck as having coined the term <tt class="docutils literal">3A</tt>.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://refactoring.com/catalog/extractMethod.html">Extract Method</a>: I&#8217;ve
+used extract method as defined by Martin Fowler. See also <a class="reference external" href="https://refactoring.com/catalog/extractVariable.html">Extract Variable</a>.</p>
+<blockquote>
+<p><strong>Update August 2018:</strong> Check out <a class="reference external" href="https://flake8-aaa.readthedocs.io/en/stable/">flake8-aaa</a> - a Flake8 plugin that
+makes it easier to write tests that follow the Arrange Act Assert&nbsp;pattern.</p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="finally">
+<h2>Finally</h2>
+<p>Thanks again to <a class="reference external" href="https://github.com/txels">Carles</a> for introducing me to the
+<span class="caps">AAA</span>&nbsp;pattern.</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/talk.html">Talk</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1609-aaa-pyconuk.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

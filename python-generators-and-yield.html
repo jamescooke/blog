@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Notes to myself on generators and how to create them with generator expressions and the yield statement.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Python generators and yield // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Python generators and <cite>yield</cite></h1>
+                <p class="postdate" title="2013-12-14T16:00:00+00:00">- Posted Dec 14, 2013</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="it-started-with-an-interview">
+<h2>It started with an&nbsp;interview</h2>
+<p>Last week in an interview for a Django developer job, I was&nbsp;asked:</p>
+<div class="highlight"><pre><span></span><span class="n">thing</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+<!--  -->
+<blockquote>
+What is the type of thing?</blockquote>
+<p>Although I was able to identify that the type is dependent on the <tt class="docutils literal">()</tt> around
+the list-comprehension-like-construction, I didn&#8217;t know the exact type that
+<tt class="docutils literal">thing</tt> would&nbsp;be.</p>
+<p>The answer is a <strong>generator</strong>.</p>
+<p>This post shows some of the functionalities of generators and how they can
+be used in Python control&nbsp;flow.</p>
+</div>
+<div class="section" id="generator-expressions">
+<h2>Generator&nbsp;expressions</h2>
+<p>Generators can be created with generator expressions. A generator expression is
+a bit like a list comprehension. List Comprehension uses square brackets
+<tt class="docutils literal">[]</tt>. In&nbsp;Python&#8230;</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+</pre></div>
+<pre class="literal-block">
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+</pre>
+<p>A generator expression is a shortcut that allows generators to be created
+easily with a similar syntax - this time it&#8217;s using parentheses <tt class="docutils literal">()</tt>.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+<pre class="literal-block">
+&lt;generator object &lt;genexpr&gt; at 0x2fa5eb0&gt;
+</pre>
+</div>
+<div class="section" id="generators-are-iterators">
+<h2>Generators are&nbsp;iterators</h2>
+<p>Generators &#8220;provide a convenient way to implement the iterator&nbsp;protocol&#8221;.</p>
+<p>In Python, an <a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#typeiter">iterator</a> provides two key
+functions, <cite>__iter__</cite> and <cite>next</cite>, so a generator itself must provide these two&nbsp;functions:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_gen</span><span class="o">.</span><span class="fm">__iter__</span>
+<span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="o">&lt;</span><span class="n">genexpr</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x293c3c0</span><span class="o">&gt;</span>
+</pre></div>
+<p><tt class="docutils literal">__iter__</tt> is there and returns the generator, now for <tt class="docutils literal">next</tt>&#8230;</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_gen</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_gen</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="mi">1</span>
+</pre></div>
+<p>Therefore <tt class="docutils literal">next</tt> works. We can keep hitting&nbsp;until&#8230;</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_gen</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="mi">81</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_gen</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">StopIteration</span>                             <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="n">b28d59f370d8</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">zzz</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+<span class="ne">StopIteration</span><span class="p">:</span>
+</pre></div>
+<p>A <tt class="docutils literal">StopIteration</tt> is raised - so the generator does everything we&#8217;d expect it
+to by the iterator&nbsp;protocol.</p>
+</div>
+<div class="section" id="building-a-generator-with-yield">
+<h2>Building a generator with&nbsp;yield</h2>
+<p>Although it&#8217;s not clear from the example above, a generator is able to
+relinquish control and return a value - while saving its state. It then allows
+the control to pass back to the structure that called it, until it&#8217;s called
+again, picking up where it left&nbsp;off.</p>
+<p>This allows for loops over sets of values to be programmed, without the full
+list of values being calculated first. A generator can be used so that <cite>next</cite>
+is called before each iteration&nbsp;required.</p>
+<p>In this way, only the values required for each iteration need to be&nbsp;computed.</p>
+<div class="section" id="the-yield-keyword-simple-example">
+<h3>The yield keyword - simple&nbsp;example</h3>
+<p>Adding <tt class="docutils literal">yield</tt> to a function allows for generators to be constructed&nbsp;&#8216;manually&#8217;.</p>
+<p>At its very simplest, a function could be written just to generate a single
+value. However, to show that a generator can return to its previous state when
+called again, let&#8217;s make one with two values. For&nbsp;example&#8230;</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">two_things</span><span class="p">():</span>
+    <span class="k">yield</span> <span class="mi">1</span>
+    <span class="k">yield</span> <span class="s1">&#39;hi&#39;</span>
+</pre></div>
+<p>Now we can make an instance of the&nbsp;generator.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_things</span> <span class="o">=</span> <span class="n">two_things</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_things</span>
+<span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="n">two_things</span> <span class="n">at</span> <span class="mh">0x31d0960</span><span class="o">&gt;</span>
+</pre></div>
+<p>And we can ask for next&nbsp;value.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_things</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="mi">1</span>
+</pre></div>
+<p>Now when we call <tt class="docutils literal">next</tt> again, our generator continues from the state of the
+last&nbsp;yield.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_things</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="s1">&#39;hi&#39;</span>
+</pre></div>
+<p>So you see how different values can be returned, one after the&nbsp;other.</p>
+<p>And after that second thing, the generator now raises a <tt class="docutils literal">StopIteration</tt>, since
+it has no further values to&nbsp;return.</p>
+<p>Since a generator implements the iterator protocol, it can be used in a <cite>for</cite>
+statement and therefore in a list comprehension. This makes for a convenient
+way to check the values of a limited generator like this&nbsp;one.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">two_things</span><span class="p">()]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="more-complex-example-with-yield">
+<h3>More complex example with&nbsp;yield</h3>
+<p>So let&#8217;s write Fibonacci as a generator. I&#8217;m going to start with doctests to
+create the definition of the function, then put the code at the&nbsp;end.</p>
+<p>What I like about the doctests in this example is that in 3 <tt class="docutils literal">fib</tt> is tested
+with <tt class="docutils literal">next</tt>, but in 4 it&#8217;s tested using a list&nbsp;comprehension.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    1.  Creates a generator</span>
+<span class="sd">    &gt;&gt;&gt; type(fib(0))</span>
+<span class="sd">    &lt;type &#39;generator&#39;&gt;</span>
+
+<span class="sd">    2.  fib(0) just generates 0th value (1)</span>
+<span class="sd">    &gt;&gt;&gt; zero_fib = fib(0)</span>
+<span class="sd">    &gt;&gt;&gt; zero_fib.next()</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; zero_fib.next()</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    StopIteration</span>
+
+<span class="sd">    3.  fib(1) creates a generator that creates 0th (1) and 1st (1) values of</span>
+<span class="sd">        fib seq</span>
+<span class="sd">    &gt;&gt;&gt; one_fib = fib(1)</span>
+<span class="sd">    &gt;&gt;&gt; one_fib.next()</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; one_fib.next()</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; one_fib.next()</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    StopIteration</span>
+
+<span class="sd">    4.  fib(10) generates the first 10 fibonacci numbers</span>
+<span class="sd">    &gt;&gt;&gt; [x for x in fib(10)]</span>
+<span class="sd">    [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">last</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">result</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+<p>That&#8217;s all - have fun with&nbsp;generators!</p>
+</div>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1312-generators.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

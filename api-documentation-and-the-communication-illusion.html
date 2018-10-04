@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="How can documenting an API help us to communicate with our team and API consumer developers efficiently?">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>API Documentation and the Communication Illusion // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1><span class="caps">API</span> Documentation and the Communication&nbsp;Illusion</h1>
+                <p class="postdate" title="2016-05-04T12:00:00+01:00">- Posted May 04, 2016</p>
+            </header>
+            <div class='article-content'>
+                <p>In this post I talk quite a lot about the &#8220;Communication Illusion&#8221; - a quote
+often <a class="reference external" href="https://en.wikiquote.org/wiki/George_Bernard_Shaw#Misattributed">misattributed to George Bernard Shaw</a>:</p>
+<blockquote>
+The single biggest problem in communication is the illusion that it has
+taken place.</blockquote>
+<p>Now let&#8217;s talk about documenting&nbsp;APIs&#8230;</p>
+<div class="section" id="api-documentation-and-my-current-workflow">
+<h2><span class="caps">API</span> documentation and my current&nbsp;workflow</h2>
+<p>When I&#8217;m building an <span class="caps">API</span>, I usually have a client in mind that will be
+consuming its resources. That means a developer or team of developers will be
+writing code against the <span class="caps">API</span> that I build and so my current workflow for
+updating or creating new <span class="caps">API</span> services focuses on providing <span class="caps">API</span>&nbsp;documentation.</p>
+<p>It works like&nbsp;this:</p>
+<ul>
+<li><p class="first">Manually document the endpoint using <a class="reference external" href="https://github.com/jamescooke/restapidocs"><span class="caps">REST</span> <span class="caps">API</span> documentation templates</a>. Highlight any side effects,
+requirements and illustrate required data and&nbsp;responses.</p>
+<p>Alternatively, if there is a change to be made to the service, then the
+documentation edit can be provided as an <span class="caps">SCM</span> diff which can be easily&nbsp;reviewed.</p>
+</li>
+<li><p class="first">Ask for sign off on the <span class="caps">API</span> documentation from the <span class="caps">API</span> consumer development
+team. Incorporate any feedback and repeat until team are&nbsp;happy.</p>
+</li>
+<li><p class="first">Build out new endpoint using test cases written from the&nbsp;documentation.</p>
+</li>
+<li><p class="first">Once complete, export server responses back from the test suite into the
+documentation. Note any changes that were required to the signed off document
+and flag them to the consumer developers during the release process, if not&nbsp;beforehand.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="past-experience-of-communications-illusions">
+<h2>Past experience of Communications&nbsp;Illusions</h2>
+<p>In conversations with other developers about my process it&#8217;s been called
+&#8220;tedious&#8221;. I can agree that it seems like extra effort at first, however, I
+believe that it pays off in the long run and that belief is based on my past
+experience at my old web development business,&nbsp;Fublo.</p>
+<p>At Fublo, we often produced <a class="reference external" href="https://en.wiktionary.org/wiki/brochureware">brochureware</a> sites on top of a simple <span class="caps">CMS</span>
+system. When starting a new project, conversation within our team would often
+happen like&nbsp;this:</p>
+<blockquote>
+We know the solution to the problem, so instead of drawing out the design,
+let&#8217;s just jump straight into <span class="caps">HTML</span> and code it up. This will save time.</blockquote>
+<p>Inevitably this didn&#8217;t save time at all. We would often have to burn much of
+our initial work because we couldn&#8217;t fit the final client requirements into it,
+or rework major structural elements because they turned out to be&nbsp;unsuitable.</p>
+<p>This inefficiency is the result of three&nbsp;illusions:</p>
+<ul class="simple">
+<li><strong>The illusion with ourselves:</strong> When we thought that we knew the solution
+and that it would be suitable and workable, this was just an illusion. Our
+minds tricked us into thinking that we knew the answer but we&nbsp;didn&#8217;t.</li>
+<li><strong>The Communications Illusion within the team:</strong> This was in full effect
+within our small team. We found that what we described as the problem to each
+other would fit with our own distorted view and we would only find out that
+our opinions were not the same some significant time after starting the
+build - sometimes too late to make&nbsp;changes.</li>
+<li><strong>The Communications Illusion with the client:</strong> We also didn&#8217;t often fully
+understand the client need, even though we thought we did at the outset.
+Sometimes there would be omissions in the brief or misunderstandings about
+how content would be provided, presented or&nbsp;managed.</li>
+</ul>
+<p>Those three illusions sum up to one big Communications Illusion - we believe
+that we, our team and our clients all have tallying opinions and ideas, when
+there is no proof that that is the&nbsp;case.</p>
+<p>Pretty quickly, but probably not as quickly as we would have liked, we realised
+that the &#8220;tedious&#8221; way of producing flat designs before starting coding was
+often the most efficient, even though it felt like it wasn&#8217;t. It provided the
+quickest route to a communication feedback loop, within ourselves, our team and
+with our clients and that destroys the Communication Illusion. On top of that
+it meant that we were not making any accidental, hard to refactor, architectural
+decisions on the fly without all the required&nbsp;information.</p>
+</div>
+<div class="section" id="applying-this-to-api-design">
+<h2>Applying this to <span class="caps">API</span>&nbsp;design</h2>
+<p>So it&#8217;s my opinion that producing a flat <span class="caps">API</span> document without touching a line
+of code or writing a single test is the most efficient way of destroying the
+potential Communications Illusions when creating&nbsp;APIs.</p>
+<p>This means that providing static <span class="caps">API</span> documentation first is the most efficient
+path to a place where <span class="caps">API</span> producers and consumers have a joint shared opinion
+about how the <span class="caps">API</span> will operate and&nbsp;perform.</p>
+</div>
+<div class="section" id="tooling-wishlist">
+<h2>Tooling&nbsp;wishlist</h2>
+<p>On the flip side of those benefits in the long term, there is still a part of
+me that finds some of my manual process a little slow. My inner need for
+efficiency feels unfulfilled every time I copy and paste an <span class="caps">API</span> response into a&nbsp;document.</p>
+<p>In an ideal world I would have tools that&nbsp;would:</p>
+<ul class="simple">
+<li>Extract from the <span class="caps">API</span> documentation a set of tests that could be run against
+the built <span class="caps">API</span> to assert that the documentation features were all adhered&nbsp;to.</li>
+<li>A tool that would extract from the server responses made to these tests the
+response payloads so that they could be added back in or matched with the <span class="caps">API</span>
+document that they came&nbsp;from.</li>
+</ul>
+<p>However, even if those tools did exist, the starting point would still be some
+form of static documentation that describes what the <span class="caps">API</span>&nbsp;does.</p>
+<p>I&#8217;ve seen that there are tools like <a class="reference external" href="https://apiary.io/">Apiary</a> which might
+make this process easier, but I would want to hear some positive experience and
+read a case study before I committed to using such a service for client&nbsp;work.</p>
+</div>
+<div class="section" id="final-thoughts">
+<h2>Final&nbsp;thoughts</h2>
+<p>So, I hope in this post I&#8217;ve been able to convince you that it&#8217;s most
+efficient to document your <span class="caps">API</span> before you build or change it. I hope that, like
+me, you find that that efficiency comes from the increase in communication that
+the documentation creates as a side-effect, destroying the Communication
+Illusion that can ruin a project&nbsp;build.</p>
+<p>Unfortunately, I&#8217;ve not found a way to ensure that the consumer programmers of
+my APIs read and understand what&#8217;s in the documentation before coding starts.
+That&#8217;s a second layer of Communication Illusion that I&#8217;ll maybe get to tackle
+another&nbsp;day.</p>
+<p>Happily, I still agree with <a class="reference external" href="https://twitter.com/jamesfublo/status/518017851224227840">this Tweet</a> that I posted more
+than 18 months&nbsp;ago:</p>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Building an <span class="caps">API</span>&#8230; All that matters is the&nbsp;docs.</p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/status/518017851224227840">October 3, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>&#8230;and in fact, after working on more <span class="caps">API</span> builds and writing this post, I
+believe it&#8217;s even more true than&nbsp;before.</p>
+<p>Happy <span class="caps">API</span>&nbsp;building!</p>
+<ul class="simple">
+<li><a class="reference external" href="https://news.ycombinator.com/item?id=11666301">Read comments on Hacker&nbsp;News</a></li>
+</ul>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/topicapi.html">topic:api</a>,                     <a href="https://jamescooke.info/tag/topicdocumentation.html">topic:documentation</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1605-api-documentation.rst'>View, comment, edit source on GitHub</a>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

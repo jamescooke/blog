@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Found that tests on a recent project started breaking for no clear reason, and it turned out it was because I’d used get to retrieve values from Contexts.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Django Contexts and get // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Django Contexts and <cite>get</cite></h1>
+                <p class="postdate" title="2014-11-17T20:00:00+00:00">- Posted Nov 17, 2014</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="background">
+<h2>Background</h2>
+<p>If you know me, then you know that I&#8217;m an avid tester. It could even be argued
+that I test too extensively as part of my day-to-day development, but that&#8217;s a
+post for another&nbsp;day.</p>
+<p>On a recent project, a particular view started failing with the&nbsp;error:</p>
+<pre class="literal-block">
+AttributeError: 'ContextList' object has no attribute 'get'
+</pre>
+<p>I wasn&#8217;t happy with just changing the tests to work again, so I dug down into
+why they started&nbsp;failing.</p>
+</div>
+<div class="section" id="tl-dr">
+<h2><span class="caps">TL</span>;<span class="caps">DR</span></h2>
+<p>To get a value from a Context object returned  by the Django Test Client, then
+it&#8217;s better to use the <tt class="docutils literal">[]</tt> operator than the <tt class="docutils literal">get</tt> method.</p>
+<p>For&nbsp;example:</p>
+<div class="highlight"><pre><span></span><span class="c1"># In a test, after doing</span>
+<span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">))</span>
+
+<span class="c1"># ... then it&#39;s better to use [] to test the context</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;Homer&#39;</span><span class="p">)</span>
+
+<span class="c1"># ...than to use get</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span> <span class="s1">&#39;Homer&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="reason">
+<h2>Reason</h2>
+<p>It turns out that the problem was to do with a developer on the project
+changing how the template for the view was generated. They changed a view that
+was using a single template, to a couple of templates using <a class="reference external" href="https://docs.djangoproject.com/en/1.7/topics/templates/#template-inheritance">Django&#8217;s template
+inheritance</a>
+and the <tt class="docutils literal">extends</tt> template&nbsp;tag.</p>
+<p>This then effects how Django&#8217;s test client returns the Context object for&nbsp;inspection.</p>
+<p>To test this I prepared the following&nbsp;test:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+
+<span class="k">class</span> <span class="nc">Tests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span> <span class="s1">&#39;Homer&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;Homer&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The home view was just a simple template&nbsp;renderer:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+
+
+<span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="p">})</span>
+</pre></div>
+<div class="section" id="simple-works">
+<h3>Simple&nbsp;works</h3>
+<p>When the &#8216;home.html&#8217; template is a simple template with no inheritance (it can
+be completely empty), then both tests&nbsp;pass.</p>
+<p><span class="quo">&#8216;</span>home.html&#8217; template&nbsp;code:</p>
+<div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Hello World<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+<p>Test&nbsp;run:</p>
+<div class="highlight"><pre><span></span>./manage.py <span class="nb">test</span>
+Creating <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+..
+----------------------------------------------------------------------
+Ran <span class="m">2</span> tests in <span class="m">0</span>.027s
+
+OK
+Destroying <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+</pre></div>
+</div>
+<div class="section" id="template-inheritance-fails-with-get">
+<h3>Template inheritance fails with <cite>get</cite></h3>
+<p>Now adjust &#8216;home.html&#8217; to extend another template &#8216;base.html&#8217; which has
+arbitrary&nbsp;contents.</p>
+<p>New &#8216;home.html&#8217; template&nbsp;code:</p>
+<div class="highlight"><pre><span></span>{% extends &#39;base.html&#39; %}
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Hello World<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+<p>Test&nbsp;run:</p>
+<div class="highlight"><pre><span></span>./manage.py <span class="nb">test</span>
+Creating <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+E.
+<span class="o">======================================================================</span>
+ERROR: test_get <span class="o">(</span>mini.tests.Tests<span class="o">)</span>
+----------------------------------------------------------------------
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">&quot;/home/james/active/mini/mmm/mini/tests.py&quot;</span>, line <span class="m">9</span>, in test_get
+      self.assertEqual<span class="o">(</span>response.context.get<span class="o">(</span><span class="s1">&#39;name&#39;</span><span class="o">)</span>, <span class="s1">&#39;Homer&#39;</span><span class="o">)</span>
+AttributeError: <span class="s1">&#39;ContextList&#39;</span> object has no attribute <span class="s1">&#39;get&#39;</span>
+
+----------------------------------------------------------------------
+Ran <span class="m">2</span> tests in <span class="m">0</span>.029s
+
+FAILED <span class="o">(</span><span class="nv">errors</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>
+Destroying <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+</pre></div>
+<p>So the <tt class="docutils literal">test_get</tt> case, which was using <tt class="docutils literal">get</tt> failed.</p>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>It&#8217;s definitely more robust to be using list access <tt class="docutils literal">[]</tt> on Context objects
+returned by the Django Test Client where possible when checking values passed
+through to&nbsp;templating.</p>
+<p>Thanks for&nbsp;reading.</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/python.html">python</a>,                     <a href="https://jamescooke.info/tag/django.html">django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1411-django-contextlist.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/migrating-from-django-14-to-15-lessons-learned.html">Migrating from Django 1.4 to 1.5 - Lessons&nbsp;learned</a>
+                        <p class="first last">Migrating a project from Django 1.4 to Django 1.5 had a couple of gotchas that cost me dev&nbsp;time.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/a-water-pouring-problem-sketched-in-python.html">A water pouring problem sketched in&nbsp;Python</a>
+                        <p class="first last">A small Python 3 sketch of a solution to a water pouring&nbsp;problem.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/reincublog-django-app.html">Reincublog Django&nbsp;app</a>
+                        <p class="first last">Reincublog is a super mini Django blog weekend hack, coded as part of a recruitment&nbsp;process.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

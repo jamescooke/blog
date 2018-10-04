@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="This post introduces the Arrange Act Assert pattern of testing and shows how it can be used in a Python context with Pytest.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Arrange Act Assert pattern for Python developers // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Arrange Act Assert pattern for Python&nbsp;developers</h1>
+                <p class="postdate" title="2017-07-06T23:00:00+01:00">- Posted Jul 06, 2017</p>
+            </header>
+            <div class='article-content'>
+                <p>This is the first of two posts exploring the Arrange Act Assert pattern and
+how to apply it to Python tests.
+It presents a recognisable and reusable test template
+following the Arrange Act Assert pattern of testing. In addition, I aim to
+present strategies for test writing and refactoring which I&#8217;ve developed over
+the last couple of years, both on my own projects and within&nbsp;teams.</p>
+<p>In this first part I will introduce the Arrange Act Assert pattern and discuss its
+constituent&nbsp;parts.</p>
+<div class="section" id="what-is-arrange-act-assert">
+<h2>What is Arrange Act&nbsp;Assert?</h2>
+<p>The &#8220;Arrange-Act-Assert&#8221; (also <span class="caps">AAA</span> and 3A) pattern of testing was <a class="reference external" href="https://xp123.com/articles/3a-arrange-act-assert/">observed and
+named by Bill Wake in 2001</a>. I first came across it in
+<a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development">Kent Beck&#8217;s book &#8220;Test Driven Development: By Example&#8221;</a> and I
+spoke about it at <a class="reference external" href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">PyConUK 2016</a>.</p>
+<p>The pattern focuses each test on a single action. The advantage of this focus
+is that it clearly separates the arrangement of the System Under Test (<span class="caps">SUT</span>) and
+the assertions that are made on it after the&nbsp;action.</p>
+<p>On multiple projects I&#8217;ve worked on I&#8217;ve experienced organised and &#8220;clean&#8221; code
+in the main codebase, but disorganisation and inconsistency in the
+test suite. However when <span class="caps">AAA</span> is applied, I&#8217;ve found it helps by unifying and
+clarifying the structure of tests which helps make the test suite much more
+understandable and&nbsp;manageable.</p>
+</div>
+<div class="section" id="tl-dr-the-shape-of-an-aaa-test">
+<h2><span class="caps">TL</span>;<span class="caps">DR</span>: The shape of an <span class="caps">AAA</span>&nbsp;test</h2>
+<p>Here is a test that I was working on recently that follows the <span class="caps">AAA</span> pattern.
+I&#8217;ve extracted it from Vim and blocked out the code with the colour that Vim&nbsp;assigns.</p>
+<img alt="The shape of a test in Python built with Arrange Act Assert." src="https://jamescooke.info/images/test_shape.png" />
+<p>Hopefully in this rough image you will see three sections to the test separated
+by an empty&nbsp;line:</p>
+<ul class="simple">
+<li>First there is the test definition, docstring and&nbsp;Arrangement.</li>
+<li>Empty&nbsp;line.</li>
+<li>In the middle, there is a single line of code - this is the most important
+part: The&nbsp;Act.</li>
+<li>Empty&nbsp;line.</li>
+<li>Finally there are the Assertions. You can see that the Assert block code
+lines all start with the orange / brown colour - that is because the Python
+keyword <tt class="docutils literal">assert</tt> is marked with this colour in Vim with my current&nbsp;configuration.</li>
+</ul>
+<p>While working on test suites that employ this pattern, my experience has been
+that I&#8217;ve found it easier to understand each test. My eye has definitely got
+used to the test &#8220;shape&#8221;. Want to know what is being tested? Just look at the
+clear line above the assertion&nbsp;block.</p>
+<p>Follow this pattern across your tests and your suite will be much&nbsp;improved.</p>
+</div>
+<div class="section" id="background">
+<h2>Background</h2>
+<p>I&#8217;ll now go into detail on each of these parts using Pytest and a toy
+test example - a simple happy-path test for Python&#8217;s builtin
+<tt class="docutils literal">list.reverse</tt> function.</p>
+<p>I&#8217;ve made the following&nbsp;assumptions:</p>
+<ul class="simple">
+<li>We all love <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/"><span class="caps">PEP008</span></a>, so we want
+tests to pass <tt class="docutils literal">flake8</tt> linting.</li>
+<li><a class="reference external" href="https://www.python.org/dev/peps/pep-0020/"><span class="caps">PEP020</span>, The Zen of Python</a>, is
+also something we work towards - I will use some of it&#8217;s &#8220;mantras&#8221; when I
+justify some of the suggestions in this&nbsp;guide.</li>
+<li>Simplicity trumps performance. We want a test suite that is easy to maintain
+and manage and can pay for that with some performance loss. I&#8217;ve assumed this
+is a reasonable trade off because the tests are run much less frequently than
+the <span class="caps">SUT</span> in&nbsp;production.</li>
+</ul>
+<p>This post is only an introduction to the <span class="caps">AAA</span> pattern. Where certain topics will
+be covered in more detail in future posts in this series, I have marked them
+with a&nbsp;footnote.</p>
+</div>
+<div class="section" id="definition">
+<h2>Definition</h2>
+<p>The definition of the test&nbsp;function.</p>
+<div class="section" id="example">
+<h3>Example</h3>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_reverse</span><span class="p">():</span>
+</pre></div>
+</div>
+<div class="section" id="guidelines">
+<h3>Guidelines</h3>
+<ul class="simple">
+<li>Name your function something descriptive because the function name will be
+shown when the test fails in Pytest&nbsp;output.</li>
+<li>Good test method names can make docstrings redundant in simple tests (<a class="reference external" href="https://github.com/jamescooke/blog/pull/10#discussion_r125855056">thanks
+Adam!</a>).</li>
+</ul>
+</div>
+</div>
+<div class="section" id="docstring">
+<h2>Docstring</h2>
+<p>An optional short single line statement about the behaviour under&nbsp;test.</p>
+<div class="section" id="id1">
+<h3>Example</h3>
+<div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">list.reverse inverts the order of items in a list, in place</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="section" id="id2">
+<h3>Guidelines</h3>
+<p>Docstrings are not part of the <span class="caps">AAA</span> pattern. Consider if your test needs one or
+if you are best to omit it for&nbsp;simplicity.</p>
+<p>If you do include a docstring, then I recommend that&nbsp;you:</p>
+<ul>
+<li><p class="first">Follow the existing Docstring style of your project so that the tests are
+consistent with the code base you are&nbsp;testing.</p>
+</li>
+<li><p class="first">Keep the language positive - state clearly what the expected behaviour is.
+Positive docstrings read similar&nbsp;to:</p>
+<blockquote>
+<p>X does Y when&nbsp;Z</p>
+</blockquote>
+<p>Or&#8230;</p>
+<blockquote>
+<p>Given Z, then X does&nbsp;Y</p>
+</blockquote>
+</li>
+<li><p class="first">Be cautious when using any uncertain language in the docstring and follow the
+mantra &#8220;Explicit is better than implicit&#8221; (<a class="reference external" href="https://www.python.org/dev/peps/pep-0020/"><span class="caps">PEP20</span></a>)</p>
+<p>Words like &#8220;should&#8221; and &#8220;if&#8221; introduce uncertainty. For&nbsp;example:</p>
+<blockquote>
+<p>X should do Y if&nbsp;Z</p>
+</blockquote>
+<p>In this case the reader could be left with questions. Is X doing it right at
+the moment? Is this a <tt class="docutils literal"><span class="caps">TODO</span></tt> note? Is this a test for an expected&nbsp;failure?</p>
+<p>In a similar vein, avoid future&nbsp;case.</p>
+<blockquote>
+<p>X will do Y when&nbsp;Z</p>
+</blockquote>
+<p>Again, this reads like a <tt class="docutils literal"><span class="caps">TODO</span></tt>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="arrange">
+<h2>Arrange</h2>
+<p>The block of code that sets up the conditions for the test&nbsp;action.</p>
+<div class="section" id="id3">
+<h3>Example</h3>
+<p>There&#8217;s not much work to do in this example to build a list, so the arrangement
+block is just one&nbsp;line.</p>
+<div class="highlight"><pre><span></span><span class="n">greek</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="id4">
+<h3>Guidelines</h3>
+<ul class="simple">
+<li>Use a single block of code with no empty&nbsp;lines.</li>
+<li>Do not use <tt class="docutils literal">assert</tt> in the Arrange block. If you need to make an assertion
+about your arrangement, then this is a smell that your arrangement is too
+complicated and should be extracted to a fixture or setup function and tested
+in its own&nbsp;right.</li>
+<li>Only prepare non-deterministic results not available after&nbsp;action.</li>
+<li>The arrange section should not require comments. If you have a large
+arrangement in your tests which is complex enough to require detailed
+comments then consider:<ul>
+<li>Extracting the comments into a multi-line&nbsp;docstring.</li>
+<li>Extracting the arrangement code into a fixture and testing that the fixture
+is establishing the expected conditions as previously&nbsp;mentioned.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="act">
+<h2>Act</h2>
+<p>The line of code where the Action is taken on the <span class="caps">SUT</span>.</p>
+<div class="section" id="id5">
+<h3>Example</h3>
+<div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">greek</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="id6">
+<h3>Guidelines</h3>
+<ul>
+<li><p class="first">Start every Action line with <tt class="docutils literal">result =</tt>.</p>
+<p>This makes it easier to distinguish test actions and means you can avoid the
+hardest job in programming: naming. When every result is called <tt class="docutils literal">result</tt>,
+then you do not need to waste brain power wondering if it should be <tt class="docutils literal">item =</tt>
+or <tt class="docutils literal">response =</tt> etc. An added benefit is that you can find test actions
+easily with a tool like <tt class="docutils literal">grep</tt>.</p>
+</li>
+<li><p class="first">Even when there is no result from the action, capture it with <tt class="docutils literal">result =</tt>
+and then <tt class="docutils literal">assert result is None</tt>. In this way, the <span class="caps">SUT</span>&#8217;s behaviour is&nbsp;pinned.</p>
+</li>
+<li><p class="first">If you struggle to write a single line action, then consider extracting some
+of that code into your&nbsp;arrangement.</p>
+</li>
+<li><p class="first">The action can be wrapped in <tt class="docutils literal">with ... raises</tt> for expected exceptions. In
+this case your action will be two lines surrounded by empty&nbsp;lines.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="assert">
+<h2>Assert</h2>
+<p>The block of code that performs the assertions on the state of the <span class="caps">SUT</span> after
+the&nbsp;action.</p>
+<div class="section" id="id7">
+<h3>Example</h3>
+<div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span>
+<span class="k">assert</span> <span class="n">greek</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="id8">
+<h3>Guidelines</h3>
+<ul class="simple">
+<li>Use a single block of code with no empty&nbsp;lines.</li>
+<li>First test <tt class="docutils literal">result</tt>, then side&nbsp;effects.</li>
+<li>Limit the actions that you make in this block. Ideally, no actions should
+happen, but that is not always&nbsp;possible.</li>
+<li>Use simple blocks of assertions. If you find that you are repeatedly writing
+the same code to extract information from the <span class="caps">SUT</span> and perform assertions on
+it, then consider extracting an assertion&nbsp;helper.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="the-final-test">
+<h2>The final&nbsp;test</h2>
+<p>Here&#8217;s the example test in&nbsp;full:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_reverse</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    list.reverse inverts the order of items in a list, in place</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">greek</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">]</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">greek</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span>
+    <span class="k">assert</span> <span class="n">greek</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="flake8-aaa">
+<h2>flake8-aaa</h2>
+<p>Check out <a class="reference external" href="https://flake8-aaa.readthedocs.io/en/stable/">flake8-aaa</a> - a
+Flake8 plugin that makes it easier to write tests that follow the Arrange Act
+Assert pattern outlined&nbsp;above.</p>
+</div>
+<div class="section" id="thanks">
+<h2>Thanks</h2>
+<p>I hope that this introduction has been helpful and you will return for part 2:
+<a class="reference external" href="/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make fixtures</a>.</p>
+<p>Thanks to <a class="reference external" href="https://adamj.eu/">Adam</a> for reviewing this post and his helpful&nbsp;feedback.</p>
+<p>Thanks for reading and happy&nbsp;testing!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1706-arrange-act-assert-for-python.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
+                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
+using it can help us all make our tests cleaner, easier to read
+and as Pythonic as&nbsp;possible.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

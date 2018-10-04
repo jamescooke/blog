@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="At July’s Vim London I gave a talk about some of Vim’s irregular behaviours. Using bare-bones Vim to present and demonstrate from is a risky business!">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Irregular Vim // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Irregular&nbsp;Vim</h1>
+                <p class="postdate" title="2015-08-16T21:00:00+01:00">- Posted Aug 16, 2015</p>
+            </header>
+            <div class='article-content'>
+                <p>My frustrations with Vim arise when it makes actions that are unexpected. At
+<a class="reference external" href="https://www.meetup.com/Vim-London/events/223784891/">Vim London</a> I presented
+some of my &#8220;pet misbehaviours&#8221; - these are the ones that affect my regular use
+of&nbsp;Vim.</p>
+<div class="section" id="background">
+<h2>Background</h2>
+<p>If you&#8217;re new to Vim then one of the key features of Vim is that it&#8217;s a modal
+editor. As a result, to quote a quote from a <a class="reference external" href="/vi-nature-everywhere-lightning-talk.html">previous talk</a>:</p>
+<blockquote>
+The &#8220;Zen&#8221; of vi is that you&#8217;re speaking a language.</blockquote>
+<p>So what happens when a language has many irregularities and frequently broken
+rules? They become hard to learn. For example the <a class="reference external" href="https://www.oxford-royale.co.uk/articles/learning-english-hard.html">English language is hard</a>&nbsp;because:</p>
+<blockquote>
+&#8230; although there are rules, there are lots of exceptions to those rules.</blockquote>
+<p>My fear is that if Vim is hard to learn it will be overlooked by new users and
+it will cease to exist in the future. I think we should all be working on the
+maxim that Drew has put on the <a class="reference external" href="https://www.meetup.com/Vim-London/">Vim London meetup page</a>:</p>
+<blockquote>
+Use Vim better, make Vim better.</blockquote>
+</div>
+<div class="section" id="pet-misbehaviours">
+<h2>Pet&nbsp;misbehaviours</h2>
+<p>Here are the five behaviours looked at in this talk, each one linked to its
+section in the slides on&nbsp;Github.</p>
+<ul>
+<li><p class="first"><a class="reference external" href="https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/10a_motion_exceptions.rst">Linewise motions always include the start and end&nbsp;position</a></p>
+<p><strong>Except</strong> when the end of the motion is in column&nbsp;1.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/15a_change_is_delete_insert.rst">Change is equivalent to Delete&nbsp;Insert</a></p>
+<p><strong>Except</strong> when motion is <tt class="docutils literal">w</tt>.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/20a_pasting_and_registers.rst">Pasting from registers is easily&nbsp;repeatable</a></p>
+<p><strong>Except</strong> when in visual&nbsp;modes.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/25a_add_number.rst">Incrementing number after cursor is&nbsp;predictable</a></p>
+<p><strong>Except</strong> when the number starts with a <tt class="docutils literal">0</tt>.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://github.com/jamescooke/irregular-vim-slides/blob/master/slides/30a_ctrl_o_goes_jump_older.rst"><span class="caps">CTRL</span>-O goes back to old cursor&nbsp;position</a></p>
+<p><strong>Except</strong> when in visual&nbsp;modes.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="testing-process">
+<h2>Testing&nbsp;process</h2>
+<p>Automated and predictable testing is an important part of how I work and so I
+attempted to use a repeatable process for testing each of the&nbsp;behaviours.</p>
+<ol class="arabic simple">
+<li>Outline the <strong>assumption</strong> about Vim. Highlight the docs (where available)
+that make the statement or&nbsp;assertion.</li>
+<li>Do some small <strong>tests</strong> of this assertion. Does it work as expected? How do
+we feel about the&nbsp;behaviour?</li>
+<li>Update the assertion with any <strong>exceptions</strong> and look at any reasons for
+those&nbsp;exceptions.</li>
+</ol>
+</div>
+<div class="section" id="content">
+<h2>Content</h2>
+<p><a class="reference external" href="https://vimeo.com/135055397">Video on vimeo</a> (thanks <a class="reference external" href="https://twitter.com/nelstrom">Drew</a>).</p>
+<iframe src="//player.vimeo.com/video/135055397" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><p><a class="reference external" href="https://github.com/jamescooke/irregular-vim-slides">Slides are on GitHub</a>.</p>
+</div>
+<div class="section" id="learnings">
+<h2>Learnings</h2>
+<p>One of my annoyances that started this journey arose when attempting to delete
+everything up to but not including a character. As you&#8217;ll see at the end of the
+talk, I learned a new movement command <tt class="docutils literal">t</tt> (thanks&nbsp;Audience!).</p>
+<p><tt class="docutils literal">t</tt> is like <tt class="docutils literal">f</tt> but not inclusive. From the help <tt class="docutils literal">:help t</tt> file:</p>
+<blockquote>
+Till before [count]&#8217;th occurrence of {char} to the right. The cursor is
+placed on the character left of {char} inclusive. {char} can be entered
+like with the f command.</blockquote>
+<p>This exactly solves the problem that started my exploration of Vim&#8217;s
+irregularities. It&#8217;s a humbling experience when you talk for 20 minutes about
+Vim commands and still learn a &#8216;basic&#8217; one at the end of the talk. I think that
+this is a reminder to me that Vim is&nbsp;deep.</p>
+</div>
+<div class="section" id="future">
+<h2>Future</h2>
+<p>I would like to improve these misbehaviours and make them more regular. My hope
+is that, if this could be achieved, it would make Vim&#8217;s interface even more
+great and also easier to&nbsp;learn.</p>
+<p>The main thing for me going forwards is to use <a class="reference external" href="https://neovim.io/">Neovim</a>. A
+project that is open to improving how Vim works. Here&#8217;s a great post about <a class="reference external" href="https://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/">why
+Neovim is better than Vim</a> - thanks
+<a class="reference external" href="https://twitter.com/ggreer">Geoff</a>.</p>
+<p>From there I will check out how many of these irregularities can be improved
+with code changes because having to have a <tt class="docutils literal">vimrc</tt> file that resets Vim to
+&#8216;regular&#8217; behaviour by turning off things like octal numerical increments seems
+horrible and repellent to new&nbsp;users.</p>
+<p>We can do&nbsp;better.</p>
+</div>
+<div class="section" id="thanks">
+<h2>Thanks</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://twitter.com/nelstrom">Drew</a> for asking me to talk and providing
+the <tt class="docutils literal">cw</tt> example.</li>
+<li><a class="reference external" href="https://twitter.com/krisajenkins">Kris</a> for inspiring me at my first Vim
+London meetup with <a class="reference external" href="https://vimeo.com/65250028">Barebones Vim navigation</a>.
+This showed me so much about Vim that I didn&#8217;t know and also that you <strong>can</strong>
+do a high quality presentation from Vim. (I hope that one day I&#8217;ll be able to
+meet your standard&nbsp;Kris).</li>
+</ul>
+<p>And thanks to you for&nbsp;reading!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/talk.html">Talk</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/topicvim.html">topic:vim</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1508-irregular-vim.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/my-vim-setup-for-python-development.html">My Vim setup for Python&nbsp;development</a>
+                        <p class="first last">My current Vim setup for Python&nbsp;development.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/vi-nature-everywhere-lightning-talk.html">vi-nature everywhere - lightning&nbsp;talk</a>
+                        <p class="first last">This week I presented at Vim-London about vi nature and the benefits
+for using it in more than&nbsp;vim.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

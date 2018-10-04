@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Using pip-tools with multiple requirements files can be difficult. This post describes my current workflow that manages the complexity with a Makefile.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>A successful pip-tools workflow for managing Python package requirements // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>A successful <cite>pip-tools</cite> workflow for managing Python package&nbsp;requirements</h1>
+                <p class="postdate" title="2016-11-13T23:00:00+00:00">- Posted Nov 13, 2016</p>
+            </header>
+            <div class='article-content'>
+                <p>In this post I present the <tt class="docutils literal"><span class="pre">pip-tools</span></tt> workflow I&#8217;ve been using over a number
+of projects to manage multiple inherited requirements files. At its core is a
+<a class="reference external" href="https://www.gnu.org/software/make/manual/make.html"><span class="caps">GNU</span> Make</a> Makefile to
+provide recipes for managing requirements and specifying the dependencies
+between the requirements&nbsp;files.</p>
+<p>If you are not aware of the excellent <tt class="docutils literal"><span class="pre">pip-tools</span></tt> <a class="reference external" href="https://github.com">package</a> it provides two commands: <tt class="docutils literal"><span class="pre">pip-compile</span></tt> and
+<tt class="docutils literal"><span class="pre">pip-sync</span></tt>. In this post I will be focusing on using <tt class="docutils literal"><span class="pre">pip-compile</span></tt> to
+compile <tt class="docutils literal">.in</tt> files consisting of top level&nbsp;requirements.</p>
+<p><tt class="docutils literal"><span class="pre">pip-compile</span></tt> consults the PyPI index for each top level package required,
+looking up the package versions available, outputting a specific list of pinned
+packages in a <tt class="docutils literal">.txt</tt> file. This extra layer of abstraction (<tt class="docutils literal">.in</tt> files
+containing top level requirements rather than just outputting <tt class="docutils literal">.txt</tt> files
+with <tt class="docutils literal">pip freeze</tt>) is very helpful for managing requirements, but does create
+some complications which mean that a solid workflow is essential for stable
+package&nbsp;management.</p>
+<div class="section" id="keep-requirements-files-in-their-own-folder">
+<h2>Keep requirements files in their own&nbsp;folder</h2>
+<p>In order to preserve sanity, I keep my project requirements in their own folder
+directly inside the&nbsp;project.</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> project
+$ ls requirements/
+base.in  base.txt  Makefile  test.in  test.txt
+</pre></div>
+<p>During this post, I&#8217;ll use this simple example with one set of &#8220;base&#8221;
+requirements and one set of &#8220;test&#8221;&nbsp;requirements.</p>
+</div>
+<div class="section" id="store-in-and-txt-files-in-version-control">
+<h2>Store <tt class="docutils literal">.in</tt> and <tt class="docutils literal">.txt</tt> files in version&nbsp;control</h2>
+<p>Both <tt class="docutils literal">.in</tt> and <tt class="docutils literal">.txt</tt> files are tracked in the project&#8217;s revision control
+system, for example <tt class="docutils literal">git</tt>. This allows for shipping of the compiled <tt class="docutils literal">.txt</tt>
+files for installation, but more importantly, it presents the opportunity to
+check the diff of <tt class="docutils literal">.txt</tt> files when upgrading&nbsp;packages.</p>
+<p>I also tend to keep <tt class="docutils literal">.in</tt> files sorted&nbsp;alphabetically.</p>
+</div>
+<div class="section" id="set-in-files-to-depend-on-txt-files">
+<h2>Set <tt class="docutils literal">.in</tt> files to depend on <tt class="docutils literal">.txt</tt> files</h2>
+<p>In the example project there are <tt class="docutils literal">base.in</tt> and <tt class="docutils literal">test.in</tt> requirements&nbsp;files:</p>
+<ul class="simple">
+<li><tt class="docutils literal">base.in</tt> compiles to <tt class="docutils literal">base.txt</tt></li>
+<li><tt class="docutils literal">test.in</tt> compiles to <tt class="docutils literal">test.txt</tt></li>
+</ul>
+<p>I want the test requirements add to the base requirements <strong>without changing
+the versions</strong> of the packages compiled for base. Therefore I set <tt class="docutils literal">test.in</tt>
+to <tt class="docutils literal"><span class="pre">-r</span></tt> require the <tt class="docutils literal">base.txt</tt> compiled&nbsp;requirements:</p>
+<p><tt class="docutils literal">base.in</tt> contains:</p>
+<pre class="literal-block">
+project-packages
+</pre>
+<p><tt class="docutils literal">test.in</tt> contains:</p>
+<pre class="literal-block">
+-r base.txt
+
+test-packages
+</pre>
+<p>Setting <tt class="docutils literal">test.in</tt> to depend on <tt class="docutils literal">base.txt</tt> rather than <tt class="docutils literal">base.in</tt> means
+that the top level requirements for testing and do not override the packages
+needed by the main&nbsp;project.</p>
+</div>
+<div class="section" id="use-a-makefile-for-common-tasks">
+<h2>Use a Makefile for common&nbsp;tasks</h2>
+<p>On each project that has multiple requirements files, I use a Makefile and
+place it in the requirements&nbsp;folder.</p>
+<div class="highlight"><pre><span></span><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">check</span> <span class="n">clean</span>
+
+<span class="nv">objects</span> <span class="o">=</span> <span class="k">$(</span>wildcard *.in<span class="k">)</span>
+<span class="nv">outputs</span> <span class="o">:=</span> <span class="k">$(</span>objects:.in<span class="o">=</span>.txt<span class="k">)</span>
+
+<span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">outputs</span><span class="k">)</span>
+
+<span class="nf">%.txt</span><span class="o">:</span> %.<span class="n">in</span>
+    pip-compile -v --output-file <span class="nv">$@</span> $&lt;
+
+<span class="nf">test.txt</span><span class="o">:</span> <span class="n">base</span>.<span class="n">txt</span>
+
+<span class="nf">check</span><span class="o">:</span>
+    @which pip-compile &gt; /dev/null
+
+<span class="nf">clean</span><span class="o">:</span> <span class="n">check</span>
+    - rm *.txt
+</pre></div>
+<!-- ** -->
+<p>Here is that same file <a class="reference external" href="https://github.com/jamescooke/prlint/blob/master/requirements/Makefile">in a current project</a>.
+<strong><span class="caps">NOTE</span></strong> that because <tt class="docutils literal">make</tt> requires recipes to be indented by tabs, if you
+want to copy this file then it could be helpful to pull the <a class="reference external" href="https://raw.githubusercontent.com/jamescooke/prlint/master/requirements/Makefile">raw file from
+Github</a>
+rather than copying and pasting out of this webpage where the tabs have not
+been&nbsp;reproduced.</p>
+<p>Let&#8217;s go over the key functionality provided by this&nbsp;Makefile:</p>
+<ul>
+<li><p class="first">First two&nbsp;definitions:</p>
+<div class="highlight"><pre><span></span><span class="nv">objects</span> <span class="o">=</span> <span class="k">$(</span>wildcard *.in<span class="k">)</span>
+</pre></div>
+<!-- ** -->
+<p><tt class="docutils literal">objects</tt> is a list containing every <tt class="docutils literal">.in</tt> file in requirements&nbsp;folder.</p>
+<div class="highlight"><pre><span></span><span class="nv">outputs</span> <span class="o">:=</span> <span class="k">$(</span>objects:.in<span class="o">=</span>.txt<span class="k">)</span>
+</pre></div>
+<p><tt class="docutils literal">outputs</tt> is also a list made of one <tt class="docutils literal">.txt</tt> filename for each <tt class="docutils literal">.in</tt> file
+in the <tt class="docutils literal">outputs</tt> list. The <tt class="docutils literal">.txt</tt> files do not need to exist yet, this
+list tells <tt class="docutils literal">make</tt> what they should be&nbsp;called.</p>
+</li>
+<li><p class="first">A recipe called <tt class="docutils literal">all</tt> to build all <tt class="docutils literal">.txt</tt> files:</p>
+<div class="highlight"><pre><span></span><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">outputs</span><span class="k">)</span>
+</pre></div>
+<p>The <tt class="docutils literal">all</tt> recipe has no commands of its own - it solely depends on all the
+<tt class="docutils literal">.txt</tt> files in the <tt class="docutils literal">outputs</tt> list being built. In order to fulfil this
+recipe, <tt class="docutils literal">make</tt> will attempt to build  every <tt class="docutils literal">.txt</tt> file in the <tt class="docutils literal">objects</tt>
+list.</p>
+</li>
+<li><p class="first">Up until now, <tt class="docutils literal">make</tt> does not know how to build a <tt class="docutils literal">.txt</tt> file, so here we
+give it a&nbsp;recipe:</p>
+<div class="highlight"><pre><span></span><span class="nf">%.txt</span><span class="o">:</span> %.<span class="n">in</span>
+    pip-compile -v --output-file <span class="nv">$@</span> $&lt;
+</pre></div>
+<p>The first line tells <tt class="docutils literal">make</tt> that any <tt class="docutils literal">.txt</tt> file depends on the <tt class="docutils literal">.in</tt>
+file with the same name. <tt class="docutils literal">make</tt> will check the date stamp on the two files
+and compare them - if the <tt class="docutils literal">.txt</tt> file is older than the <tt class="docutils literal">.in</tt> file or does
+not exist, then <tt class="docutils literal">make</tt> will build&nbsp;it.</p>
+<p>The next line tells <tt class="docutils literal">make</tt> the command to use to perform the build - it is
+the <tt class="docutils literal"><span class="pre">pip-compile</span></tt> command with the following&nbsp;flags:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">-v</span></tt> means <tt class="docutils literal"><span class="pre">pip-compile</span></tt> will give verbose output. I find this helpful
+for general watchfulness, but you may prefer to remove&nbsp;it.</li>
+<li><tt class="docutils literal"><span class="pre">output-file</span> $&#64;</tt> means &#8220;send the output to the target of the recipe&#8221;, which
+is the <tt class="docutils literal">.txt</tt> file we&#8217;ve asked to be made. For example when invoking <tt class="docutils literal">make
+base.txt</tt>, then <tt class="docutils literal"><span class="pre">--output-file</span> base.txt</tt> will be&nbsp;passed.</li>
+<li><tt class="docutils literal">$&lt;</tt> at the end is the corresponding <tt class="docutils literal">.in</tt> input file. Make matches the
+names using the <tt class="docutils literal">%</tt> sign in the recipe, so it knows to build <tt class="docutils literal">base.txt</tt>
+from <tt class="docutils literal">base.in</tt>.</li>
+</ul>
+</li>
+<li><p class="first">Now we tell <tt class="docutils literal">make</tt> about the dependency between the requirements&nbsp;files.</p>
+<div class="highlight"><pre><span></span><span class="nf">test.txt</span><span class="o">:</span> <span class="n">base</span>.<span class="n">txt</span>
+</pre></div>
+<p>This creates a dependency chain. This is an additional recipe for
+<tt class="docutils literal">test.txt</tt> which tells <tt class="docutils literal">make</tt> that it depends on <tt class="docutils literal">base.txt</tt>. That means
+that if <tt class="docutils literal">make</tt> is asked to build <tt class="docutils literal">test.txt</tt>, then it should be updated if
+<tt class="docutils literal">test.in</tt> <em>or</em> <tt class="docutils literal">base.txt</tt> have been&nbsp;updated.</p>
+<p>If <tt class="docutils literal">base.in</tt> is updated, then <tt class="docutils literal">make</tt> knows that it will need to recompile
+<tt class="docutils literal">base.txt</tt> in order to make <tt class="docutils literal">test.txt</tt>. We can see that&nbsp;here:</p>
+<div class="highlight"><pre><span></span>$ touch base.in       <span class="c1"># Update timestamp on base.in</span>
+$ make -n test.txt    <span class="c1"># What commands will be run to build test.txt</span>
+pip-compile -v --output-file base.txt base.in
+pip-compile -v --output-file test.txt test.in
+</pre></div>
+<p>This is exactly what we want for requirements inheritance. If the
+requirements in our base have changed, then we want our test file to be
+recompiled too because of the <tt class="docutils literal"><span class="pre">-r</span> base.txt</tt> line we added to the
+<tt class="docutils literal">test.in</tt> file.</p>
+<p>Of course, this is a trivial example, but I have used
+multiple lines of dependency in Makefiles to manage multiple levels of
+inheritance in requirements&nbsp;files.</p>
+</li>
+<li><p class="first">Finally, a recipe to help us update&nbsp;requirements.</p>
+<div class="highlight"><pre><span></span><span class="nf">check</span><span class="o">:</span>
+    @which pip-compile &gt; /dev/null
+
+<span class="nf">clean</span><span class="o">:</span> <span class="n">check</span>
+    - rm *.txt
+</pre></div>
+<!-- ** -->
+<p>The <tt class="docutils literal">check</tt> recipe will fail if <tt class="docutils literal"><span class="pre">pip-tools</span></tt> is not&nbsp;installed.</p>
+<p>The <tt class="docutils literal">clean</tt> recipe will remove all the <tt class="docutils literal">.txt</tt> files if the <tt class="docutils literal">check</tt>
+recipe is successful. This makes it harder to accidentally delete your
+requirements files without <tt class="docutils literal"><span class="pre">pip-tools</span></tt> already installed to be able to
+build them&nbsp;again.</p>
+</li>
+</ul>
+<p>I&#8217;ve explained what the Makefile above does, but not how or when you would use
+it. So let&#8217;s continue with some common workflow&nbsp;actions.</p>
+</div>
+<div class="section" id="build-one-or-more-requirements-files">
+<h2>Build one or more requirements&nbsp;files</h2>
+<p>To update all requirements use the default <tt class="docutils literal">all</tt> recipe.</p>
+<div class="highlight"><pre><span></span>$ make all
+</pre></div>
+<p>To update a particular file, ask for it by&nbsp;name:</p>
+<div class="highlight"><pre><span></span>$ make test.txt
+</pre></div>
+<p>If make tells you that a file is up-to-date but you want to force it to be
+rebuilt you should <tt class="docutils literal">touch</tt> the <tt class="docutils literal">.in</tt> file.</p>
+<div class="highlight"><pre><span></span>$ make base.txt
+make: <span class="s1">&#39;base.txt&#39;</span> is up to date.
+$ touch base.in
+$ make base.txt
+pip-compile -v --output-file base.txt base.in
+...
+</pre></div>
+</div>
+<div class="section" id="add-a-dependency">
+<h2>Add a&nbsp;dependency</h2>
+<p>To add a dependency, locate the appropriate <tt class="docutils literal">.in</tt> file and add the new
+package name there. The version number is only required if a particular version
+of the library is required. The latest version will be chosen by default when&nbsp;compiling.</p>
+<div class="highlight"><pre><span></span>$ cat &gt;&gt; base.in
+ipython
+$ make all
+</pre></div>
+</div>
+<div class="section" id="update-a-package">
+<h2>Update a&nbsp;package</h2>
+<p>In order to update a single top level package version, remove its lines from
+the compiled corresponding <tt class="docutils literal">.txt</tt> files. I tend to be quite &#8220;aggressive&#8221; with
+this and remove every package that the top level package depended on using
+<tt class="docutils literal">sed</tt> with a pattern&nbsp;match.</p>
+<p>Given that I want to update <tt class="docutils literal">ipython</tt> and it is not pinned in my <tt class="docutils literal">.in</tt>
+file:</p>
+<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;/ipython/d&#39;</span> -i *.txt
+$ make all
+</pre></div>
+<p>There is no command for this removal built into the Makefile, but potentially
+it could be. Ideally, it could be provided as extra functionality by
+<tt class="docutils literal"><span class="pre">pip-tools</span></tt>. Beware that packages often contain each other&#8217;s names as
+substrings so could lead to bad matching. If in doubt review your diff and
+potentially remove lines from your <tt class="docutils literal">.txt</tt> files&nbsp;manually.</p>
+<p>The call to <tt class="docutils literal">make all</tt> will reevaluate the latest version for packages that
+do not have corresponding lines in the <tt class="docutils literal">.txt</tt> file and they will be updated
+as&nbsp;required.</p>
+</div>
+<div class="section" id="update-all-requirements">
+<h2>Update all&nbsp;requirements</h2>
+<p>A full update of all requirements to the latest version (including updating all
+packages that are not pinned in the <tt class="docutils literal">.in</tt> file with a particular version
+number) can be achieved&nbsp;with:</p>
+<div class="highlight"><pre><span></span>$ make clean all
+</pre></div>
+<p>The <tt class="docutils literal">clean</tt> recipe will clean out all <tt class="docutils literal">*.txt</tt> files if you have
+<tt class="docutils literal"><span class="pre">pip-tools</span></tt> installed. Then the <tt class="docutils literal">all</tt> recipe will rebuild them all in
+dependency&nbsp;order.</p>
+</div>
+<div class="section" id="finally">
+<h2>Finally</h2>
+<p>A tip for working with Makefiles. If you want to see what commands will be run
+by a recipe, you can use the <tt class="docutils literal"><span class="pre">-n</span></tt> flag and inspect the commands that were&nbsp;planned:</p>
+<div class="highlight"><pre><span></span>$ make -n all
+</pre></div>
+<p>Happy requirements&nbsp;packing!</p>
+</div>
+<div class="section" id="update-21-11-2016">
+<h2>Update&nbsp;21/11/2016</h2>
+<p>For more information on the advantages and disadvantages of setting recursive
+requirements to point at <tt class="docutils literal">.in</tt> files or <tt class="docutils literal">.txt</tt> files please see <a class="reference external" href="https://github.com/nvie/pip-tools/issues/398">this Issue</a> on the <tt class="docutils literal"><span class="pre">pip-tools</span></tt>
+repository.</p>
+<p>In particular, <a class="reference external" href="https://github.com/nvie/pip-tools/issues/398#issuecomment-261313647">my comment</a>
+illustrates how development requirements can become out of sync with base
+requirements when <tt class="docutils literal">.in</tt> files are used in recursion which does not happen
+when <tt class="docutils literal">.txt</tt> files are used. It&#8217;s for this reason, that I continue to
+recommend pointing at <tt class="docutils literal">.txt</tt> files with <tt class="docutils literal"><span class="pre">-r</span></tt>.</p>
+</div>
+<div class="section" id="update-30-06-2017">
+<h2>Update&nbsp;30/06/2017</h2>
+<p>See also <a class="reference external" href="https://github.com/jamescooke/blog/issues/9">this comment on GitHub</a> from Devin Fee for a
+<tt class="docutils literal">Makefile</tt> which:</p>
+<blockquote>
+&#8230; corrects the annoyance <tt class="docutils literal"><span class="pre">-e</span> <span class="pre">file:///Users/dfee/code/zebra</span> <span class="pre">-&gt;</span> <span class="pre">-e</span> .</tt>,
+making the file useful for users who don&#8217;t develop / deploy from your
+directory.</blockquote>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1611-pip-tools-workflow.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="A small Python 3 sketch of a solution to a water pouring problem.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>A water pouring problem sketched in Python // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>A water pouring problem sketched in&nbsp;Python</h1>
+                <p class="postdate" title="2015-01-09T10:00:00+00:00">- Posted Jan 09, 2015</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="the-problem">
+<h2>The&nbsp;problem</h2>
+<p>At the end of last year, I came across the following water pouring problem
+because something similar had come up in a friend&#8217;s functional programming&nbsp;interview:</p>
+<blockquote>
+<strong>There are three glasses on the table - 3, 5, and 8 oz. The first two are
+empty, the last contains 8 oz of water. By pouring water from one glass to
+another make at least one of them contain exactly 4 oz of water.</strong></blockquote>
+<p><em>Source: A. Bogomolny,</em> <a class="reference external" href="https://www.cut-the-knot.org/water.shtml">3 Glasses Puzzle from Interactive Mathematics
+Miscellany and Puzzles</a>, <em>Accessed
+09 January&nbsp;2015</em></p>
+</div>
+<div class="section" id="a-solution-using-search-not-algebra">
+<h2>A solution using search, not&nbsp;algebra</h2>
+<p>At first I started to explore the problem by looking at it algebraically. What
+are the differences between each cup? How can those differences be summed
+together to give the required remainder of&nbsp;4?</p>
+<p>However this didn&#8217;t yield anything helpful. Instead, I started looking at the
+solution states. What do the cups have to look like for the puzzle to be&nbsp;solved?</p>
+<div class="section" id="two-success-states">
+<h3>Two success&nbsp;states</h3>
+<p>There are at least two success states. One where the 5 oz cup contains 4 oz
+of water and the other where the 8 oz cup contains 4 oz of water. The other two
+cups must contain the remaining 4 oz of water. This is the notation I&#8217;ve used
+for these two states, where <tt class="docutils literal">x + y = 4</tt>:</p>
+<pre class="literal-block">
+[&lt;Cup x/3&gt;, &lt;Cup 4/5&gt;, &lt;Cup y/8&gt;]
+</pre>
+<p>And:</p>
+<pre class="literal-block">
+[&lt;Cup x/3&gt;, &lt;Cup y/5&gt;, &lt;Cup 4/8&gt;]
+</pre>
+</div>
+<div class="section" id="the-search-problem">
+<h3>The search&nbsp;problem</h3>
+<p>So taking the second state, and assuming that the first cup is full, then the
+question&nbsp;becomes:</p>
+<blockquote>
+How do we get from the start state to the end state?</blockquote>
+<pre class="literal-block">
+[&lt;Cup 0/3&gt;, &lt;Cup 0/5&gt;, &lt;Cup 8/8&gt;]
+...
+TODO: Search in here for a path
+...
+[&lt;Cup 3/3&gt;, &lt;Cup 1/5&gt;, &lt;Cup 4/8&gt;]
+</pre>
+<p>This is really helpful. It turns an algebra problem into a search problem.
+Computers are good at doing search. We can write code for&nbsp;this.</p>
+</div>
+</div>
+<div class="section" id="a-python-3-sketch">
+<h2>A Python 3&nbsp;sketch</h2>
+<p>I&#8217;ve written some Python to solve this problems using a type of depth first
+<a class="reference external" href="https://en.wikipedia.org/wiki/Tree_traversal">Tree Traversal</a> and tree
+generation&nbsp;strategy.</p>
+<p>The <a class="reference external" href="https://github.com/jamescooke/water-pouring-python">code repository is available on GitHub</a>. The <span class="caps">README</span> contains the
+installation and operating&nbsp;instructions.</p>
+<p>These are some of the features of the&nbsp;code:</p>
+<div class="section" id="cup-and-game-classes">
+<h3>Cup and Game&nbsp;classes</h3>
+<p>In this code, the <a class="reference external" href="https://github.com/jamescooke/water-pouring-python/blob/master/water/cup.py">Cup
+class</a>
+represents a cup in the problem. Each Cup has a certain <tt class="docutils literal">capacity</tt> and
+<tt class="docutils literal">contents</tt>. The benefit of using a Cup class as a data type is that it can
+perform checks that is not holding more than its capacity of water or that it&#8217;s
+holding a negative capacity of water&nbsp;either.</p>
+<p>The <a class="reference external" href="https://github.com/jamescooke/water-pouring-python/blob/master/water/game.py">Game
+class</a>
+is more complex as it represents a single state in the tree. Each Game state
+has three main&nbsp;properties:</p>
+<ul class="simple">
+<li><tt class="docutils literal">cups</tt> - The three Cups that make up this Game&nbsp;state.</li>
+<li><tt class="docutils literal">parent</tt> - The Game that came before this one in the search. The starting
+state will have this as <tt class="docutils literal">None</tt>, but all the rest will have a&nbsp;parent.</li>
+<li><tt class="docutils literal">children</tt> - Each Game will have some or no child Game states stored in a
+list. These are the valid states that can be made by pouring some or all of
+one Cup&#8217;s contents into another Cup in the Game that haven&#8217;t already been
+seen during the&nbsp;search.</li>
+</ul>
+<p>The Game&#8217;s <tt class="docutils literal">children</tt> property makes the Game class a <a class="reference external" href="https://en.wikipedia.org/wiki/Recursive_data_type">recursive data
+structure</a> because it can
+contain other instances of Games. This opens the door to the recursive search
+described&nbsp;below.</p>
+<p>Again using this Game type is really helpful because I&#8217;ve been able to write
+tested functions for supporting data type functions like <tt class="docutils literal">__eq__</tt> (which
+tests if two Game stats are logically the same). The most important function in
+Game is <tt class="docutils literal">is_solvable</tt> which implements the search&nbsp;function.</p>
+</div>
+<div class="section" id="recursive-search">
+<h3>Recursive&nbsp;search</h3>
+<p>As mentioned above, the <tt class="docutils literal">Game.is_solvable</tt> function implements the tree
+search, so here it is in full, comments&nbsp;removed.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_solvable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_goal</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_trace</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_children</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solvable_child</span><span class="p">()</span>
+</pre></div>
+<p>There are two base cases to this <a class="reference external" href="https://en.wikipedia.org/wiki/Recursion_(computer_science)#Recursive_functions_and_algorithms">recursive function</a>.</p>
+<ul class="simple">
+<li><tt class="docutils literal">self.is_goal()</tt> : Goal has been reached. This Game contains a Cup that
+has 4 oz of water, success, a goal state has been found! Return <tt class="docutils literal">True</tt>
+and print a trace of how the algorithm got&nbsp;here.</li>
+<li><tt class="docutils literal">self.make_children() == 0</tt> : There are no child states. This Game can not
+generate any new states that don&#8217;t exist in the tree already, so this state
+is a fail, return <tt class="docutils literal">False</tt>.</li>
+</ul>
+<p>When neither of those two base cases are found, then this state is on a
+&#8220;success path&#8221; if one of its children &#8220;is solvable&#8221;. The recursive case is that
+the <tt class="docutils literal">Game.solvable_child</tt> helper function is then used to call
+<tt class="docutils literal">Game.is_solvable</tt> on each of the child&nbsp;Games.</p>
+<p>Here is the helper function without&nbsp;comments:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solvable_child</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">is_solvable</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">return</span> <span class="bp">False</span>
+</pre></div>
+<p>There are two &#8220;interesting&#8221; features of this&nbsp;function:</p>
+<ul class="simple">
+<li>It operates like a <a class="reference external" href="https://en.wikipedia.org/wiki/Short-circuit_evaluation">short circuited <span class="caps">OR</span></a> reduction. This
+means that as soon as a solvable child is found, it stops searching and
+returns <tt class="docutils literal">True</tt>.</li>
+<li>It has been split out from <tt class="docutils literal">Game.is_solvable</tt> to assist with unit&nbsp;testing.</li>
+</ul>
+<p>This short circuiting feature is important. I wasn&#8217;t able to get it to work in
+a <tt class="docutils literal">reduce</tt> statement on the <tt class="docutils literal">Game.children</tt>, so instead I wrote it out
+explicitly as a&nbsp;for-loop.</p>
+</div>
+<div class="section" id="duplicate-search">
+<h3>Duplicate&nbsp;search</h3>
+<p>When generating new Games by pouring water from Cup to Cup, only new Game
+states are added as children of any particular Game. This prevents duplication
+of Games and ensures that the search will terminate once all different possible
+states have been generated at the very&nbsp;latest.</p>
+<p>The <tt class="docutils literal">Game.has_game</tt> function implements this duplicate search using a
+recursive depth first tree&nbsp;search.</p>
+</div>
+<div class="section" id="as-much-functional-style-as-possible">
+<h3>As much functional style as&nbsp;possible</h3>
+<p>Originally I intended to write this sketch with as much <a class="reference external" href="https://en.wikipedia.org/wiki/Functional_programming">functional style code</a> as possible. However,
+there were certainly some functions that we not possible to achieve this
+without some serious hacking, and so I chose to keep those functions as simple
+and testable as&nbsp;possible.</p>
+<p>I&#8217;d love to have the time to come back and construct a similar sketch for this
+problem in&nbsp;Haskell.</p>
+</div>
+</div>
+<div class="section" id="possible-improvements-and-follow-up-ideas">
+<h2>Possible improvements and follow up&nbsp;ideas</h2>
+<p>Apart from a fully functional rewrite, there are a couple of ways that I could
+see to improve the sketch. Even though it doesn&#8217;t run slowly, there are
+certainly some optimisations that could be made, plus some follow up&nbsp;ideas.</p>
+<div class="section" id="save-time-by-checking-cups-contents-when-pouring">
+<h3>Save time by checking Cups contents when&nbsp;pouring</h3>
+<p>When generating child Game states by pouring from one cup to another, the
+system does not care if a Cup has water to give or if the recipient is full. It
+does the pour and then eliminates the new state because it&#8217;s a duplicate of its&nbsp;parent.</p>
+<p>Instead, time could be saved by improving the pouring function so that pours
+only generate new Game states when there is water to give and the destination
+cup has space for that&nbsp;water.</p>
+</div>
+<div class="section" id="improve-the-network-anti-duplication-search">
+<h3>Improve the network anti-duplication&nbsp;search</h3>
+<p>Searching the existing Game states to ensure that the same state hasn&#8217;t already
+been created first runs to the top of the Game tree, then searches&nbsp;downwards.</p>
+<p>Most Game states will be duplicates of a Game that&#8217;s either their parent or one
+Game state away from them. This means there&#8217;s an advantage, especially when
+running bigger problem searches, to search nearest Games&nbsp;first.</p>
+</div>
+<div class="section" id="create-a-goal-variable">
+<h3>Create a <tt class="docutils literal">goal</tt> variable</h3>
+<p>The code could be improved to accept a <tt class="docutils literal">goal</tt> value for the amount of water
+that should be in a Cup for success to be&nbsp;achieved.</p>
+</div>
+<div class="section" id="search-for-bigger-solvable-problems">
+<h3>Search for bigger solvable&nbsp;problems</h3>
+<p>Going meta, it would be interesting now to use this code to search for a nice
+big complicated water pouring problem. What&#8217;s the largest number of Cups and
+steps to success that can be&nbsp;found?</p>
+</div>
+</div>
+<div class="section" id="related-stuff">
+<h2>Related&nbsp;stuff</h2>
+<p>I&#8217;ve always been fascinated by the power of graph searching as a replacement
+for intelligence. In this example, the code has searched all possible Game
+states for one that meets the success&nbsp;criteria.</p>
+<p>My first introduction to this idea was via <a class="reference external" href="https://www.theguardian.com/science/2007/jul/10/uk.obituaries1">Donald Michie</a>&#8216;s  <span class="caps">MENACE</span>
+machine. This was a noughts-and-crosses playing machine made from matchboxes.
+It used a very simple algorithm, which is effectively a weighted graph, to
+&#8220;learn&#8221; to play the game. <a class="reference external" href="https://www.it.uu.se/edu/course/homepage/ai/menace">Uppsala University has an interesting project
+outline for building a code version</a>.</p>
+<p>Thanks for&nbsp;reading.</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/python.html">python</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1501-sketch-water-pouring.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-contexts-and-get.html">Django Contexts and <cite>get</cite></a>
+                        <p class="first last">Found that tests on a recent project started breaking for no clear
+reason, and it turned out it was because I&#8217;d used <tt class="docutils literal">get</tt> to retrieve
+values from&nbsp;Contexts.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/got-the-stack-overflow-tumbleweed-badge-for-mako-filters-question.html">Got the Stack Overflow tumbleweed badge for Mako filters&nbsp;question</a>
+                        <p class="first last">My Mako question got no views and no answers - should we be using Mako if things are so&nbsp;quiet?</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

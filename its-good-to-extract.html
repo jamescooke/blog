@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Thoughts on the benefits of extracting library code from Python projects into their own packages.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>It’s good to extract // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>It&#8217;s good to&nbsp;extract</h1>
+                <p class="postdate" title="2018-04-21T19:00:00+01:00">- Posted Apr 21, 2018</p>
+            </header>
+            <div class='article-content'>
+                <p>Last week we released version 1 of <a class="reference external" href="https://pypi.org/project/pysyncgateway/">pysyncgateway</a> - a Python package for
+communicating with <a class="reference external" href="https://github.com/couchbase/sync_gateway">Couchbase&#8217;s Sync Gateway</a> via its <span class="caps">REST</span> <span class="caps">API</span>.</p>
+<p>But this &#8220;new&#8221; library was not created from scratch. It consists mainly of code
+extracted from my employer&#8217;s Django based <span class="caps">API</span> server repository. That <span class="caps">API</span> is
+now around 4,000 lines of code and test smaller and installs <tt class="docutils literal">pysyncgateway</tt>
+as a package during&nbsp;deployment.</p>
+<p>Both the process of extraction and the final result have been been really
+helpful - this post covers some of the benefits that we have found so&nbsp;far.</p>
+<div class="section" id="better-separation-of-concerns">
+<h2>Better separation of&nbsp;concerns</h2>
+<p>The boundary between the new library and the server code makes it much easier
+to reason about where responsibilities start and&nbsp;end.</p>
+<p>Originally the Sync Gateway communication code was tightly knitted with our
+Django <span class="caps">API</span>&nbsp;server:</p>
+<ul class="simple">
+<li>It used Django settings for establishing URLs of the Sync Gateway instance in
+test and&nbsp;production.</li>
+<li>It provided test cases to our server&#8217;s old <tt class="docutils literal">Unittest</tt> test suite, Those
+test cases created test Databases, Users and Documents on the Sync Gateway
+for each test - tearing them down&nbsp;afterwards.</li>
+<li>It manipulated the statistical data retrieved from Sync Gateway and posted it
+to our <tt class="docutils literal">statsd</tt> instance. Again Django&#8217;s settings were used for&nbsp;configuration.</li>
+</ul>
+<p>In extracting the library, these responsibilities have been cleaned out and&nbsp;clarified:</p>
+<ul class="simple">
+<li>Communication with Sync Gateway&#8217;s <span class="caps">API</span> from Python - Responsibility of
+<tt class="docutils literal">pysyncgateway</tt> library. All calls made to Sync Gateway are the
+responsibility of the&nbsp;library.</li>
+<li>Testing and mitigating any strange behaviours of the Sync Gateway <span class="caps">API</span> -
+Responsibility of <tt class="docutils literal">pysyncgateway</tt>. The library&#8217;s code is the place to pin
+and mitigate any strange behaviours that are&nbsp;found.</li>
+<li>Integration of Sync Gateway&#8217;s objects (User, Document, Database) into
+the <span class="caps">API</span> server and Django - Responsibility of <span class="caps">API</span> server code. The server
+code remains responsible for managing its own tests&nbsp;conditions.</li>
+<li>Synchronisation of Django&#8217;s User object with Sync Gateway&#8217;s User objects -
+Responsibility of <span class="caps">API</span> server. The library is oblivious to the application that is
+using it - in the same way that the <a class="reference external" href="http://docs.python-requests.org/en/master/">requests libary</a> is oblivious to the fact that is
+it being used by <tt class="docutils literal">pysyncgateway</tt> to communicate with Sync&nbsp;Gateway.</li>
+</ul>
+</div>
+<div class="section" id="improved-efficiency-of-development-and-test">
+<h2>Improved efficiency of development and&nbsp;test</h2>
+<p>While working on the library code, I&#8217;ve found that testing has been much more&nbsp;efficient.</p>
+<p>In terms of time, a single test run as part of a build on <a class="reference external" href="https://circleci.com/gh/constructpm/pysyncgateway/tree/master">Circle <span class="caps">CI</span></a> takes around
+10s whereas in our <span class="caps">API</span> server test suite it was taking 40s and was mixed in
+with a much longer (~20 minute) long test&nbsp;suite.</p>
+<p>The dedicated library repository now means that when I&#8217;ve had questions
+about how Sync Gateway behaves in certain situations, then the library is
+the place to explore that behaviour and ensure that the library code is
+fulfilling its main responsibility - communicating as best it can with any Sync
+Gateway&nbsp;instance.</p>
+</div>
+<div class="section" id="document-all-the-things">
+<h2>Document all the&nbsp;things</h2>
+<p>The documentation built by <a class="reference external" href="http://www.sphinx-doc.org/en/master/">sphinx</a> and
+hosted on <a class="reference external" href="https://pysyncgateway.readthedocs.io/en/stable/">Read The Docs</a> is
+great. I&#8217;ve found it much better than reading docs via a code editor or
+<tt class="docutils literal">ipython</tt> and end up using the <span class="caps">RTD</span> site as the main point of&nbsp;reference.</p>
+<p>Luckily many of the docstrings were in place in much of the code before the
+extraction, but moving they were mixed in with <span class="caps">API</span> project specific information
+that could not be published. Again, the clarity of responsibilities meant that
+we could clean up much of the docs to make them ready to be&nbsp;published.</p>
+</div>
+<div class="section" id="still-a-monolith-but-with-packaging-benefits">
+<h2>Still a monolith, but with packaging&nbsp;benefits</h2>
+<p>Our server code remains a single monolith - it&#8217;s one installed blob of code on
+one server. The Sync Gateway code was extracted into a library, not a&nbsp;service.</p>
+<p>However, now that the Sync Gateway code is installed from PyPi via
+<tt class="docutils literal"><span class="pre">pip-sync</span></tt>, this provides the additional abstraction that we can select the
+version of the library that will be&nbsp;installed.</p>
+<p>This means we will have more flexibility to improve the library to work with
+the latest version of Sync Gateway 2 (it&#8217;s currently only tested with 1.5) and
+also Python 3. We can upgrade the library, make breaking changes if required
+and bump versions without touching the server monolith at&nbsp;all.</p>
+</div>
+<div class="section" id="finally">
+<h2>Finally</h2>
+<p>The extraction of <tt class="docutils literal">pysyncgateway</tt> has worked out well for us and so I&#8217;m
+preparing to extract our next library - a simple object orientated layer that
+we use to communicate with&nbsp;Nextcloud.</p>
+<p>There will be quite a bit of time invested to extract the code, but my
+expectation is that the test benefits will be great. Not only will we get to
+remove library code that takes around 6 minutes to test, but also we will gain
+the library&#8217;s test suite as a dedicated area to test the nuanced edge cases of
+Nextcloud&#8217;s <span class="caps">API</span>.</p>
+<p>Happy code&nbsp;extraction!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1804-pysyncgateway.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

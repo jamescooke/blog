@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Exploring the various model instance factories available for Django. Each factory is tested based on the quality of the instances it creates. Bonus: talk version and slides also available.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Django Factory Audit // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Django Factory&nbsp;Audit</h1>
+                <p class="postdate" title="2016-10-12T10:00:00+01:00">- Posted Oct 12, 2016</p>
+            </header>
+            <div class='article-content'>
+                <p>Factories build instances of models, primarily for testing, but can be used
+anywhere. In this post I present my attempts at grading different factory
+libraries available for Django based on the validity of the instances that they&nbsp;create.</p>
+<div class="section" id="the-problem">
+<h2>The&nbsp;Problem</h2>
+<p>You&#8217;re a much better programmer than me - I&#8217;m a bad programmer. I make
+mistakes, lots of them. I often forget to validate my instances before saving.
+In order for my tests to be more dependable and solid, I&#8217;d like whatever object
+factory I use to look after me by validating the generated instance before it
+reaches the&nbsp;database.</p>
+<p>This is the way that I&#8217;ve been looking at Django model instances - for a single
+model we can imagine sets of instances which might look&nbsp;like:</p>
+<img alt="Venn diagram showing sets of Django model instances grouped by validity." src="https://jamescooke.info/images/venn.png" style="width: 500px;" />
+<p>Where:</p>
+<ul class="simple">
+<li><tt class="docutils literal">ε</tt>: The universal set of all possible instances of this&nbsp;model.</li>
+<li><tt class="docutils literal">D</tt>: The set of instances that the database would consider valid. It&#8217;s
+interesting to note that this set might change as code is developed, tested
+and run on machines that have different database versions or use different
+databases&nbsp;altogether.</li>
+<li><tt class="docutils literal">V</tt>: The set of valid instances which pass <tt class="docutils literal">full_clean</tt>. This is a subset
+of <tt class="docutils literal">D</tt>.</li>
+</ul>
+<p>The main issue is the set <tt class="docutils literal">D/V</tt> of instances. These are all the instances
+which can be saved into the database but are considered invalid by&nbsp;Django.</p>
+<p>When factories create instances that reside in this <tt class="docutils literal">D/V</tt> set, they create
+instability in the&nbsp;system:</p>
+<ul class="simple">
+<li>If a user attempts to edit that instance through the Django Admin system,
+then they may not be able to save their changes without fixing a list of
+invalid&nbsp;fields.</li>
+<li>Test suites will be executed using model instances that <em>should</em> not be
+created during the &#8220;normal&#8221; lifetime of the&nbsp;application.</li>
+</ul>
+</div>
+<div class="section" id="possible-solutions">
+<h2>Possible&nbsp;solutions</h2>
+<p>We could argue that way in which Django does not call <tt class="docutils literal">full_clean</tt> before it
+writes instances to the database is the root of the problem - I&#8217;ve previously
+<a class="reference external" href="https://jamescooke.info/djangos-model-save-vs-full_clean.html">written and spoken about this</a>. However, this is more a
+&#8220;condition of the environment&#8221; and therefore something that we need to manage,
+rather than&nbsp;fix.</p>
+<p>Also, look at it another way. Any factory that integrates with Django can
+inspect the target model and immediately find the constraints on each field.
+Therefore with Django, factory libraries have all the information they need to
+build a strategy for creating valid data. On top of that, Django provides the
+<tt class="docutils literal">full_clean</tt> function so any generated data can also be checked for validity
+before it&#8217;s sent to the database. Why should we have to re-code the constraints
+already created for our models into our factories? This looks like duplication
+of&nbsp;work.</p>
+<p>So let&#8217;s explore how different factory libraries deal with this problem of
+instances in the <tt class="docutils literal">D/V</tt> set - the white of the fried egg in the&nbsp;diagram.</p>
+</div>
+<div class="section" id="factory-libraries">
+<h2>Factory&nbsp;libraries</h2>
+<p>The following factory libraries have been&nbsp;explored:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/fcurella/django-fakery">Django&nbsp;Fakery</a></li>
+<li><a class="reference external" href="https://github.com/FactoryBoy/factory_boy">Factory Boy</a><ul>
+<li><a class="reference external" href="https://github.com/jamescooke/factory_djoy">Factory&nbsp;Djoy</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="https://hypothesis.readthedocs.io/en/latest/django.html">Hypothesis[django]</a></li>
+<li><a class="reference external" href="https://github.com/klen/mixer">Mixer</a></li>
+<li><a class="reference external" href="https://github.com/vandersonmota/model_mommy">Model&nbsp;Mommy</a></li>
+</ul>
+<p>Factory Djoy is my factory library. It&#8217;s a thin wrapper around Factory Boy
+which does the hard work. I&#8217;ve indented it because it&#8217;s really a version of
+Factory Boy than a standalone factory&nbsp;library.</p>
+</div>
+<div class="section" id="test-conditions">
+<h2>Test&nbsp;conditions</h2>
+<p>The code used to test the factory libraries is available in the <a class="reference external" href="https://github.com/jamescooke/factory_audit">Factory Audit
+repository</a>. For each factory
+library, two factories have been created in a default state, one targeting each
+of the test&nbsp;Models:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal">ItemFactory</tt>: to create and save instances of <tt class="docutils literal">plant.models.Item</tt>, a
+test model defined <a class="reference external" href="https://github.com/jamescooke/factory_audit/blob/master/factory_audit/plant/models.py">in the &#8216;plant&#8217; app</a>.</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Single Item with one required field &#39;name&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p>This example has been taken from the <a class="reference external" href="https://github.com/jamescooke/factory_audit">Factory_Djoy <span class="caps">README</span></a> but with a reduced length of
+name down to one character to more easily force name&nbsp;collisions.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">UserFactory</tt>: to create and save instances of the default
+<tt class="docutils literal">django.contrib.auth</tt> User&nbsp;Model.</p>
+</li>
+</ul>
+<p>The goal is that each factory should reliably generate 10 valid instances of
+each&nbsp;model.</p>
+<p>Wherever possible I&#8217;ve tried to be as explicit as possible and import the
+target model, rather than refer to it by name as some factories&nbsp;allow.</p>
+</div>
+<div class="section" id="gradings">
+<h2>Gradings</h2>
+<p>Each factory library has been graded based on how its default configuration
+behaves when used with the <tt class="docutils literal">Item</tt> and <tt class="docutils literal">User</tt> models.</p>
+<p>The gradings are based on the definition of &#8220;valid&#8221;. Valid instances are ones
+which will pass Django&#8217;s <tt class="docutils literal">full_clean</tt> and not raise a <tt class="docutils literal">ValidationError</tt>.
+For example, using the <tt class="docutils literal">ItemFactory</tt> a generated item passes validation&nbsp;with:</p>
+<div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">ItemFactory</span><span class="p">()</span>
+<span class="n">item</span><span class="o">.</span><span class="n">full_clean</span><span class="p">()</span>
+</pre></div>
+<p>The gradings&nbsp;are:</p>
+<ul class="simple">
+<li><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span> - Factory creates <strong>invalid</strong> instances of the model and
+saves them to the database. These are instances in the <tt class="docutils literal">D/V</tt> set.</li>
+<li><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span> - Factory raises an exception and does not save any
+invalid instances. Preferably this would be a <tt class="docutils literal">ValidationError</tt>, but I&#8217;ve
+also allowed <tt class="docutils literal">IntegrityError</tt> and <tt class="docutils literal">RunTimeError</tt> here.</li>
+<li><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span> - Factory creates multiple <strong>valid</strong> instances with no
+invalid instances created or skipped. Running factory <tt class="docutils literal">n</tt> times generates
+<tt class="docutils literal">n</tt> valid&nbsp;instances.</li>
+</ul>
+<p>The tests on each of the factories have been written to pass when the factory
+behaves to the expected grade. For example, the test on Factory Djoy&#8217;s
+<tt class="docutils literal">ItemFactory</tt> expect that it raises <tt class="docutils literal">ValidationError</tt> each time it&#8217;s used
+and <a class="reference external" href="https://github.com/jamescooke/factory_audit/blob/master/factory_audit/plant/tests/test_factory_djoy_factories.py#L12-L20">is therefore <span class="caps">YELLOW</span> grade</a>.</p>
+</div>
+<div class="section" id="results">
+<h2>Results</h2>
+<div class="section" id="original-results">
+<h3>Original&nbsp;results</h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Library</th>
+<th class="head">ItemFactory</th>
+<th class="head">UserFactory</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><strong>Django Fakery</strong></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+</tr>
+<tr><td><strong>Factory Boy</strong></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+</tr>
+<tr><td><strong>Factory Djoy</strong></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+<tr><td><strong>Hypothesis[django]</strong></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+</tr>
+<tr><td><strong>Mixer</strong></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+<tr><td><strong>Model Mommy</strong></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="update">
+<h3>Update</h3>
+<p>Thanks to Piotr and Adam who pointed out some issues with my grading&nbsp;system.</p>
+<p><strong>Adam</strong> pointed out that collisions are still collisions, even if they are
+unlikely. Therefore, even if factories are employing fantastic strategies for
+generating valid data, their generated instances should still be run through
+<tt class="docutils literal">full_clean</tt> before&nbsp;save.</p>
+<p>I agree with this opinion and think that calling <tt class="docutils literal">full_clean</tt> on every
+instance creates the opportunity for two benefits, over and above asserting
+that every instance is&nbsp;valid:</p>
+<ul class="simple">
+<li>If a factory raises <tt class="docutils literal">ValidationError</tt> with information on what failed it
+will always be helpful to the developer who is fixing the broken test&nbsp;run.</li>
+<li>If invalid data is found, this would create an opportunity for a factory to
+adjust failing fields so that valid data can be saved and the test run will
+not be&nbsp;interrupted.</li>
+</ul>
+<p>I&#8217;ve added a &#8220;Uses <tt class="docutils literal">full_clean</tt>&#8221; field to evaluate each factory and capture
+this&nbsp;information.</p>
+<p><strong>Piotr</strong> pointed out that the results of the grading are inconclusive since I
+don&#8217;t agree with the results. For example, in the original results Mixer is the
+only library that has <span class="caps">GREEN</span> <span class="caps">GREEN</span> and therefore we would assume that it is the
+best of the factories tested. However, that&#8217;s not the case, since I found it
+hard to use and its exception bubbling was also&nbsp;intrusive.</p>
+<p>I&#8217;ve added the &#8220;Ease of use&#8221; grading to capture this information based on my
+experience working with each&nbsp;factory.</p>
+</div>
+<div class="section" id="new-gradings">
+<h3>New&nbsp;gradings</h3>
+<ul class="simple">
+<li>Uses <tt class="docutils literal">full_clean</tt>:<ul>
+<li><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span> - Not instance of <tt class="docutils literal">full_clean</tt> in the factory code&nbsp;base.</li>
+<li><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span> - Factory code base includes <tt class="docutils literal">full_clean</tt> in the
+test suite&nbsp;only.</li>
+<li><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span> - Factory tests every generated instance with
+<tt class="docutils literal">full_clean</tt>.</li>
+</ul>
+</li>
+<li>Ease of use:<ul>
+<li><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span> - Do not bother trying. Too difficult to&nbsp;use.</li>
+<li><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span> - Some pain may be experienced. You might struggle to
+install, need to adjust your workflow, packages,&nbsp;etc.</li>
+<li><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span> - Easy to install. Clean <span class="caps">API</span>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="updated-results">
+<h3>Updated&nbsp;results</h3>
+<p>Results with additional &#8220;Uses <tt class="docutils literal">full_clean</tt> and &#8220;Ease of use&#8221;&nbsp;information:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="19%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Library</th>
+<th class="head">ItemFactory</th>
+<th class="head">UserFactory</th>
+<th class="head">Uses <tt class="docutils literal">full_clean</tt></th>
+<th class="head">Ease of use</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><strong>Django Fakery</strong></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+<tr><td><strong>Factory Boy</strong></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+<tr><td><strong>Factory Djoy</strong></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+<tr><td><strong>Hypothesis[django]</strong></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+<tr><td><strong>Mixer</strong></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+</tr>
+<tr><td><strong>Model Mommy</strong></td>
+<td><img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+<td><img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></td>
+<td><img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="notes-about-each-library">
+<h2>Notes about each&nbsp;library</h2>
+<p>Grading each library was often harder than I thought it would be because many
+don&#8217;t fall into one grading or another. Where that has happened I&#8217;ve noted it&nbsp;below.</p>
+<div class="section" id="id1">
+<h3>Django&nbsp;Fakery</h3>
+<ul>
+<li><p class="first"><strong>ItemFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
+<p>Unfortunately, Django Fakery does not recognise that only one character is
+allowed for the Item model&#8217;s <tt class="docutils literal">name</tt> field. It uses Latin words from a
+generator which are saved by the default SQLite database and are invalid
+because they are too&nbsp;long.</p>
+</li>
+<li><p class="first"><strong>UserFactory</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
+<p>In order to create <tt class="docutils literal">User</tt> instances Django Fakery also uses the Latin
+generator which collides often. This means that <tt class="docutils literal">IntegrityError</tt> is raised
+when collisions occur, but any Users created are&nbsp;valid.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>Factory&nbsp;Boy</h3>
+<ul>
+<li><p class="first"><strong>ItemFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
+<p>Creates invalid instance of <tt class="docutils literal">Item</tt> which has no name and saves&nbsp;it.</p>
+</li>
+<li><p class="first"><strong>UserFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
+<p>Creates <tt class="docutils literal">User</tt> with invalid <tt class="docutils literal">username</tt> and <tt class="docutils literal">password</tt> fields and
+saves&nbsp;it.</p>
+</li>
+</ul>
+<p>Factory Boy has no automatic strategies used for default factories and so it
+fails this test hard. If the library was extended to call <tt class="docutils literal">full_clean</tt> for
+generated instances before saving then it could be upgraded to <span class="caps">YELLOW</span>.</p>
+</div>
+<div class="section" id="id3">
+<h3>Factory&nbsp;Djoy</h3>
+<ul>
+<li><p class="first"><strong>ItemFactory</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
+<p>Calls <tt class="docutils literal">full_clean</tt> on the <tt class="docutils literal">Item</tt> instance created by Factory Boy which it
+wraps. This raises <tt class="docutils literal">ValidationError</tt> and the <tt class="docutils literal">Item</tt> is not&nbsp;saved.</p>
+</li>
+<li><p class="first"><strong>UserFactory</strong> <img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></p>
+<p>Creates valid instances using a <a class="reference external" href="https://factory-djoy.readthedocs.io/en/latest/userfactory.html#unique-usernames">simple strategy</a>
+Unique <tt class="docutils literal">usernames</tt> are generated via Faker Factory which is already a
+requirement of Factory Boy. <tt class="docutils literal">full_clean</tt> is called on the generated
+instance to catch any collisions in the strategy and on collision, a new name
+is generated and&nbsp;retried.</p>
+</li>
+</ul>
+<p>Factory Djoy contains only one simple strategy for creating <tt class="docutils literal">Users</tt>. It has
+no inspection ability to create strategies of its own based on&nbsp;Models.</p>
+</div>
+<div class="section" id="id4">
+<h3>Hypothesis[django]</h3>
+<ul>
+<li><p class="first"><strong>ItemFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
+</li>
+<li><p class="first"><strong>UserFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
+<p>Hypothesis&#8217;s Django extra does not reliably create instances of either model
+because it&#8217;s <tt class="docutils literal">example</tt> function does <a class="reference external" href="https://github.com/jamescooke/factory_audit/pull/4">not reliably generate valid data</a>. In the case that an
+invalid example is generated it is skipped and the previous example is&nbsp;used.</p>
+<p>Interestingly, Hypothesis creates <tt class="docutils literal">User</tt> instances that Django considers to
+have invalid email&nbsp;addresses.</p>
+</li>
+<li><p class="first"><strong>Uses &#8220;full_clean&#8220;</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
+<p>Hypothesis&#8217;s code base currently includes a <a class="reference external" href="https://github.com/HypothesisWorks/hypothesis-python/blob/f6230a6f72ea8c89543e8c56a44d0510fb662f5d/tests/django/toystore/test_given_models.py#L112">single instance</a> of <tt class="docutils literal">full_clean</tt>.
+This is in its test suite to assert that instances built are valid. However,
+it doesn&#8217;t call <tt class="docutils literal">full_clean</tt> on generated instances during its normal&nbsp;operation.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>Mixer</h3>
+<ul>
+<li><p class="first"><strong>ItemFactory</strong> <img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></p>
+<p>Mixer appears to inspect the <tt class="docutils literal">Item</tt> model and generates a very limited
+strategy for generating names. Unfortunately it runs out of instances around
+23, even though there are hundreds of characters&nbsp;available.</p>
+</li>
+<li><p class="first"><strong>UserFactory</strong> <img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></p>
+</li>
+<li><p class="first"><strong>Ease of use</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
+<p>Mixer helpfully raises <tt class="docutils literal">Runtime</tt> error if a strategy can&#8217;t generate a valid
+instance. However, it echoes this to the standard out, which is annoying and
+really confused me when I was first using it because exceptions appear on the
+terminal even though all tests have&nbsp;passed.</p>
+<p>It uses an old version of Fake Factory which meant that its tests had to be
+extracted into a second test run that occurs after a <tt class="docutils literal"><span class="pre">pip-sync</span></tt> has taken
+place. I found this the hardest factory library to work&nbsp;with.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>Model&nbsp;Mommy</h3>
+<ul>
+<li><p class="first"><strong>ItemFactory</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
+<p>There is no method used to create unique values so there are collisions
+when there are a small number of possible values. Items that are
+created are&nbsp;valid.</p>
+</li>
+<li><p class="first"><strong>UserFactory</strong> <img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></p>
+<p>Model Mommy&#8217;s random text strategy works here for <tt class="docutils literal">username</tt> and the random
+strings are unlikely to&nbsp;collide.</p>
+</li>
+</ul>
+<p>Model Mommy depends on its strategies to create valid data and does not call
+<tt class="docutils literal">full_clean</tt> meaning that <tt class="docutils literal">IntegrityError</tt> can be raises when collisions
+occur. It could be argued that it should be downgraded to <span class="caps">YELLOW</span> because
+<tt class="docutils literal">IntegrityError</tt> is&nbsp;raised.</p>
+</div>
+</div>
+<div class="section" id="and-the-winner-is">
+<h2>And the winner&nbsp;is?</h2>
+<p>What is the best factory to use? This is a really hard&nbsp;question.</p>
+<p>These factory libraries generally consist of two parts and different libraries
+do each part&nbsp;well.</p>
+<ul class="simple">
+<li>Control / <span class="caps">API</span>: Personally I really like the Factory Boy <span class="caps">API</span> and how it
+interfaces with Django. I&#8217;m happy with the Factory Djoy library because it
+provides the certainly of calling <tt class="docutils literal">full_clean</tt> for every created instance
+on top of the Factory Boy <span class="caps">API</span>.</li>
+<li>Data strategy: I&#8217;m excited by Hypothesis and its ability to generate test&nbsp;data.</li>
+</ul>
+<p>My current advice is to use Factory Djoy, or wrap your favourite factory in a
+call to <tt class="docutils literal">full_clean</tt>.</p>
+<p>Yes, there is a performance overhead to calling <tt class="docutils literal">full_clean</tt> but my opinion
+is that eliminating the <tt class="docutils literal">D/V</tt> set of invalid instances is worth the effort
+and makes the test suite &#8220;fundamentally simpler&#8221; <a class="footnote-reference" href="#id9" id="id7">[1]</a>.</p>
+<p>My future thinking is that if Hypothesis can improve its interface to Django it
+could be the&nbsp;winner.</p>
+</div>
+<div class="section" id="resources">
+<h2>Resources</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/jamescooke/factory_audit">Factory audit repository</a>:
+Contains the research work - factories and tests for each factory library.
+Pull requests very welcome - especially if they add a new factory library or
+fix a&nbsp;test.</li>
+<li><a class="reference external" href="https://speakerdeck.com/jamescooke/full-clean-factories">Slides</a>: From my
+presentation of these results at the London Django October&nbsp;meetup.</li>
+<li>Video: Available via the <a class="reference external" href="https://skillsmatter.com/skillscasts/9137-full-clean-factories">Skills Matter website</a>.</li>
+<li>Thanks to Adam for pointing out the collisions issue which you can hear in
+the video around 20 minutes in. Even if collisions are unlikely, they can
+still be a problem. <a class="reference external" href="https://adamj.eu/tech/2014/09/03/factory-boy-fun/">Check out his Factory Boy post</a>.</li>
+<li>The <a class="reference external" href="#update">15th October update</a> to the post is visible as a <a class="reference external" href="https://github.com/jamescooke/blog/pull/4">Pull
+Request on the blog&#8217;s repository</a>.</li>
+</ul>
+<p>Happy&nbsp;fabricating!</p>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[1]</a></td><td><!--  -->
+<blockquote>
+Taking a few percent hit, going a little slower, in order to do
+something that&#8217;s just fundamentally simpler&#8221;</blockquote>
+<p><a class="reference external" href="https://youtu.be/zFMdhXYlFfY?t=20m1s">Pycon <span class="caps">UK</span> 2016: Python and the Glories of the <span class="caps">UNIX</span>&nbsp;Tradition</a></p>
+<p class="last">Brandon Rhodes, Pycon <span class="caps">UK</span>&nbsp;2016</p>
+</td></tr>
+</tbody>
+</table>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>,                     <a href="https://jamescooke.info/tag/topicdjango.html">topic:django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1610-factory-audit.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
+                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
+                        <p class="first last">An updated simple assertion helper for comparing instances of
+Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

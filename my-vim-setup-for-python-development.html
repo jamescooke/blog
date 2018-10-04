@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="My current Vim setup for Python development.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>My Vim setup for Python development // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>My Vim setup for Python&nbsp;development</h1>
+                <p class="postdate" title="2017-01-04T14:30:00+00:00">- Posted Jan 04, 2017</p>
+            </header>
+            <div class='article-content'>
+                <p>Below is a list of my Vim plug-ins and&nbsp;configurations.</p>
+<p>My goal has been to make Vim more useful for (primarily) Python development.
+This post refers to Vim 7, because I have not yet updated to Vim 8. I&#8217;m using
+<a class="reference external" href="https://github.com/junegunn/vim-plug">vim-plug</a> to manage my packages, so
+mentions of packages below will use the <tt class="docutils literal">Plug</tt> command.</p>
+<p>All the commands and configuration below come from my <a class="reference external" href="https://github.com/jamescooke/dotfiles/blob/master/store/.vimrc">vimrc file</a>. You&#8217;ll
+find that I don&#8217;t have a large number of plug-ins or configuration lines
+compared to other more famous Vim users (cough) <a class="reference external" href="https://github.com/nelstrom/dotfiles/blob/master/bundles.vim">Drew</a> (cough). That
+is a direct result of <a class="reference external" href="https://vimeo.com/65250028">Kris Jenkins&#8217;s Bare Bones Navigation Vim talk</a> at Vim London. The main result of which has been
+that I have always run a very simple Vim&nbsp;setup.</p>
+<p>My relatively recent use of <span class="caps">FZF</span> and Ctags listed below are a direct result of
+attending the most recent <a class="reference external" href="https://www.meetup.com/Vim-London/">Vim London meetup</a> and, if you&#8217;re in the London area, I
+fully recommend joining and attending. Every meetup I attend, my Vim-fu&nbsp;improves.</p>
+<div class="section" id="specific-python-config">
+<h2>Specific Python&nbsp;config</h2>
+<p>The following are my <tt class="docutils literal">.vimrc</tt> lines for handling&nbsp;Python.</p>
+<p>When searching for files with Vim, only load Python&nbsp;files:</p>
+<div class="highlight"><pre><span></span><span class="k">set</span> <span class="nb">suffixesadd</span><span class="p">=</span>.<span class="k">py</span>
+</pre></div>
+<p>Ignore <tt class="docutils literal">pyc</tt> files when expanding&nbsp;wildcards:</p>
+<div class="highlight"><pre><span></span><span class="k">set</span> <span class="nb">wildignore</span><span class="p">=</span>*.pyc
+</pre></div>
+<p>Don&#8217;t show <tt class="docutils literal">pyc</tt> in file&nbsp;lists:</p>
+<div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">g</span>:netrw_list_hide<span class="p">=</span> <span class="s1">&#39;.*\.pyc$&#39;</span>
+</pre></div>
+<p>Keep &#8220;Pythonic&#8221; tabs using 4 white&nbsp;spaces:</p>
+<div class="highlight"><pre><span></span><span class="k">set</span> <span class="nb">autoindent</span> <span class="nb">nosmartindent</span>    <span class="c">&quot; auto/smart indent</span>
+<span class="k">set</span> <span class="nb">smarttab</span>
+<span class="k">set</span> <span class="nb">expandtab</span>                   <span class="c">&quot; expand tabs to spaces</span>
+<span class="k">set</span> <span class="nb">shiftwidth</span><span class="p">=</span><span class="m">4</span>
+<span class="k">set</span> <span class="nb">softtabstop</span><span class="p">=</span><span class="m">4</span>
+</pre></div>
+<p>I really get frustrated with tabs that look like white spaces, so I ensure
+they are visible by telling Vim to show all tabs as little arrows <tt class="docutils literal">▷</tt>. This
+line also ensures that end of lines are shown with a negation sign <tt class="docutils literal">¬</tt> :</p>
+<div class="highlight"><pre><span></span><span class="k">set</span> <span class="nb">listchars</span><span class="p">=</span><span class="nb">eol</span>:¬<span class="p">,</span><span class="k">tab</span>:▷\ <span class="p">,</span>
+</pre></div>
+<p>A classic &#8220;Python tell&#8221; in Vim is the 79th or 80th character&nbsp;highlight:</p>
+<div class="highlight"><pre><span></span><span class="k">set</span> <span class="nb">colorcolumn</span><span class="p">=</span><span class="m">80</span>              <span class="c">&quot; Show the 80th char column.</span>
+<span class="nb">highlight</span> ColorColumn ctermbg<span class="p">=</span><span class="m">5</span>
+</pre></div>
+</div>
+<div class="section" id="fzf">
+<h2><span class="caps">FZF</span></h2>
+<p>My greatest recent revelation has been the integration of <a class="reference external" href="https://github.com/junegunn/fzf"><span class="caps">FZF</span></a> to provide &#8220;quick&#8221; fuzzy searching. Most
+frequently I search for files in the current git repository, open buffers and&nbsp;tags.</p>
+<p>Install <span class="caps">FZF</span> and get it working on your machine, then add it to your Vim
+setup using <a class="reference external" href="https://github.com/junegunn/fzf.vim">fzf.vim</a>:</p>
+<div class="highlight"><pre><span></span>Plug <span class="s1">&#39;junegunn/fzf&#39;</span><span class="p">,</span> { <span class="s1">&#39;dir&#39;</span>: <span class="s1">&#39;~/.fzf&#39;</span><span class="p">,</span> <span class="s1">&#39;do&#39;</span>: <span class="s1">&#39;./install --all&#39;</span> }
+Plug <span class="s1">&#39;junegunn/fzf.vim&#39;</span>
+</pre></div>
+<p>I&#8217;ve mapped my most common <span class="caps">FZF</span> searches to <a class="reference external" href="http://stevelosh.com/blog/2010/09/coming-home-to-vim/#using-the-leader">leader commands</a>:</p>
+<div class="highlight"><pre><span></span>imap <span class="p">&lt;</span><span class="k">c</span><span class="p">-</span><span class="k">x</span><span class="p">&gt;&lt;</span><span class="k">c</span><span class="p">-</span><span class="k">o</span><span class="p">&gt;</span> <span class="p">&lt;</span>plug<span class="p">&gt;(</span>fzf<span class="p">-</span><span class="nb">complete</span><span class="p">-</span>line<span class="p">)</span>
+map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">b</span> :Buffers<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">f</span> :Files<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">g</span> :GFiles<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">t</span> :Tags<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+</pre></div>
+<p>Keeping <span class="caps">FZF</span>&#8217;s line completion on <tt class="docutils literal"><span class="pre"><span class="caps">CTRL</span>-x</span> <span class="pre"><span class="caps">CTRL</span>-o</span></tt> means that I can keep
+access to Vim&#8217;s line completion which is bound to <tt class="docutils literal"><span class="pre"><span class="caps">CTRL</span>-x</span> <span class="pre"><span class="caps">CTRL</span>-l</span></tt> by&nbsp;default.</p>
+<p><a class="reference external" href="https://github.com/ggreer/the_silver_searcher">Ag</a> results integration
+with <span class="caps">FZF</span> is next on my list, I&#8217;m still using <tt class="docutils literal">Ag</tt> results on the command&nbsp;line.</p>
+</div>
+<div class="section" id="ctags">
+<h2>Ctags</h2>
+<p>I was definitely slow to get on the <a class="reference external" href="https://en.wikipedia.org/wiki/Ctags">Ctags</a>
+bandwagon, only adding them to my workflow in the last couple of months, but
+along with <span class="caps">FZF</span>, they have been a revelation. I&#8217;ve been using <a class="reference external" href="https://en.wikipedia.org/wiki/Ctags">Exhuberant Ctags</a> as my index&nbsp;generator.</p>
+<p>TPope has published a neat trick of stashing the <tt class="docutils literal">ctags</tt> script inside the
+<tt class="docutils literal">.git</tt> folder, outlined in <a class="reference external" href="https://tbaggery.com/2011/08/08/effortless-ctags-with-git.html">his blog post here</a>. My version
+of the script is inside my <a class="reference external" href="https://github.com/jamescooke/dotfiles/blob/master/store/.git_template/hooks/ctags.sh">git hooks configuration</a>
+and works in combination with my <a class="reference external" href="https://github.com/jamescooke/dotfiles/blob/master/store/.ctags">ctags config</a>.</p>
+<p>As mentioned above, I have used <tt class="docutils literal">&lt;leader&gt;t</tt> to trigger an <span class="caps">FZF</span>-powered search
+of&nbsp;tags:</p>
+<div class="highlight"><pre><span></span>map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">t</span> :Tags<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+</pre></div>
+<p>The default &#8220;jump to definition under cursor&#8221; is still the default <tt class="docutils literal"><span class="pre"><span class="caps">CTRL</span>-]</span></tt>
+which, with &#8220;previous tag&#8221; <tt class="docutils literal"><span class="pre"><span class="caps">CTRL</span>-t</span></tt> makes it really easy to traverse&nbsp;code.</p>
+</div>
+<div class="section" id="visual-selection">
+<h2>Visual&nbsp;selection</h2>
+<p>The <a class="reference external" href="https://github.com/gorkunov/smartpairs.vim">smartpairs plugin</a> is
+fantastic for selecting text inside brackets, braces and parentheses and is
+excellent for all languages I work with, not just&nbsp;Python:</p>
+<div class="highlight"><pre><span></span>Plug <span class="s1">&#39;gorkunov/smartpairs.vim&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="linting">
+<h2>Linting</h2>
+<p>In general, I&#8217;ve used external programs to provide linting of my Python code
+and so I run Vim with the current project&#8217;s virtualenv&nbsp;active.</p>
+<p>With <a class="reference external" href="https://pypi.python.org/pypi/isort">Isort</a> installed in the current
+environment, sort the imports of the current file with <tt class="docutils literal">&lt;leader&gt;i</tt> or call it
+with <tt class="docutils literal">:Isort</tt> command on a range of&nbsp;lines:</p>
+<div class="highlight"><pre><span></span>map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">i</span> :Isort<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+command<span class="p">!</span> <span class="p">-</span>range<span class="p">=</span>% Isort :<span class="p">&lt;</span>line1<span class="p">&gt;,&lt;</span>line2<span class="p">&gt;!</span> isort <span class="p">-</span>
+</pre></div>
+<p>With <a class="reference external" href="https://pypi.python.org/pypi/flake8/">flake8</a> installed in the current
+environment, lint the current file with <tt class="docutils literal">F7</tt> as provided by <a class="reference external" href="https://github.com/nvie/vim-flake8">Vincent
+Driessen&#8217;s vim-flake8</a>:</p>
+<div class="highlight"><pre><span></span>Plug <span class="s1">&#39;nvie/vim-flake8&#39;</span>
+</pre></div>
+<p>Happy&nbsp;Vimming!</p>
+<p><tt class="docutils literal">:xa</tt></p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/topicvim.html">topic:vim</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1701-vim-python.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/irregular-vim.html">Irregular&nbsp;Vim</a>
+                        <p class="first last">At July&#8217;s Vim London I gave a talk about some of Vim&#8217;s irregular
+behaviours. Using bare-bones Vim to present and demonstrate from is a
+risky&nbsp;business!</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/vi-nature-everywhere-lightning-talk.html">vi-nature everywhere - lightning&nbsp;talk</a>
+                        <p class="first last">This week I presented at Vim-London about vi nature and the benefits
+for using it in more than&nbsp;vim.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

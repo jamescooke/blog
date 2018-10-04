@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Using Pelican to generate this blog, a move away from Jekyll and to some pure Python.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Setting up this homepage with Pelican // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Setting up this homepage with&nbsp;Pelican</h1>
+                <p class="postdate" title="2013-01-20T17:25:00+00:00">- Posted Jan 20, 2013</p>
+            </header>
+            <div class='article-content'>
+                <p>This page has been through a lot in the last ten&nbsp;years.</p>
+<p>Since starting work at Quibly, I&#8217;ve had a lot more time to code and it&#8217;s exactly what I wanted, hopefully it&#8217;ll continue. The result of that is that I&#8217;ve got more to write about&#8230; The code that I develop at work, fixes I make to open source libraries and general things I learn, primarily about Python and web - hopefully all valuable and worth&nbsp;sharing.</p>
+<p>I&#8217;m experimenting with <a class="reference external" href="https://github.com/getpelican/pelican">Pelican</a> - a static blog generator written in Python. It&#8217;s excellent and noticeably easier than Jekyll - probably because I&#8217;m much more clued up in Python than Ruby. I&#8217;m lazy, so I&#8217;m hosting the outputted static files in the <tt class="docutils literal"><span class="pre">gh-pages</span></tt> branch of the <a class="reference external" href="https://github.com/jamescooke/blog/">blog&#8217;s repository</a> to take advantage of <a class="reference external" href="https://pages.github.com/">GitHub Pages&#8217; free hosting features</a> - thanks&nbsp;GitHub!</p>
+<p>In addition, I found <a class="reference external" href="https://www.davidfischer.name/2012/12/quick-note-pelican-github/">this article by David Fischer</a> very helpful. Particularly the suggestion of adding the <tt class="docutils literal"><span class="caps">CNAME</span></tt> copy command to the <tt class="docutils literal">Makefile</tt> to get GitHub Pages one configuration requirement and <tt class="docutils literal"><span class="pre">gph-import</span></tt> working nicely together. Plus David pointed out that Pelican already has a <tt class="docutils literal">github</tt> target in the <tt class="docutils literal">Makefile</tt> which I hadn&#8217;t noticed and is now what I use to push articles&nbsp;live.</p>
+<p>All in all - great and&nbsp;simple.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/zzz-misc.html">ZZZ Misc...</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/pelican.html">pelican</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/pelican-svbtle-theme-tweaks.html">Pelican Svbtle theme&nbsp;tweaks</a>
+                        <p class="first last">A tweaked fork of the Pelican Svbtle theme with some cleaned <span class="caps">CSS</span> and <span class="caps">HTML</span>.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

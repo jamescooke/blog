@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Confirming that Django can screw up your data when saving, and exploring why this is still the case.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Django’s model save vs full_clean // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Django&#8217;s model <cite>save</cite> vs <cite>full_clean</cite></h1>
+                <p class="postdate" title="2015-11-15T17:00:00+00:00">- Posted Nov 15, 2015</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="screwing-up-data">
+<h2>Screwing up&nbsp;data</h2>
+<p>At a previous talk I gave on <a class="reference external" href="/things-i-wish-id-known-about-django.html">&#8220;Things I wish I&#8217;d known about Django&#8221;</a> there was this&nbsp;slide:</p>
+<script async class="speakerdeck-embed" data-slide="6" data-id="6f327318d302437f8ccafb8da4c2cd32" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script></div>
+<div class="section" id="what">
+<h2>What?</h2>
+<p>I&#8217;ve made some experimental code in a <a class="reference external" href="https://github.com/jamescooke/django-clean-vs-save">small Django clean vs save project</a>.  It has a few models
+and a <a class="reference external" href="https://github.com/jamescooke/django-clean-vs-save/blob/master/clean_vs_save/clean_vs_save/tests.py">single test file</a>
+which is readable and&nbsp;passes.</p>
+<p>The main take-aways&nbsp;are:</p>
+<ul class="simple">
+<li>Creating an instance of a Model and calling <tt class="docutils literal">save</tt> on that instance does
+not call <tt class="docutils literal">full_clean</tt>. Therefore it&#8217;s possible for invalid data to enter
+your database if you don&#8217;t manually call the <tt class="docutils literal">full_clean</tt> function before&nbsp;saving.</li>
+<li>Object managers&#8217; default <tt class="docutils literal">create</tt> function also doesn&#8217;t call
+<tt class="docutils literal">full_clean</tt>.</li>
+</ul>
+<p>Personally I find this&nbsp;jarring.</p>
+<p>Given that the developer is the customer of Django I think it conflicts with
+the <a class="reference external" href="https://en.wikipedia.org/wiki/Principle_of_least_astonishment">principle of least astonishment</a>.</p>
+</div>
+<div class="section" id="why-is-it-like-this">
+<h2>Why is it like&nbsp;this?</h2>
+<p>The <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/models/instances/#validating-objects">Django documentation of Validating Objects</a>
+is quoted in <a class="reference external" href="https://code.djangoproject.com/ticket/13100">Django ticket #13100</a> as&nbsp;saying:</p>
+<blockquote>
+Note that full_clean() will <span class="caps">NOT</span> be called automatically when you call your
+model&#8217;s save() method. You&#8217;ll need to call it manually if you want to run
+model validation outside of a ModelForm. (This is for backwards
+compatibility.)</blockquote>
+<p><strong>Ahh &#8220;backwards&nbsp;compatibility&#8221;?!</strong></p>
+<p>It appears that phrase only lived for four months back in&nbsp;2010.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/django/django/commit/4d6c66d4d8fa63005f8ca2d3fbae195922969d13">Created 5th Jan&nbsp;2010</a></li>
+<li><a class="reference external" href="https://github.com/django/django/commit/4a15dc450996b62596d74f8d98388c9e2f4a10c7#diff-5b33a9c46f488003c1846ef677f861d3L56">Removed 9th May&nbsp;2010</a></li>
+</ul>
+<p>I haven&#8217;t been able to find any more specific reasons that it was added or&nbsp;removed.</p>
+</div>
+<div class="section" id="what-next">
+<h2>What&nbsp;next?</h2>
+<p>More warnings I&nbsp;guess:</p>
+<ul class="simple">
+<li>Consider if you ever want to be able to call <tt class="docutils literal">save</tt> <strong>without</strong>
+<tt class="docutils literal">full_clean</tt>. If the answer is &#8216;no&#8217;, then explore how you&#8217;ll wrap your
+models in business logic or extend them in some way that implements this
+(with tests of course). A quick search of the internet will show you some
+Django plugins that adjust this&nbsp;behaviour.</li>
+<li>Remember that you can ruin your database when migrating if you don&#8217;t call
+<tt class="docutils literal">full_clean</tt> after the migration has changed a model but before saving. All
+migrations should be tested to ensure that they can roll-back if
+<tt class="docutils literal">full_clean</tt> raises a <tt class="docutils literal">ValidationError</tt> during&nbsp;migration.</li>
+<li>Check out posts like <a class="reference external" href="http://dev.nando.audio/2014/04/04/why_i_sort_of_dislike_django.html">Why I sort of dislike Django</a>. It
+mentions things like backwards compatibility and the <tt class="docutils literal">save</tt> function.</li>
+</ul>
+</div>
+<div class="section" id="finally">
+<h2>Finally</h2>
+<p>Thanks to <a class="reference external" href="https://twitter.com/petexgraham"><span class="caps">PXG</span></a> for sharing the &#8220;Why I sort
+of dislike Django&#8221; post and discussing Django project structures with&nbsp;me.</p>
+<p>Thanks for&nbsp;reading!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/topicdjango.html">topic:django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1511-django-save-vs-fullclean.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/fixing-exception-in-django-menu.html">Fixing exception in&nbsp;django-menu</a>
+                        <p class="first last">A tiny pull request to stop django-menu from throwing exceptions on
+new unconfigured&nbsp;sites.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/django-mailchimp-compatability-with-v13-api.html">Django-mailchimp compatability with v1.3 <span class="caps">API</span></a>
+                        <p class="first last">Some small updates to the django-mailchimp library to upgrade to the latest Mailchimp <span class="caps">API</span>.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
+                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

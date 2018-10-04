@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Notes to myself about Python decorators with a focus on making them testable.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Things to remember about decorators // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Things to remember about&nbsp;decorators</h1>
+                <p class="postdate" title="2013-10-22T20:00:00+01:00">- Posted Oct 22, 2013</p>
+            </header>
+            <div class='article-content'>
+                <p>After an interview question about Python decorators which I stumbled over, I
+promised myself that I would improve my knowledge of this metaprogramming&nbsp;technique.</p>
+<p>These are my notes to myself on decorators - maybe they&#8217;ll be helpful to
+someone else who&#8217;s improving their knowledge of decorators&nbsp;too.</p>
+<ul>
+<li><p class="first">A decorator is pure Pythonic syntatic&nbsp;sugar.</p>
+</li>
+<li><p class="first">A decorator is a Python callable that receives the decorated function and
+returns a new function in its&nbsp;place.</p>
+<p>For example, if there is a decorator called <cite>my_decorator</cite> and we want to
+decorate <cite>my_func</cite> then&#8230;</p>
+<div class="highlight"><pre><span></span><span class="nd">@my_decorator</span>
+<span class="k">def</span> <span class="nf">my_func</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;some stuff&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+    <span class="k">return</span>
+</pre></div>
+<p>Is equivalent to&nbsp;writing.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_func</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;some stuff&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+    <span class="k">return</span>
+<span class="n">my_func</span> <span class="o">=</span> <span class="n">my_decorator</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first">The decorator callable is executed at load time, not at execution time. Here
+is an example of a silly decorator that prints &#8220;Hello World&#8221; when the Python
+file is loaded - there is nothing else in the&nbsp;file.</p>
+<p><cite>hello.py</cite></p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s1">&#39;Hello World&#39;</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+<span class="nd">@say_hello</span>
+<span class="k">def</span> <span class="nf">nothing</span><span class="p">():</span>
+    <span class="c1"># Do nothing just return</span>
+    <span class="k">return</span>
+</pre></div>
+<p>Run it on the command line, and &#8220;Hello World&#8221; appears when the <cite>nothing</cite>
+function is&nbsp;decorated.</p>
+<div class="highlight"><pre><span></span>$ python hello.py
+Hello World
+</pre></div>
+</li>
+<li><p class="first">When writing a decorator, remember to patch over the docstring of the wrapped
+function. This can be done by accessing the passed function&#8217;s <cite>__doc__</cite>
+attribute. Failing to do so will prevent doctest from testing the decorated&nbsp;function.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># Pass through the doc string</span>
+    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+</pre></div>
+<p><strong>Update</strong> This is actually far better done with the <cite>wraps</cite> decorator from
+the <cite>functools</cite> modules, which fixes the <cite>__name__</cite> and <cite>__doc__</cite> attributes
+to what we&#8217;d expect them to&nbsp;be.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
+<span class="k">def</span> <span class="nf">my_decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+</pre></div>
+<p>Found on <a class="reference external" href="https://jeffknupp.com/blog/2013/11/29/improve-your-python-decorators-explained/">Improve your Python</a>.</p>
+</li>
+<li><p class="first">When unit testing decorators, one strategy can be to manually call the
+decorator on a mocked object and inspect how it interacts with&nbsp;it.</p>
+<p>Here&#8217;s a caching function which is used to speed up the Fibonacci&nbsp;series.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="c1"># Keep a dict of values returned already</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vals</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">vals</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vals</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+</pre></div>
+<p>Now use the cache function as a&nbsp;decorator.</p>
+<div class="highlight"><pre><span></span><span class="nd">@cache</span>
+<span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fibonacci series</span>
+
+<span class="sd">    &gt;&gt;&gt; fib(1)</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; fib(2)</span>
+<span class="sd">    2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Must be greater than 0&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fib</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+<p>And here&#8217;s a unittest that asserts that the cache function only allows calls
+through when there is no value saved in the <cite>vals</cite> dict.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">mock</span> <span class="kn">import</span> <span class="n">Mock</span>
+
+<span class="k">class</span> <span class="nc">TestCashDecorator</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">my_fn</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_fn&#39;</span><span class="p">)</span>
+        <span class="n">my_fn</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s1">&#39;hi&#39;</span>
+
+        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">cache</span><span class="p">(</span><span class="n">my_fn</span><span class="p">)</span>
+        <span class="c1"># First call gives a call count of 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wrapped</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">my_fn</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Second call keeps the call count at 1 - the cached value is used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wrapped</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">my_fn</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Subsequent call with a new value increased the call count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wrapped</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span> <span class="s1">&#39;hi&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">my_fn</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first">Make sure the scope of variables used in the decorators is correct, this is
+<a class="reference external" href="http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/">an interesting article by Simeon Franklin about decorators and scope</a>.</p>
+<p>If in doubt, extend any tests to test a second decorated function and ensure
+that the two functions do not effect each&nbsp;other.</p>
+<p>Below is a test that aims to check that cache dictionaries are not shared
+between instances of the <cite>cache</cite> decorator, it is appended to the
+<cite>test_cache</cite> test&nbsp;above.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Check that the vals dict isn&#39;t shared between other decor</span>
+<span class="n">my_other_fn</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;other fn&#39;</span><span class="p">)</span>
+<span class="n">my_other_fn</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s1">&#39;other hi&#39;</span>
+<span class="c1"># Create other wrapped function</span>
+<span class="n">other_wrapped</span> <span class="o">=</span> <span class="n">cache</span><span class="p">(</span><span class="n">my_other_fn</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">other_wrapped</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span> <span class="s1">&#39;other hi&#39;</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">my_other_fn</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># The original function has not have been additionally called, its</span>
+<span class="c1"># call count remains 2</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">my_fn</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</li>
+</ul>
+<p>All suggested tips on decorators very welcome - thanks for&nbsp;reading!</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1310-decorators.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

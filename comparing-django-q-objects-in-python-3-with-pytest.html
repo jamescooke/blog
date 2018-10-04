@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="An updated simple assertion helper for comparing instances of Django’s Q objects using pytest in Python 3.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Comparing Django Q Objects in Python 3 with pytest // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Comparing Django Q Objects in Python 3 with&nbsp;pytest</h1>
+                <p class="postdate" title="2017-05-30T22:00:00+01:00">- Posted May 30, 2017</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="background">
+<h2>Background</h2>
+<p>In a <a class="reference external" href="https://jamescooke.info/comparing-django-q-objects.html">previous post</a> I wrote
+about comparing Django&#8217;s Q object instances. The original code was Python 2
+with unittest and was <a class="reference external" href="https://github.com/jamescooke/blog/issues/6">due for an update</a>.</p>
+<p>The previous issue with comparing Django&#8217;s Q objects remains the&nbsp;same:</p>
+<blockquote>
+<p>Django&#8217;s Q object does not implement <tt class="docutils literal">__cmp__</tt> and neither does
+<tt class="docutils literal">Node</tt> which it extends (<tt class="docutils literal">Node</tt> is in the <tt class="docutils literal">django.utils.tree</tt> module).</p>
+<p>Unfortunately, that means that comparison of Q objects that are equal&nbsp;fails.</p>
+</blockquote>
+</div>
+<div class="section" id="a-simple-python-3-solution">
+<h2>A simple Python 3&nbsp;solution</h2>
+<p>The following is a Python 3.6 assertion helper for use with pytest that uses
+the original strategy of comparing the string versions of the Q&nbsp;objects.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+
+
+<span class="k">def</span> <span class="nf">assert_q_equal</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test two Q objects for equality. Does is not match commutative.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        left (Q)</span>
+<span class="sd">        right (Q)</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: When -</span>
+<span class="sd">            * `left` or `right` are not an instance of `Q`</span>
+<span class="sd">            * `left` and `right` are not considered equal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">Q</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;{left.__class__} is not subclass of Q&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">Q</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;{right.__class__} is not subclass of Q&#39;</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="n">f</span><span class="s1">&#39;Q{left} != Q{right}&#39;</span>
+</pre></div>
+<p>This time the helper is just a function rather than a mixin for
+<tt class="docutils literal">unittest.TestCase</tt>.</p>
+<p><tt class="docutils literal">isinstance</tt> is used for comparison so that any instance of a class derived
+from <tt class="docutils literal">Q</tt> can also be matched. The assertions have secondary expressions in
+the form of <a class="reference external" href="https://docs.python.org/3/whatsnew/3.6.html#whatsnew36-pep498">f-strings</a> to give
+helpful output without raising a custom&nbsp;assertion.</p>
+<p>When two <tt class="docutils literal">Q</tt> instances do not match, pytest shows the following&nbsp;output:</p>
+<pre class="literal-block">
+______________________ test_neq_multi_not_commutative ______________________
+test_assert_q_equal.py:83: in test_neq_multi_not_commutative
+    assert_q_equal(q_a, q_b)
+test_assert_q_equal.py:22: in assert_q_equal
+    assert str(left) == str(right), f'Q{left} != Q{right}'
+E   AssertionError: Q(AND: ('speed', 12), ('direction', 'north')) != Q(AND: ('direction', 'north'), ('speed', 12))
+E   assert &quot;(AND: ('spee...n', 'north'))&quot; == &quot;(AND: ('direc...'speed', 12))&quot;
+E     - (AND: ('speed', 12), ('direction', 'north'))
+E     + (AND: ('direction', 'north'), ('speed', 12))
+==================== 1 failed, 7 passed in 0.07 seconds ====================
+</pre>
+<p>The important thing is to adjust your assertion helpers to best fit
+the needs of your test suite and&nbsp;team.</p>
+</div>
+<div class="section" id="final-testing-related-note">
+<h2>Final testing related&nbsp;note</h2>
+<p>Thanks to <a class="reference external" href="https://github.com/jamescooke/blog/pull/7#pullrequestreview-41177014">Adam&#8217;s feedback on my initial post</a>, I
+improved the assertions to use <tt class="docutils literal">isinstance</tt> and secondary expressions to
+provide helpful&nbsp;output.</p>
+<p>Tests for <tt class="docutils literal">assert_q_equal</tt> and its original code are <a class="reference external" href="https://gist.github.com/jamescooke/1bed3414fee7d5c72540e567bcd63887">in this gist</a>.</p>
+<p>Happy&nbsp;testing!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>,                     <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topicdjango.html">topic:django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1705-comparing-django-q-objects-python3.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
+                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

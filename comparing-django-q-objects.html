@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="A super simple assertion helper for comparing instances of Django’s Q objects.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Comparing Django Q Objects // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Comparing Django Q&nbsp;Objects</h1>
+                <p class="postdate" title="2016-03-28T12:00:00+01:00">- Posted Mar 28, 2016</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="background">
+<h2>Background</h2>
+<blockquote>
+<strong>Note:</strong> A newer version of this post exists with an assertion helper for
+<a class="reference external" href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Python 3 and pytest</a>. Read on for
+Python 2 and unittest and general background on Q objects&#8230;</blockquote>
+<p>When programmatically building complex queries in Django <span class="caps">ORM</span>, it&#8217;s helpful
+to be able to test the resulting <a class="reference external" href="https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q">Q object instances</a>
+against each&nbsp;other.</p>
+<p>However, Django&#8217;s Q object does not implement <tt class="docutils literal">__cmp__</tt> and neither does
+<tt class="docutils literal">Node</tt> which it extends (<tt class="docutils literal">Node</tt> is in the <tt class="docutils literal">django.utils.tree</tt> module).</p>
+<p>Unfortunately, that means that comparison of Q objects that are equal&nbsp;fails.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">thing</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">thing</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">assert</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">Assertion</span> <span class="n">Error</span><span class="p">:</span>
+</pre></div>
+<p>This means that writing unit tests that assert that correct Q objects have been
+created is&nbsp;hard.</p>
+</div>
+<div class="section" id="a-simple-solution">
+<h2>A simple&nbsp;solution</h2>
+<p>Q objects generate great Unicode representations of&nbsp;themselves:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">place</span><span class="o">=</span><span class="s1">&#39;Residential&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">people__gt</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="sa">u</span><span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Residential&#39;), (&#39;people__gt&#39;, 5))&quot;</span>
+</pre></div>
+<p>In addition, it is &#8220;good&#8221; testing practice to write assertion helpers whenever
+a test suite has complicated assertions to make frequently. This provides an
+opportunity to <span class="caps">DRY</span> out test code and expand on any error messages that are
+raised on&nbsp;failure.</p>
+<p>Therefore a really simple solution is an assertion helper that would compare Q
+objects&nbsp;by:</p>
+<ul class="simple">
+<li>Asserting that left and right sides are both instances of <tt class="docutils literal">Q</tt>.</li>
+<li>Asserting that the Unicode for the left and right sides are&nbsp;identical.</li>
+</ul>
+<p>So here&#8217;s a mixin containing the assertion helper. It can be added to any class
+that extends <tt class="docutils literal">unittest.TestCase</tt> (such as Django&#8217;s default <tt class="docutils literal">TestCase</tt>):</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+
+
+<span class="k">class</span> <span class="nc">QTestMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">assertQEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assert `Q` objects are equal by ensuring that their</span>
+<span class="sd">        unicode outputs are equal (crappy but good enough)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
+        <span class="n">left_u</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right_u</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">left_u</span><span class="p">,</span> <span class="n">right_u</span><span class="p">)</span>
+</pre></div>
+<p>Disadvantage of this method is that it is simplistic and doesn&#8217;t find all the Q
+objects that are identical (see below). However, the advantage is that it
+provides rich diffs on&nbsp;failure:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TestFail</span><span class="p">(</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">QTestMixin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_unhappy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Two Q objects are not the same</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">place</span><span class="o">=</span><span class="s1">&#39;Residential&#39;</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">place</span><span class="o">=</span><span class="s1">&#39;Palace&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertQEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+<p>Gives&nbsp;output:</p>
+<div class="highlight"><pre><span></span>AssertionError: u<span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Residential&#39;))&quot;</span> !<span class="o">=</span> u<span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Palace&#39;))&quot;</span>
+- <span class="o">(</span>AND: <span class="o">(</span><span class="s1">&#39;place&#39;</span>, <span class="s1">&#39;Residential&#39;</span><span class="o">))</span>
+?                  ^^^^^^^^^
++ <span class="o">(</span>AND: <span class="o">(</span><span class="s1">&#39;place&#39;</span>, <span class="s1">&#39;Palace&#39;</span><span class="o">))</span>
+?                  ^  +++
+</pre></div>
+<p>Which can be very helpful when trying to track down&nbsp;errors.</p>
+<blockquote>
+See this <a class="reference external" href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">updated post</a> for a version of
+this assertion helper for Python 3 with pytest.</blockquote>
+</div>
+<div class="section" id="the-perfect-world-predicate-logic">
+<h2>The perfect world: Predicate&nbsp;Logic</h2>
+<p>Since Q objects represent the logic of <span class="caps">SQL</span> <tt class="docutils literal"><span class="caps">WHERE</span></tt> clauses they are therefore
+Python representations of predicates. In an ideal world the predicate logic
+rules of equality could be used to compare Q objects and this would be built
+directly into <tt class="docutils literal">Q.__cmp__</tt>.</p>
+<p>This would mean&nbsp;that:</p>
+<div class="highlight"><pre><span></span><span class="c1"># WARNING MAGIC IMAGINARY CODE!</span>
+
+<span class="c1"># Commutative would work</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">True</span>
+
+<span class="c1"># Double negation would work</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="o">~~</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">True</span>
+
+<span class="c1"># Negation on expression would work</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">True</span>
+
+<span class="c1"># END IMAGINATION SECTION</span>
+</pre></div>
+<p>This is probably never going to be implemented in Django, because it would be
+functionality only used (as far as I can see) for testing. In addition, without
+a special implementation for rendering Q objects diffs, it would be hard to
+understand the source of errors when mismatches&nbsp;occur.</p>
+</div>
+<div class="section" id="final-testing-related-notes">
+<h2>Final testing related&nbsp;notes</h2>
+<ul class="simple">
+<li>When a suite has complicated assertions to test regularly, create an
+assertion helper. Write tests to show that your helper works correctly under
+various&nbsp;conditions.</li>
+<li>Tests for <tt class="docutils literal">assertQEqual</tt> are <a class="reference external" href="https://gist.github.com/jamescooke/b9bd5afba3a7253d53bd">in this gist</a>. (If you spot
+something missing, please let me&nbsp;know!)</li>
+<li>Always consider the output of failing tests - the complexity of managing a
+test suite for a software project can be greatly influenced by how
+informative assertion errors are when they&nbsp;occur.</li>
+<li>A secondary assertion helper could be created to check for inequality
+<tt class="docutils literal">assertQNotEquals</tt>.</li>
+</ul>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>,                     <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topicdjango.html">topic:django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1603-comparing-django-q-objects.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
+                        <p class="first last">An updated simple assertion helper for comparing instances of
+Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

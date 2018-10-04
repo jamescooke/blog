@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Django has been my go-to web framework for about three years. But I wish I’d started with it sooner. This became a talk which I gave at the London Django meetup in July this year.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Things I wish I’d known about Django // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Things I wish I&#8217;d known about&nbsp;Django</h1>
+                <p class="postdate" title="2015-07-18T20:00:00+01:00">- Posted Jul 18, 2015</p>
+            </header>
+            <div class='article-content'>
+                <p>This month at <a class="reference external" href="https://www.meetup.com/The-London-Django-Meetup-Group/events/223297765/">The London Django meetup</a> I
+gave a talk about some of the things I wish I&#8217;d known about Django (before I&nbsp;started).</p>
+<br>
+<script async class="speakerdeck-embed" data-id="6f327318d302437f8ccafb8da4c2cd32" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<br><div class="section" id="thanks">
+<h2>Thanks</h2>
+<p>My thanks to <a class="reference external" href="https://github.com/zalun">Piotr</a>, who I mentioned in the talk.
+For years he told me to check out <a class="reference external" href="https://www.djangoproject.com/">Django</a>
+because &#8220;it does things right&#8221;. Only when I&#8217;d truly broken myself with <span class="caps">PHP</span> did
+I take his advice and I haven&#8217;t looked&nbsp;back.</p>
+<p>Django opened the door for me&nbsp;to:</p>
+<ul class="simple">
+<li><strong>Python</strong> which has become my backend language of&nbsp;choice.</li>
+<li><strong>Test Driven Development</strong> which has become a way of&nbsp;life.</li>
+</ul>
+</div>
+<div class="section" id="more-power">
+<h2>More&nbsp;Power</h2>
+<p>When I&#8217;m developing for web and using Django, I think it&#8217;s possible for me to
+keep more features live with fewer errors than was previously possible for me
+with <span class="caps">PHP</span> based tools. I put this down to two main&nbsp;things:</p>
+<ul class="simple">
+<li>The application of tests in my Django projects. I&#8217;m particularly happy with
+the test suite provided by Django. Where I&#8217;ve needed to rewire it or patch
+it, it&#8217;s responded&nbsp;well.</li>
+<li>The structure that Django provides, without enforcing how projects are&nbsp;built.</li>
+</ul>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>I wish I&#8217;d jumped into Django sooner. If you&#8217;re thinking about transitioning to
+it, see what you can do today. I think it pays back in the long&nbsp;run.</p>
+<p>Thanks for&nbsp;reading.</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/talk.html">Talk</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/django.html">django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1507-things-i-wish-id-known-about-django.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-contexts-and-get.html">Django Contexts and <cite>get</cite></a>
+                        <p class="first last">Found that tests on a recent project started breaking for no clear
+reason, and it turned out it was because I&#8217;d used <tt class="docutils literal">get</tt> to retrieve
+values from&nbsp;Contexts.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/migrating-from-django-14-to-15-lessons-learned.html">Migrating from Django 1.4 to 1.5 - Lessons&nbsp;learned</a>
+                        <p class="first last">Migrating a project from Django 1.4 to Django 1.5 had a couple of gotchas that cost me dev&nbsp;time.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/reincublog-django-app.html">Reincublog Django&nbsp;app</a>
+                        <p class="first last">Reincublog is a super mini Django blog weekend hack, coded as part of a recruitment&nbsp;process.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

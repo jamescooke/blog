@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Should detailed history be kept for development features, if so, where?">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Git: To squash or not to squash? // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Git: To squash or not to&nbsp;squash?</h1>
+                <p class="postdate" title="2013-11-19T11:00:00+00:00">- Posted Nov 19, 2013</p>
+            </header>
+            <div class='article-content'>
+                <div class="section" id="it-started-with-a-tweet">
+<h2>It started with a&nbsp;Tweet</h2>
+<p>Over the weekend I spotted a tweet from <a class="reference external" href="https://oli.me.uk/">Oliver</a>&#8230;</p>
+<blockquote class="twitter-tweet" lang="en"><p>To squash features into develop, or not to squash features into&nbsp;develop?</p>&mdash; Oliver Caldwell (@OliverCaldwell) <a href="https://twitter.com/OliverCaldwell/statuses/401299558887485440">November 15, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>And I jumped straight in&nbsp;with&#8230;</p>
+<blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/OliverCaldwell">@OliverCaldwell</a> Squash, but keep detailed commit messages. Unless you have a particular use-case / reason not&nbsp;to.</p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/statuses/402123985791369216">November 17, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>Then, as part of our following <a class="reference external" href="https://twitter.com/OliverCaldwell/statuses/401299558887485440">conversation</a>, I drew a&nbsp;picture:</p>
+<blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/OliverCaldwell">@OliverCaldwell</a> This is how I see it. Better to keep the direct route rather than the &#8220;how we got here&#8221;. <a href="https://t.co/X5FZQ1euoU">pic.twitter.com/X5FZQ1euoU</a></p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/statuses/402407321265274881">November 18, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>But&#8230;</p>
+</div>
+<div class="section" id="it-s-about-more-than-just-squashing">
+<h2>It&#8217;s about more than just&nbsp;squashing</h2>
+<p>What I realised while writing this post and experimenting with <cite>git</cite> is that
+the issue is not as simple as &#8220;Squash? Yes /&nbsp;No?&#8221;</p>
+<p>Variables to consider&nbsp;include:</p>
+<ul class="simple">
+<li><strong>How you record your commit messages on your squashed commit.</strong> This effects
+the impact of history loss - good commit messages and or external ticketing /
+dev tracking mean it&#8217;s less&nbsp;important.</li>
+<li><strong>Whether you push your feature branches for other developers, or between your
+dev boxes, to share.</strong> Do you need to keep the shared history between&nbsp;machines?</li>
+<li><strong>The velocity of your project.</strong> How long do you need to keep history for?
+Do bugs show up&nbsp;regularly?</li>
+</ul>
+</div>
+<div class="section" id="tl-dr-simple-project-squash-yes">
+<h2><span class="caps">TL</span>;<span class="caps">DR</span> Simple project. Squash =&nbsp;Yes</h2>
+<p>For a simple project with no sharing between devs required and regular
+releases, then squashing features seems like a good idea if&nbsp;you:</p>
+<ul class="simple">
+<li>Keep detailed commit messages when you&nbsp;squash.</li>
+<li>Use <cite>git rebase</cite> to squash your features&#8217; commits into a candidate branch and
+merge that in to <cite>dev</cite> or <cite>master</cite> depending on your <span class="caps">SCM</span>&nbsp;strategy.</li>
+<li>Only push your squashed features to keep <cite>origin</cite> clean and easy to&nbsp;understand.</li>
+<li>Keep your feature branches if you want. But, if you delete them <cite>git</cite> will
+keep your commits in the reflog for 30 days by&nbsp;default.</li>
+</ul>
+</div>
+<div class="section" id="keeping-a-detailed-history">
+<h2>Keeping a detailed&nbsp;history</h2>
+<p>One of the issues that Oliver raised was about losing&nbsp;history.</p>
+<blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/jamesfublo">@jamesfublo</a> I suppose so. Squashing just feels like you&#39;re killing off that fine grained history, like when was that two line change&nbsp;made.</p>&mdash; Oliver Caldwell (@OliverCaldwell) <a href="https://twitter.com/OliverCaldwell/statuses/402394094111977472">November 18, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>So, since I advocate squashing and branch deletion, I&#8217;m therefore suggesting
+that the <strong>reflog is used to recover detailed history in the local repository</strong>
+if&nbsp;required.</p>
+<p>So let&#8217;s explore how much history is actually&nbsp;kept&#8230;</p>
+<p><a class="reference external" href="https://git-scm.com/docs/git-reflog">From the docs</a>:</p>
+<blockquote>
+Reflog is a mechanism to record when the tip of branches are updated.</blockquote>
+<p>This means&nbsp;that&#8230;</p>
+<p><strong>Every commit that every branch in your local repostitory has ever pointed to
+is kept in the&nbsp;reflog.</strong></p>
+<p>And this even includes branch&nbsp;switching&#8230;</p>
+<blockquote>
+<span class="caps">HEAD</span> reflog records branch switching as well.</blockquote>
+<p>Sounds very warm and cozy, <strong><span class="caps">BUT</span></strong> there are conditions, so let&#8217;s do a
+practical experiment with a test&nbsp;repository.</p>
+</div>
+<div class="section" id="experiment-squashing-with-rebase-and-keeping-history">
+<h2>Experiment: Squashing with rebase and keeping&nbsp;history</h2>
+<p>Make a repository with an initial&nbsp;commit.</p>
+<div class="highlight"><pre><span></span>$ git init
+</pre></div>
+<p>Create a <cite><span class="caps">README</span>.md</cite> file and put a line of text into it and commit - this
+commit is called&nbsp;A.</p>
+<div class="highlight"><pre><span></span>$ cat &gt; README.md
+First line of readme file
+^C
+$ git add README.md
+$ git commit
+</pre></div>
+<p>Current <cite>git</cite> tree&nbsp;status:</p>
+<pre class="literal-block">
+A   &lt;-master
+</pre>
+<div class="section" id="work-on-feature">
+<h3>Work on&nbsp;feature</h3>
+<p>In a new branch, we create a <em>feature</em> to update the <span class="caps">README</span> with two new lines
+and to delete the first&nbsp;line.</p>
+<div class="highlight"><pre><span></span>$ git checkout -b feature-a
+
+<span class="c1"># First feature commit (B)</span>
+$ cat &gt;&gt; README.md
+Add a second line
+^C
+$ git add README.md
+$ git commit
+
+<span class="c1"># Second feature commit (C)</span>
+$ cat &gt;&gt; README.md
+Add a third line
+^C
+$ git add README.md
+$ git commit
+
+<span class="c1"># Third feature commit (D)</span>
+$ vim README.md
+<span class="c1"># Remove first line and save</span>
+$ git add README.md
+$ git commit
+</pre></div>
+<p>Current <cite>git</cite> tree&nbsp;status:</p>
+<pre class="literal-block">
+A   &lt;-master
+ \
+  B--C--D   &lt;-feature-a
+</pre>
+</div>
+<div class="section" id="check-progress-in-reflog">
+<h3>Check progress in&nbsp;reflog</h3>
+<p>Checkout <cite>master</cite>.</p>
+<div class="highlight"><pre><span></span>$ git checkout master
+</pre></div>
+<p>Let&#8217;s check the&nbsp;reflog.</p>
+<div class="highlight"><pre><span></span>$ git reflog
+</pre></div>
+<pre class="literal-block">
+8e48d1d HEAD&#64;{0}: checkout: moving from feature-a to master
+262057a HEAD&#64;{1}: commit: D: Remove first line
+9efbf73 HEAD&#64;{2}: commit: C: Add a third line
+f2503d5 HEAD&#64;{3}: commit: B: Add a second line
+8e48d1d HEAD&#64;{4}: checkout: moving from master to feature-a
+8e48d1d HEAD&#64;{5}: commit (initial): Make readme
+</pre>
+<p>Newest stuff pops out&nbsp;first:</p>
+<ul class="simple">
+<li><cite><span class="caps">HEAD</span>&#64;{0}</cite> - Checkout from <cite>feature-a</cite> to <cite>master</cite> is&nbsp;recorded.</li>
+<li><cite><span class="caps">HEAD</span>&#64;{1}</cite> to <cite><span class="caps">HEAD</span>&#64;{3}</cite> - our <cite>feature-a</cite> commits (D, C and&nbsp;B).</li>
+<li><cite><span class="caps">HEAD</span>&#64;{4}</cite> - Checkout of the <cite>feature-a</cite> branch.</li>
+<li><cite><span class="caps">HEAD</span>&#64;{5}</cite> - Initial&nbsp;commit.</li>
+</ul>
+</div>
+<div class="section" id="squash-commits-into-candidate-branch">
+<h3>Squash commits into candidate&nbsp;branch</h3>
+<p><cite>feature-a</cite> is ready to bring into <cite>master</cite>. Let&#8217;s first cleanup our history by
+doing an interactive rebase. We use a candidate branch for this work because
+it&#8217;s a nice safety net which can help with&nbsp;testing.</p>
+<div class="highlight"><pre><span></span>$ git checkout feature-a
+$ git checkout -b feature-a-candidate
+</pre></div>
+<p>Current <cite>git</cite> tree&nbsp;status:</p>
+<pre class="literal-block">
+A   &lt;-master
+ \
+  B--C--D   &lt;-feature-a &lt;-feature-a-candidate
+</pre>
+<div class="highlight"><pre><span></span>$ git rebase --interactive master
+</pre></div>
+<p>Let&#8217;s squash our three commits into&nbsp;one.</p>
+<pre class="literal-block">
+pick f2503d5 B: Add a second line
+squash 9efbf73 C: Add a third line
+squash 262057a D: Remove first line
+</pre>
+<p>And now we merge together the three commits, describing the activity that took
+place. We keep the messages so that history is clean, but informative. We also
+include a reference to the ticket we are working&nbsp;against:</p>
+<pre class="literal-block">
+Updating README.md as per #ticket
+
+* Add a second line
+* Add a third line
+* Remove first line
+</pre>
+<p>Check reflog&nbsp;again:</p>
+<div class="highlight"><pre><span></span>$ git reflog
+</pre></div>
+<pre class="literal-block">
+d0445b2 HEAD&#64;{0}: rebase -i (finish): returning to refs/heads/feature-a-candidat
+d0445b2 HEAD&#64;{1}: rebase -i (squash): Updating README.md as per #ticket
+362b6ef HEAD&#64;{2}: rebase -i (squash): # This is a combination of 2 commits.
+f2503d5 HEAD&#64;{3}: checkout: moving from feature-a-candidate to f2503d5
+262057a HEAD&#64;{4}: checkout: moving from feature-a to feature-a-candidate
+</pre>
+<p>The reflog shows us that there is a new commit <cite>d0445b2</cite>, we&#8217;ll call this <cite>E</cite>.
+This is the commit that results from the rebase and leaves the tree looking&nbsp;like:</p>
+<pre class="literal-block">
+A   &lt;-master
+|\
+| B--C--D   &lt;-feature-a
+\
+ \
+  E   &lt;-feature-a-candidate
+</pre>
+<p>This is a good stage to test everything <strong>and</strong> to check that your tests are
+what you expect them to be, ensure that no information has been&nbsp;lost.</p>
+</div>
+<div class="section" id="merge-onto-master">
+<h3>Merge onto&nbsp;master</h3>
+<p>The new commit <cite>E</cite> is the patch for our <em>feature</em> which we now merge onto
+<cite>master</cite>.</p>
+<div class="highlight"><pre><span></span>$ git checkout master
+$ git merge feature-a-candidate master
+</pre></div>
+<pre class="literal-block">
+Updating 8e48d1d..d0445b2
+Fast-forward
+ README.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+</pre>
+<p>The&nbsp;tree:</p>
+<pre class="literal-block">
+A--E   &lt;-master &lt;-feature-a-candidate
+ \
+  B--C--D   &lt;-feature-a
+</pre>
+</div>
+<div class="section" id="push">
+<h3>Push</h3>
+<p>At this stage the <em>feature</em> would usually be pushed to a branch on <cite>origin</cite>.</p>
+<div class="highlight"><pre><span></span>$ git push origin master
+</pre></div>
+<p>Note that we&#8217;ve only shared the squashed <cite>E</cite> commit, not <cite>B</cite>, <cite>C</cite> or <cite>D</cite> in the
+<cite>feature-a</cite> branch.</p>
+</div>
+<div class="section" id="cleanup">
+<h3>Cleanup</h3>
+<p>We can then cleanup our working branches. First the&nbsp;candidate.</p>
+<div class="highlight"><pre><span></span>$ git branch -d feature-a-candidate
+</pre></div>
+<p>This leaves us with a tree&nbsp;like:</p>
+<pre class="literal-block">
+A--E   &lt;-master
+ \
+  B--C--D   &lt;-feature-a
+</pre>
+</div>
+</div>
+<div class="section" id="keeping-history">
+<h2>Keeping&nbsp;history</h2>
+<p>As Oliver noted, the <cite>feature-a</cite> branch can just be kept by the developer in
+their local repository to preserve the full history - that is certainly an&nbsp;option.</p>
+<blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/jamesfublo">@jamesfublo</a> I suppose you can still keep the unsquashed branches in the repository. I never used to squash, but I might&nbsp;start.</p>&mdash; Oliver Caldwell (@OliverCaldwell) <a href="https://twitter.com/OliverCaldwell/statuses/402401798738018304">November 18, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>However, I prefer a clean working repository so I like to delete the
+<cite>feature-a</cite> branch.</p>
+<div class="section" id="clean-up-the-feature-branch">
+<h3>Clean up the feature&nbsp;branch</h3>
+<p>When deleting the <cite>feature-a</cite> branch <cite>git</cite> requires the <cite>-D</cite> flag to force the
+deletion. <cite>git</cite> does not <em>work out</em> that <cite>E</cite> is <em>equal</em> to <cite>B</cite>, <cite>C</cite> and <cite>D</cite>
+combined, so thinks that history could be&nbsp;lost.</p>
+<div class="highlight"><pre><span></span>$ git branch -D feature-a
+</pre></div>
+<pre class="literal-block">
+Deleted branch feature-a (was 262057a)
+</pre>
+<p>This leaves a tree&nbsp;like:</p>
+<pre class="literal-block">
+A--E   &lt;-master
+ \
+  B--C--D
+</pre>
+</div>
+<div class="section" id="b-c-and-d-are-now-hanging-commits">
+<h3>B, C and D are now hanging&nbsp;commits</h3>
+<p>Check&nbsp;reflog.</p>
+<div class="highlight"><pre><span></span>$ git reflog
+</pre></div>
+<p>This is a part of&nbsp;it:</p>
+<pre class="literal-block">
+...
+262057a HEAD&#64;{12}: commit: D: Remove first line
+9efbf73 HEAD&#64;{13}: commit: C: Add a third line
+f2503d5 HEAD&#64;{14}: commit: B: Add a second line
+...
+</pre>
+<p>The development commits from the <em>feature</em> development are still available and
+could be checked out into <em>detached <span class="caps">HEAD</span></em> state and inspected, played with,
+rebranched. Let&#8217;s try&nbsp;that.</p>
+<div class="highlight"><pre><span></span>$ git checkout 262057a
+</pre></div>
+<p>Now play and explore as much as you&nbsp;want.</p>
+<p>When you&#8217;re ready, move back to <cite>master</cite>.</p>
+<div class="highlight"><pre><span></span>$ git checkout master
+</pre></div>
+<p>And <cite>git</cite> warns us that we&#8217;ve left behind our hanging&nbsp;commits:</p>
+<pre class="literal-block">
+Warning: you are leaving 3 commits behind, not connected to
+any of your branches:
+
+  262057a D: Remove first line
+  9efbf73 C: Add a third line
+  f2503d5 B: Add a second line
+
+If you want to keep them by creating a new branch, this may be a good time
+to do so with:
+
+ git branch new_branch_name 262057a
+</pre>
+</div>
+</div>
+<div class="section" id="how-long-are-hanging-commits-kept">
+<h2>How long are hanging commits&nbsp;kept?</h2>
+<p>But how long will these unreachable commits <em>hang</em> around&nbsp;for?</p>
+<p><strong>We can&nbsp;decide!</strong></p>
+<p>Hanging commits are removed from the local repository by garbage collection,
+known as <cite>gc</cite>, or by manual&nbsp;removal.</p>
+<p>There are various settings which <cite>gc</cite> will use to determine which commits
+should be cleaned before the repository is&nbsp;repacked.</p>
+<p><cite>gc.reflogExpireUnreachable</cite> tells <cite>gc</cite> how long hanging commits should be left
+in the repository. Default value is 30 days. Adjust this to a value that you
+feel comfortable with. You can make that setting on any of the normal levels -
+global, system or&nbsp;local.</p>
+<p>Hey - you want to keep all history in the reflog for ever? Here&#8217;s a&nbsp;setting:</p>
+<pre class="literal-block">
+[gc]
+    reflogExpire = never
+    reflogExpireUnreachable = never
+</pre>
+<p>I&#8217;m happy with the 30 day default&nbsp;myself!</p>
+<p>For more detailed explanation, checkout the Configuration section of the
+<cite>git-gc</cite> man&nbsp;page.</p>
+</div>
+<div class="section" id="a-manual-clean">
+<h2>A manual&nbsp;clean</h2>
+<p>Just for experimention, I tried to clean the repository of the <cite>B</cite>, <cite>C</cite> and <cite>D</cite>
+hanging commits. This was challenging because my default settings prevented
+reflog and <cite>gc</cite> from performing the clean, however I found <a class="reference external" href="https://stackoverflow.com/a/14995269/1286705">this <span class="caps">SO</span> answer
+helpful</a>.</p>
+<div class="highlight"><pre><span></span>$ git reflog expire --all --expire-unreachable<span class="o">=</span><span class="m">0</span>
+$ git repack -A -d
+</pre></div>
+<p>Repacking occurred. Now check&nbsp;reflog.</p>
+<div class="highlight"><pre><span></span>$ git reflog
+</pre></div>
+<pre class="literal-block">
+d0445b2 HEAD&#64;{0}: merge feature-a-candidate: Fast-forward
+8e48d1d HEAD&#64;{1}: checkout: moving from feature-a-candidate to master
+d0445b2 HEAD&#64;{2}: rebase -i (finish): returning to refs/heads/feature-a-candidat
+d0445b2 HEAD&#64;{3}: checkout: moving from master to feature-a
+8e48d1d HEAD&#64;{4}: commit (initial): Make readme
+</pre>
+<p>There are now only two commits in the&nbsp;repository:</p>
+<ul class="simple">
+<li><cite>8e48d1d</cite> - Initial commit <cite>A</cite> &#64; 1 and&nbsp;4.</li>
+<li><cite>d0445b2</cite> - Feature commit <cite>E</cite> made by the rebase &#64; 0, 2 and&nbsp;3</li>
+</ul>
+<p>The cleaned repository now looks&nbsp;like:</p>
+<pre class="literal-block">
+A--E   &lt;-master
+</pre>
+<p>So fresh and so&nbsp;clean!</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>At the end of the day, the dev team (even if that&#8217;s just you on a weekend
+project) decides how best to keep history and share&nbsp;features.</p>
+<p>My general solution is&nbsp;for:</p>
+<ul class="simple">
+<li>Squashed single-commit&nbsp;features.</li>
+<li>Detailed commit messages created at <em>squash-time</em>.</li>
+<li>Devs keep more history locally, either with branches or in a long-life&nbsp;reflog.</li>
+<li>Devs backup their repositories and don&#8217;t rely on <cite>origin</cite>.</li>
+</ul>
+<p>Remember there can be a full 30 day history (or longer depending on the
+<cite>gc.reflogExpireUnreachable</cite> setting) in the local repo which hasn&#8217;t been
+pushed to <cite>origin</cite>. It&#8217;s this history that could save your bacon one day - so
+consider backing it&nbsp;up!</p>
+<p>Happy source code&nbsp;management!</p>
+</div>
+<div class="section" id="update-23-08-2018">
+<h2>Update&nbsp;23/08/2018</h2>
+<p>See also <a class="reference external" href="https://github.com/jamescooke/blog/issues/17">this comment on GitHub</a> from Curt J. Sampson with some
+great points about when not to squash. One helpful&nbsp;excerpt:</p>
+<blockquote>
+I think of a set of commits I&#8217;m proposing for master branch as a story I&#8217;m
+telling to the other developers. Make the story as clear as possible,
+divided up into reasonably small chunks where you can do so. This will make
+other developers love, rather than hate, reviewing your code.</blockquote>
+<p>Thanks Curt - spread the&nbsp;love!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/git.html">git</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1311-git-squash.rst'>View, comment, edit source on GitHub</a>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

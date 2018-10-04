@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="This post explores how to extract arrangement code when working with the Arrange Act Assert pattern so that it can be used with certainty across the test suite.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>AAA Part 2: Extracting Arrange code to make fixtures // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</h1>
+                <p class="postdate" title="2017-08-07T00:00:00+01:00">- Posted Aug 07, 2017</p>
+            </header>
+            <div class='article-content'>
+                <p>In this post I will describe how code in tests&#8217; Arrange blocks can become
+over-complicated, break the <span class="caps">AAA</span> pattern and benefit from&nbsp;extraction.</p>
+<div class="section" id="background">
+<h2>Background</h2>
+<ul class="simple">
+<li>This post is Part 2 of a series on the Arrange Act Assert pattern for Python
+developers. See <a class="reference external" href="/arrange-act-assert-pattern-for-python-developers.html">Part 1</a> for an
+introduction to the pattern and outline of its constituent&nbsp;parts.</li>
+<li>When I mention &#8220;code extraction&#8221; I&#8217;m primarily referring to the Extract
+Method <a class="footnote-reference" href="#em" id="id1">[1]</a> of refactoring. <a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development">Kent Beck&#8217;s book &#8220;Test Driven Development: By
+Example&#8221;</a> really
+turned me on to the value in eliminating duplicated code between tests and
+between tests and the <span class="caps">SUT</span> <a class="footnote-reference" href="#sut" id="id2">[2]</a>.</li>
+<li>I&#8217;m using <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a> in this example
+which means that fixtures are marked with the <tt class="docutils literal">&#64;pytest.fixture</tt> decorator.
+If you&#8217;re using <tt class="docutils literal">unittest</tt> then you could extract the set up code into the
+<tt class="docutils literal">TestCase.setUp</tt> method.</li>
+<li>If you can, perform Extract Method while your test suite is <span class="caps">GREEN</span> <a class="footnote-reference" href="#green" id="id3">[3]</a>.
+This means that you can be more assured that your refactoring has worked
+without&nbsp;errors.</li>
+<li>During my work I often build permission systems that manage access to
+resources such as files, accounts, projects, etc, based on the connection
+between Users and those resources. The example test below is from one of
+those projects. I often use Simpsons and Futurama characters in tests because
+I think it makes it easier to visualise the test conditions when characters
+are used that other programmers may be familiar with&nbsp;already.</li>
+</ul>
+</div>
+<div class="section" id="the-problem">
+<h2>The&nbsp;problem</h2>
+<p>I&#8217;ve found that this problem, which I call &#8220;Complicated Setup&#8221;, occurs as a test suite grows and
+the complexity of the tests on the outside of the code&nbsp;increases.</p>
+<p>Tests will often need to combine a number of objects in increasingly complex
+states to build the <span class="caps">SUT</span> <a class="footnote-reference" href="#sut" id="id4">[2]</a>. As a result, additional assertions are
+required before the Act block to ensure that the test conditions are correctly
+established. The problem with these additional assertions is that
+they break the <span class="caps">AAA</span> pattern because there should be no assertions in the Arrange&nbsp;block.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Warning - this test does *not* fit the AAA pattern because it has</span>
+<span class="c1"># assertions in the Arrange block.</span>
+
+<span class="k">def</span> <span class="nf">test_owner_invite_admin</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Leela can invite Bender to an additional Project, Fry is notified</span>
+
+<span class="sd">    ----------------+---------------+-----------</span>
+<span class="sd">     Account Role   | Project Role  | Name</span>
+<span class="sd">    ----------------+---------------+-----------</span>
+<span class="sd">     Owner          | -             | Leela</span>
+<span class="sd">     Admin          | -             | Fry</span>
+<span class="sd">     Viewer         | Admin         | Bender</span>
+<span class="sd">    ----------------+---------------+-----------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># LEELA (and account)</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">AccountFactory</span><span class="p">(</span><span class="n">owner__first_name</span><span class="o">=</span><span class="s1">&#39;Leela&#39;</span><span class="p">)</span>
+    <span class="n">account_document</span> <span class="o">=</span> <span class="n">AccountDocument</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="n">default_database</span><span class="p">)</span>
+    <span class="n">account_document</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">()</span>
+    <span class="n">leela</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">owner</span>
+    <span class="n">new_project</span> <span class="o">=</span> <span class="n">leela</span><span class="o">.</span><span class="n">create_project</span><span class="p">(</span><span class="s1">&#39;new_project&#39;</span><span class="p">)</span>
+    <span class="c1"># FRY</span>
+    <span class="n">admin_membership</span> <span class="o">=</span> <span class="n">AccountMembershipFactory</span><span class="p">(</span>
+        <span class="n">account</span><span class="o">=</span><span class="n">account</span><span class="p">,</span>
+        <span class="n">permission</span><span class="o">=</span><span class="s1">&#39;AA&#39;</span><span class="p">,</span>
+        <span class="n">person__first_name</span><span class="o">=</span><span class="s1">&#39;Fry&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fry</span> <span class="o">=</span> <span class="n">admin_membership</span><span class="o">.</span><span class="n">person</span>
+    <span class="c1"># BENDER</span>
+    <span class="n">project_data</span> <span class="o">=</span> <span class="n">ProjectMembershipFactory</span><span class="p">(</span>
+        <span class="n">account</span><span class="o">=</span><span class="n">account</span><span class="p">,</span>
+        <span class="n">person__first_name</span><span class="o">=</span><span class="s1">&#39;Bender&#39;</span><span class="p">,</span>
+        <span class="n">role</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">project_couchbase</span> <span class="o">=</span> <span class="n">project_data</span><span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">]</span>
+    <span class="n">bender</span> <span class="o">=</span> <span class="n">project_data</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">]</span>
+    <span class="c1"># Check</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bender</span><span class="o">.</span><span class="n">accounts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>            <span class="c1"># &lt;</span>
+    <span class="k">assert</span> <span class="n">bender</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="n">leela</span>    <span class="c1"># &lt; Assertions in Arrange</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bender</span><span class="o">.</span><span class="n">projects</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>            <span class="c1"># &lt;</span>
+    <span class="k">assert</span> <span class="n">bender</span><span class="o">.</span><span class="n">projects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">new_project</span>    <span class="c1"># &lt;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>               <span class="c1"># &lt;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">leela</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">invite</span><span class="p">(</span><span class="n">bender</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">True</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+<p>Tests on the arrangement of the <span class="caps">SUT</span> will often be informed by the tests that are about
+to be carried out on it in the Act. Here I want to ensure that Fry is notified with a new
+message so it is important that after Arrange Fry has no messages waiting.
+But adding these assertions before the Act section means
+breaking <span class="caps">AAA</span> and this is a smell the test has grown too complex and should be cut&nbsp;down.</p>
+<p>It is possible to use Extract Method to create a fixture that solves this issue
+and returns the test to pure <span class="caps">AAA</span> pattern. I&#8217;ve used a simplified example to
+illustrate how to solve this below. I&#8217;ve imagined a <tt class="docutils literal"><span class="caps">SUT</span></tt> class that must be
+called with some arrangement functions like <tt class="docutils literal">arrange_a</tt>, <tt class="docutils literal">arrange_b</tt>,&nbsp;etc.</p>
+<script async class="speakerdeck-embed" data-id="da526efe5fb6445eadb71b7f4b66c2f5" data-ratio="1.82857142857143" src="//speakerdeck.com/assets/embed.js"></script><p>If the example does not load for you, you can <a class="reference external" href="https://speakerdeck.com/jamescooke/extract-arrangement-code">view it on speakerdeck</a>.</p>
+<p>Now applying this process to the Futurama account test above I get the
+following fixture with its own dedicated test and a much simpler test for the
+invite&nbsp;behaviour.</p>
+<div class="highlight"><pre><span></span><span class="nd">@pytest.fixture</span>
+<span class="k">def</span> <span class="nf">account_members</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            User: Leela - Account owner.</span>
+<span class="sd">            User: Fry - Admin.</span>
+<span class="sd">            User: Bender - Project admin.</span>
+
+<span class="sd">    ----------------+---------------+-----------</span>
+<span class="sd">     Account Role   | Project Role  | Name</span>
+<span class="sd">    ----------------+---------------+-----------</span>
+<span class="sd">     Owner          | -             | Leela</span>
+<span class="sd">     Admin          | -             | Fry</span>
+<span class="sd">     Viewer         | Admin         | Bender</span>
+<span class="sd">    ----------------+---------------+-----------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># LEELA (and account)</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">AccountFactory</span><span class="p">(</span><span class="n">owner__first_name</span><span class="o">=</span><span class="s1">&#39;Leela&#39;</span><span class="p">)</span>
+    <span class="n">account_document</span> <span class="o">=</span> <span class="n">AccountDocument</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="n">default_database</span><span class="p">)</span>
+    <span class="n">account_document</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">()</span>
+    <span class="n">leela</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">owner</span>
+    <span class="n">new_project</span> <span class="o">=</span> <span class="n">leela</span><span class="o">.</span><span class="n">create_project</span><span class="p">(</span><span class="s1">&#39;new_project&#39;</span><span class="p">)</span>
+    <span class="c1"># FRY</span>
+    <span class="n">admin_membership</span> <span class="o">=</span> <span class="n">AccountMembershipFactory</span><span class="p">(</span>
+        <span class="n">account</span><span class="o">=</span><span class="n">account</span><span class="p">,</span>
+        <span class="n">permission</span><span class="o">=</span><span class="s1">&#39;AA&#39;</span><span class="p">,</span>
+        <span class="n">person__first_name</span><span class="o">=</span><span class="s1">&#39;Fry&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fry</span> <span class="o">=</span> <span class="n">admin_membership</span><span class="o">.</span><span class="n">person</span>
+    <span class="c1"># BENDER</span>
+    <span class="n">project_data</span> <span class="o">=</span> <span class="n">ProjectMembershipFactory</span><span class="p">(</span>
+        <span class="n">account</span><span class="o">=</span><span class="n">account</span><span class="p">,</span>
+        <span class="n">person__first_name</span><span class="o">=</span><span class="s1">&#39;Bender&#39;</span><span class="p">,</span>
+        <span class="n">role</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">project_couchbase</span> <span class="o">=</span> <span class="n">project_data</span><span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">]</span>
+    <span class="n">bender</span> <span class="o">=</span> <span class="n">project_data</span><span class="p">[</span><span class="s1">&#39;person&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">leela</span><span class="p">,</span> <span class="n">fry</span><span class="p">,</span> <span class="n">bender</span>
+
+<span class="k">def</span> <span class="nf">test_account_members</span><span class="p">(</span><span class="n">account_members</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fry has no pending messages and Bender is a member of the Account</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">account_members</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="n">leela</span><span class="p">,</span> <span class="n">fry</span><span class="p">,</span> <span class="n">bender</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bender</span><span class="o">.</span><span class="n">accounts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">bender</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="n">leela</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bender</span><span class="o">.</span><span class="n">projects</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">bender</span><span class="o">.</span><span class="n">projects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">new_project</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">test_owner_invite_admin</span><span class="p">(</span><span class="n">account_members</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Leela can invite Bender to an additional Project, Fry is notified</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">leela</span><span class="p">,</span> <span class="n">fry</span><span class="p">,</span> <span class="n">bender</span> <span class="o">=</span> <span class="n">account_members</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">leela</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">invite</span><span class="p">(</span><span class="n">bender</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">True</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+<p>Even though this example is long winded, I hope you can see that the
+extraction of the set up code into its own fixture has simplified the tests and
+brought the code back into conformity with the <span class="caps">AAA</span>&nbsp;pattern.</p>
+</div>
+<div class="section" id="benefits-of-extraction">
+<h2>Benefits of&nbsp;extraction</h2>
+<p>The result of the extraction process is a pair of tests with a single fixture. The tests
+fit the <span class="caps">AAA</span> pattern that I advocated in Part 1 of this series and the resulting
+code&#8217;s structure has a number of advantages for the future of the test&nbsp;suite:</p>
+<ul>
+<li><p class="first">Continued development on the fixture can happen using <span class="caps">TDD</span> <a class="footnote-reference" href="#tdd" id="id5">[4]</a> by adding
+new requirements to <tt class="docutils literal">test_fixture()</tt> and then expanding the fixture to get
+back to <span class="caps">GREEN</span>.</p>
+</li>
+<li><p class="first">The resulting fixture can be reused really easily. Permutations of different
+actions on a particular <span class="caps">SUT</span> can be easily tested without having to depend on
+our power of copy and paste and without creating more duplicated&nbsp;code.</p>
+</li>
+<li><p class="first">If a situation arises in the future where the arrangement of the <span class="caps">SUT</span> needs to
+change in the fixture all the tests that use it <em>might</em> fail. However, the
+payoff for the additional failure of the fixture&#8217;s dedicated tests is that
+there is the opportunity to fix the problem in one place - the extracted code
+in the&nbsp;fixture.</p>
+<p>On top of that, the fix can be performed using <span class="caps">TDD</span> because the fixture is
+already extracted and under test - a potential double&nbsp;win.</p>
+</li>
+</ul>
+<p>In this way the test suite remains dynamic, clear and able to adapt with the
+software it&#8217;s&nbsp;testing.</p>
+</div>
+<div class="section" id="should-all-fixtures-have-their-own-tests">
+<h2>Should all fixtures have their own&nbsp;tests?</h2>
+<p>I&#8217;m often asked whether I think test fixtures should be tested. My answer is:
+&#8220;It&nbsp;depends&#8221;.</p>
+<p>When the fixture was arrived at via &#8220;Complicated setup&#8221; then my answer is
+&#8220;yes&#8221;. As we&#8217;ve seen, the <tt class="docutils literal">test_fixture()</tt> test remains to pin the fixture&#8217;s
+behaviour and assert that the <span class="caps">SUT</span> is in the expected&nbsp;state.</p>
+<p>When the fixture has been extracted because of &#8220;Setup duplication&#8221; <a class="footnote-reference" href="#sd" id="id6">[5]</a> there will
+be a fixture created that does not have its own explicit test. Instead, the
+fixture is tested implicitly by the two tests but does not have a dedicated
+test of its&nbsp;own.</p>
+<p>For me this is an &#8220;<span class="caps">OK</span>&#8221; situation and if it turns out that the fixture should be
+adjusted then a fixture test can be created to facilitate that change under the
+usual <span class="caps">RED</span>, <span class="caps">GREEN</span>, <span class="caps">REFACTOR</span>&nbsp;cycle.</p>
+</div>
+<div class="section" id="flake8-aaa">
+<h2>flake8-aaa</h2>
+<p>Check out <a class="reference external" href="https://flake8-aaa.readthedocs.io/en/stable/">flake8-aaa</a> - a
+Flake8 plugin that makes it easier to write tests that follow the Arrange Act
+Assert&nbsp;pattern.</p>
+<p>Happy&nbsp;testing!</p>
+</div>
+<div class="section" id="tiny-glossary">
+<h2>Tiny&nbsp;glossary</h2>
+<table class="docutils footnote" frame="void" id="em" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Extract Method is a refactoring step <a class="reference external" href="https://refactoring.com/catalog/extractMethod.html">defined here</a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="sut" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://en.wikipedia.org/wiki/System_under_test">System Under Test</a> I&#8217;ve used this to mean the
+Unit under test, there is no implication around the size of the &#8220;system&#8221; or
+&#8220;unit&#8221;.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="green" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><span class="caps">GREEN</span> is the name for the state when all tests in your suite pass.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="tdd" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>Test Driven Development.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="sd" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Setup duplication: My name for the situation where there are large
+chunks of Arrange code duplicated between tests. This topic warrants a
+follow-up post.</td></tr>
+</tbody>
+</table>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1708-aaa-extract-arrange.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

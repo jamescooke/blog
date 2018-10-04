@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Migrating a project from Django 1.4 to Django 1.5 had a couple of gotchas that cost me dev time.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Migrating from Django 1.4 to 1.5 - Lessons learned // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Migrating from Django 1.4 to 1.5 - Lessons&nbsp;learned</h1>
+                <p class="postdate" title="2013-03-29T19:00:00+00:00">- Posted Mar 29, 2013</p>
+            </header>
+            <div class='article-content'>
+                <p>From <a class="reference external" href="https://twitter.com/ryankask/">Ryan Kaskel</a>&#8216;s talk at <a class="reference external" href="https://www.meetup.com/The-London-Django-Meetup-Group/">Django London</a> in November last
+year, I guessed that upgrading the <a class="reference external" href="https://github.com/jamescooke/actionguide">Action Guide code</a> from Django 1.4 to 1.5 might have
+created some issues with users (<a class="reference external" href="https://docs.djangoproject.com/en/dev/releases/1.5/#configurable-user-model">user models have changed in Django 1.5 to
+allow more customisation</a>).</p>
+<p>However, as it turns out, the main problems were with settings and urls, the
+users were fine. My main take-aways&nbsp;were:</p>
+<div class="section" id="url-formats-have-changed-now-need-quotes">
+<h2>Url formats have changed - now need&nbsp;quotes</h2>
+<p>The Django team had already updated the <cite>url</cite> tag to accept the path parameter
+as a string, but the old syntax was still allowed. 1.4 allowed both types of
+syntax, the team having provided <cite>{% load url from future %}</cite> for those that
+wanted to update their templates to the new&nbsp;syntax.</p>
+<p>Here&#8217;s the warning from the <a class="reference external" href="https://docs.djangoproject.com/en/1.5/ref/templates/builtins/#std:templatetag-url"><span class="caps">URL</span> tag documentation</a>.</p>
+<img alt="Screenshot of warning from Django documentation. Warning reads: &quot;Don't forget to put quotes around the function path or pattern name!" src="https://jamescooke.info/images/url-warning.png" />
+<p>This was a reasonably easy change to implement - some search and replace and
+all <cite>url</cite> tags can be easily hunted down and&nbsp;changed.</p>
+</div>
+<div class="section" id="read-up-on-the-settings-no-allowed-hosts-makes-500s">
+<h2>Read up on the settings - no ALLOWED_HOSTS makes&nbsp;500s</h2>
+<p>This was the real&nbsp;killer.</p>
+<p>There is a <a class="reference external" href="https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts">new ALLOWED_HOSTS settings in 1.5</a> required
+to get Django and running in non-debug&nbsp;mode.</p>
+<p>Worst thing about the implementation of this new setting is that I couldn&#8217;t get
+a single bit of debugging output it through <cite>wsgi</cite> on WebFaction - just a 500
+error on every page load when I took the site out of debug&nbsp;mode.</p>
+<p>I was so confused that I posted <a class="reference external" href="https://stackoverflow.com/questions/15605185/django-1-5-url-deprecation-warning-causes-500-error-in-webfaction-apache-wsgi/15626247">this question on StackOverflow</a>,
+thinking the problem was <cite>url</cite> warnings being shown as errors and halting the
+<cite>wsgi</cite>. In the end, just adding <cite>ALLOWED_HOSTS</cite> fixed everything up&nbsp;great.</p>
+<p>My main problem was that I scanned the docs, tested the migration on localhost
+in dev mode, and just expected everything to deploy. With Captain Hindsight,
+I&#8217;d have RTFMed much harder before deploying - a lesson for the&nbsp;future.</p>
+<p>Apart from that, everything works really well. <strong>Have&nbsp;fun!</strong></p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/django.html">django</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1303-django-1.5-migration.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/django-contexts-and-get.html">Django Contexts and <cite>get</cite></a>
+                        <p class="first last">Found that tests on a recent project started breaking for no clear
+reason, and it turned out it was because I&#8217;d used <tt class="docutils literal">get</tt> to retrieve
+values from&nbsp;Contexts.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/things-i-wish-id-known-about-django.html">Things I wish I&#8217;d known about&nbsp;Django</a>
+                        <p class="first last">Django has been my go-to web framework for about three years. But I
+wish I&#8217;d started with it sooner. This became a talk which I gave at
+the London Django meetup in July this&nbsp;year.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/reincublog-django-app.html">Reincublog Django&nbsp;app</a>
+                        <p class="first last">Reincublog is a super mini Django blog weekend hack, coded as part of a recruitment&nbsp;process.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>
