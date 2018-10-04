@@ -194,7 +194,4 @@ someone else who's improving their knowledge of decorators too.
         # call count remains 2
         self.assertEqual(my_fn.call_count, 2)
 
-All suggested tips on decorators very welcome - `find me on Twitter
-<https://twitter.com/jamesfublo>`_.
-
-Thanks for reading!
+All suggested tips on decorators very welcome - thanks for reading!

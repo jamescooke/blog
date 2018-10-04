@@ -158,7 +158,4 @@ I'm running 125 tests in around 15s on a Python (2.7) Django (1.7) project that
 makes integrated API calls to Dropbox, sits on top of MySQL, runs coverage and
 flake8.
 
-Grab me on `Twitter <https://twitter.com/jamesfublo/>`_ to discuss testing and
-CI.
-
 Thanks for reading.

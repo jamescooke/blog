@@ -9,10 +9,10 @@ My blog doesn't run a commenting system, but feedback and conversation are very
 welcome. There are three main channels:
 
 * Drop me an email on `hi AT jamescooke DOT info`.
-* ~~[Tweet me](https://twitter.com/intent/user?screen_name=jamesfublo)~~ Twitter is deprecated.
+
 * Drop a github comment on the content. All blog posts are in the [content
-    folder](content). Alternatively raise an Issue and I'll reply as soon as I
-    can.
+  folder](content). Alternatively raise an Issue and I'll reply as soon as I
+  can.
 
 ***
 

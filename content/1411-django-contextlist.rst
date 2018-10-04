@@ -154,7 +154,4 @@ It's definitely more robust to be using list access ``[]`` on Context objects
 returned by the Django Test Client where possible when checking values passed
 through to templating.
 
-
-Grab me on `Twitter <https://twitter.com/jamesfublo/>`_ to discuss testing.
-
 Thanks for reading.

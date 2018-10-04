@@ -401,8 +401,7 @@ call to ``full_clean``.
 
 Yes, there is a performance overhead to calling ``full_clean`` but my opinion
 is that eliminating the ``D/V`` set of invalid instances is worth the effort
-and makes the test suite `fundamentally simpler
-<https://twitter.com/jamesfublo/status/778528014665654272>`_.
+and makes the test suite "fundamentally simpler" [#]_.
 
 My future thinking is that if Hypothesis can improve its interface to Django it
 could be the winner.
@@ -433,6 +432,15 @@ Resources
 
 Happy fabricating!
 
+.. [#]
+    ..
+
+        Taking a few percent hit, going a little slower, in order to do
+        something that's just fundamentally simpler"
+
+    `Pycon UK 2016: Python and the Glories of the UNIX Tradition <https://youtu.be/zFMdhXYlFfY?t=20m1s>`_
+    
+    Brandon Rhodes, Pycon UK 2016
 
 .. |red_circle| image:: |filename|/images/red_circle.png
     :width: 25

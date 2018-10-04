@@ -253,6 +253,4 @@ It used a very simple algorithm, which is effectively a weighted graph, to
 outline for building a code version
 <https://www.it.uu.se/edu/course/homepage/ai/menace>`_.
 
-Grab me on `Twitter <https://twitter.com/jamesfublo/>`_ to share any thoughts.
-
 Thanks for reading.

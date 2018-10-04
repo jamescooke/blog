@@ -95,5 +95,4 @@ Finally
 Thanks to `PXG <https://twitter.com/petexgraham>`_ for sharing the "Why I sort
 of dislike Django" post and discussing Django project structures with me.
 
-Thanks for reading! Comment on Github (link below) or grab me on `Twitter
-<https://twitter.com/jamesfublo/>`_ with any feedback.
+Thanks for reading!
