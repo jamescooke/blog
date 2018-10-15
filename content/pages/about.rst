@@ -22,6 +22,8 @@ At work, I usually focus on server-side development, so day to day I'm
 predominantly developing code that creates, validates and manages data, usually
 serving it to a web or mobile app.
 
+For more information you can download a `PDF version of my CV
+<{filename}/docs/james_cooke_cv.pdf>`_.
 
 Contact
 -------
@@ -52,7 +54,3 @@ Elsewhere on the web
 
 * `Stack Overflow profile <https://stackoverflow.com/users/1286705/jamesc>`_ -
   Asking and answering questions about code and operating systems.
-
-* `Stack Overflow developer story <https://stackoverflow.com/story/jamescooke>`_
-  - A timeline-like version of my CV. You can also download a `PDF version of
-  my CV <{filename}/docs/james_cooke_cv.pdf>`_.
