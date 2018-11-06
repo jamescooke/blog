@@ -3,8 +3,6 @@ Hello, my name is James
 
 Thanks for visiting my site - the content here is primarily technical.
 
-I currently work as a back end developer for `Construct <https://construct.pm/>`_.
-
 .. image:: |filename|/images/whiteboard.jpg
     :alt: James Cooke at a whiteboard
 
