@@ -21,17 +21,22 @@ Over the weekend I spotted a tweet from `Oliver <https://oli.me.uk/>`_...
 
 And I jumped straight in with...
 
-.. raw:: html
+    `@OliverCaldwell <https://twitter.com/OliverCaldwell>`_ Squash, but keep
+    detailed commit messages. Unless you have a particular use-case / reason
+    not to.
 
-    <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/OliverCaldwell">@OliverCaldwell</a> Squash, but keep detailed commit messages. Unless you have a particular use-case / reason not to.</p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/statuses/402123985791369216">November 17, 2013</a></blockquote>
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    November 17, 2013
 
-Then, as part of our following `conversation <https://twitter.com/OliverCaldwell/statuses/401299558887485440>`_, I drew a picture:
+Then, as part of our following conversation, I drew a picture:
 
-.. raw:: html
+.. image:: |filename|/images/git.jpg
+    :alt: Git squashing, feature versus history
 
-    <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/OliverCaldwell">@OliverCaldwell</a> This is how I see it. Better to keep the direct route rather than the &quot;how we got here&quot;. <a href="https://t.co/X5FZQ1euoU">pic.twitter.com/X5FZQ1euoU</a></p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/statuses/402407321265274881">November 18, 2013</a></blockquote>
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+..
+
+    This is how I see it. Better to keep the direct route rather than the "how we got here".
+
+    November 18, 2013
 
 But...
 
@@ -498,3 +503,9 @@ great points about when not to squash. One helpful excerpt:
     other developers love, rather than hate, reviewing your code.
 
 Thanks Curt - spread the love!
+
+Update 06/01/2019
+-----------------
+
+The Twitter account that I used in my conversations with Oliver above has been
+deleted. I've replaced the links to tweets with the original content.

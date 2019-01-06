@@ -144,14 +144,12 @@ my APIs read and understand what's in the documentation before coding starts.
 That's a second layer of Communication Illusion that I'll maybe get to tackle
 another day.
 
-Happily, I still agree with `this Tweet
-<https://twitter.com/jamesfublo/status/518017851224227840>`_ that I posted more
+Happily, I still agree with this (old, now deleted) Tweet that I posted more
 than 18 months ago:
 
-.. raw:: html
+    Building an API... All that matters is the docs.
 
-    <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Building an API... All that matters is the docs.</p>&mdash; James Cooke (@jamesfublo) <a href="https://twitter.com/jamesfublo/status/518017851224227840">October 3, 2014</a></blockquote>
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    October 3, 2014
 
 ...and in fact, after working on more API builds and writing this post, I
 believe it's even more true than before.
