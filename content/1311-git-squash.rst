@@ -30,7 +30,7 @@ And I jumped straight in with...
 Then, as part of our following conversation, I drew a picture:
 
 .. image:: |filename|/images/git.jpg
-    :alt: James Cooke at a whiteboard
+    :alt: Git squashing, feature versus history
 
 ..
 
