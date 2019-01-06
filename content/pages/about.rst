@@ -44,11 +44,5 @@ Elsewhere on the web
 
 * `GitHub <https://github.com/jamescooke>`_ - Lots of code things.
 
-* `Last.fm <https://www.last.fm/user/JamesCooke>`_ - I listen to lots of drum
-  and bass.
-
-* `Flickr <https://www.flickr.com/photos/26877867@N07/>`_ - Occasionally I take
-  photos, some are public.
-
 * `Stack Overflow profile <https://stackoverflow.com/users/1286705/jamesc>`_ -
   Asking and answering questions about code and operating systems.
