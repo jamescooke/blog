@@ -33,10 +33,11 @@ very welcome:
 
   **Note:** No recruitment agency emails please.
 
-* Comment on the content via GitHub. All blog posts are in the `content folder
-  <https://github.com/jamescooke/blog/tree/master/content>`_. Alternatively
-  raise an `Issue on GitHub <https://github.com/jamescooke/blog/issues>`_ and
-  I'll reply as soon as I can.
+* Raise an `Issue on GitHub <https://github.com/jamescooke/blog/issues/new>`_
+  and I'll reply as soon as I can. Issues that are comments have their own
+  `"blog comment"
+  <https://github.com/jamescooke/blog/issues?q=is%3Aissue+label%3A%22blog+comment%22>`_
+  label for easy access.
 
 
 Elsewhere on the web

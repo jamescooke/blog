@@ -10,9 +10,10 @@ welcome. There are three main channels:
 
 * Drop me an email on `hi AT jamescooke DOT info`.
 
-* Drop a github comment on the content. All blog posts are in the [content
-  folder](content). Alternatively raise an Issue and I'll reply as soon as I
-  can.
+* Raise an [Issue on GitHub](https://github.com/jamescooke/blog/issues/new) and
+  I'll reply as soon as I can. Issues that are comments have their own ["blog
+  comment"](https://github.com/jamescooke/blog/issues?q=is%3Aissue+label%3A%22blog+comment%22)
+  label for easy access.
 
 ***
 
