@@ -1796,10 +1796,13 @@ Illusion that can ruin a project&amp;nbsp;build.&lt;/p&gt;
 my APIs read and understand what&amp;#8217;s in the documentation before coding starts.
 That&amp;#8217;s a second layer of Communication Illusion that I&amp;#8217;ll maybe get to tackle
 another&amp;nbsp;day.&lt;/p&gt;
-&lt;p&gt;Happily, I still agree with &lt;a class="reference external" href="https://twitter.com/jamesfublo/status/518017851224227840"&gt;this Tweet&lt;/a&gt; that I posted more
+&lt;p&gt;Happily, I still agree with this (old, now deleted) Tweet that I posted more
 than 18 months&amp;nbsp;ago:&lt;/p&gt;
-&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;Building an &lt;span class="caps"&gt;API&lt;/span&gt;&amp;#8230; All that matters is the&amp;nbsp;docs.&lt;/p&gt;&amp;mdash; James Cooke (@jamesfublo) &lt;a href="https://twitter.com/jamesfublo/status/518017851224227840"&gt;October 3, 2014&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;&amp;#8230;and in fact, after working on more &lt;span class="caps"&gt;API&lt;/span&gt; builds and writing this post, I
+&lt;blockquote&gt;
+&lt;p&gt;Building an &lt;span class="caps"&gt;API&lt;/span&gt;&amp;#8230; All that matters is the&amp;nbsp;docs.&lt;/p&gt;
+&lt;p&gt;October 3,&amp;nbsp;2014&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&amp;#8230;and in fact, after working on more &lt;span class="caps"&gt;API&lt;/span&gt; builds and writing this post, I
 believe it&amp;#8217;s even more true than&amp;nbsp;before.&lt;/p&gt;
 &lt;p&gt;Happy &lt;span class="caps"&gt;API&lt;/span&gt;&amp;nbsp;building!&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -2953,10 +2956,20 @@ with &lt;tt class="docutils literal"&gt;next&lt;/tt&gt;, but in 4 it&amp;#8217;s
 &lt;p&gt;Over the weekend I spotted a tweet from &lt;a class="reference external" href="https://oli.me.uk/"&gt;Oliver&lt;/a&gt;&amp;#8230;&lt;/p&gt;
 &lt;blockquote class="twitter-tweet" lang="en"&gt;&lt;p&gt;To squash features into develop, or not to squash features into&amp;nbsp;develop?&lt;/p&gt;&amp;mdash; Oliver Caldwell (@OliverCaldwell) &lt;a href="https://twitter.com/OliverCaldwell/statuses/401299558887485440"&gt;November 15, 2013&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;And I jumped straight in&amp;nbsp;with&amp;#8230;&lt;/p&gt;
-&lt;blockquote class="twitter-tweet" data-conversation="none" lang="en"&gt;&lt;p&gt;&lt;a href="https://twitter.com/OliverCaldwell"&gt;@OliverCaldwell&lt;/a&gt; Squash, but keep detailed commit messages. Unless you have a particular use-case / reason not&amp;nbsp;to.&lt;/p&gt;&amp;mdash; James Cooke (@jamesfublo) &lt;a href="https://twitter.com/jamesfublo/statuses/402123985791369216"&gt;November 17, 2013&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;Then, as part of our following &lt;a class="reference external" href="https://twitter.com/OliverCaldwell/statuses/401299558887485440"&gt;conversation&lt;/a&gt;, I drew a&amp;nbsp;picture:&lt;/p&gt;
-&lt;blockquote class="twitter-tweet" data-conversation="none" lang="en"&gt;&lt;p&gt;&lt;a href="https://twitter.com/OliverCaldwell"&gt;@OliverCaldwell&lt;/a&gt; This is how I see it. Better to keep the direct route rather than the &amp;#8220;how we got here&amp;#8221;. &lt;a href="https://t.co/X5FZQ1euoU"&gt;pic.twitter.com/X5FZQ1euoU&lt;/a&gt;&lt;/p&gt;&amp;mdash; James Cooke (@jamesfublo) &lt;a href="https://twitter.com/jamesfublo/statuses/402407321265274881"&gt;November 18, 2013&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;But&amp;#8230;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://twitter.com/OliverCaldwell"&gt;&amp;#64;OliverCaldwell&lt;/a&gt; Squash, but keep
+detailed commit messages. Unless you have a particular use-case / reason
+not&amp;nbsp;to.&lt;/p&gt;
+&lt;p&gt;November 17,&amp;nbsp;2013&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Then, as part of our following conversation, I drew a&amp;nbsp;picture:&lt;/p&gt;
+&lt;img alt="Git squashing, feature versus history" src="https://jamescooke.info/images/git.jpg" /&gt;
+&lt;!--  --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is how I see it. Better to keep the direct route rather than the &amp;#8220;how we got&amp;nbsp;here&amp;#8221;.&lt;/p&gt;
+&lt;p&gt;November 18,&amp;nbsp;2013&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;But&amp;#8230;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="it-s-about-more-than-just-squashing"&gt;
 &lt;h2&gt;It&amp;#8217;s about more than just&amp;nbsp;squashing&lt;/h2&gt;
@@ -3317,6 +3330,11 @@ telling to the other developers. Make the story as clear as possible,
 divided up into reasonably small chunks where you can do so. This will make
 other developers love, rather than hate, reviewing your code.&lt;/blockquote&gt;
 &lt;p&gt;Thanks Curt - spread the&amp;nbsp;love!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="update-06-01-2019"&gt;
+&lt;h2&gt;Update&amp;nbsp;06/01/2019&lt;/h2&gt;
+&lt;p&gt;The Twitter account that I used in my conversations with Oliver above has been
+deleted. I&amp;#8217;ve replaced the links to tweets with the original&amp;nbsp;content.&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="git"></category></entry><entry><title>vi-nature everywhere - lightning talk</title><link href="https://jamescooke.info/vi-nature-everywhere-lightning-talk.html" rel="alternate"></link><published>2013-11-01T20:00:00+00:00</published><updated>2013-11-01T20:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-11-01:/vi-nature-everywhere-lightning-talk.html</id><summary type="html">&lt;p class="first last"&gt;This week I presented at Vim-London about vi nature and the benefits
 for using it in more than&amp;nbsp;vim.&lt;/p&gt;

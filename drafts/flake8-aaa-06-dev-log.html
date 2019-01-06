@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" property="og:description" content="Pack your Python bags before you ship to PyPI land.">
+        <meta name="description" property="og:description" content="Dev log from my work on version 0.6.0 of the flake8-aaa test linter.">
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
@@ -16,7 +16,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 
-        <title>Packaging checklist // James Cooke // Brighton-based Python developer</title>
+        <title>Flake8-AAA 0.6 Dev Log // James Cooke // Brighton-based Python developer</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width">
     </head>
@@ -44,28 +44,52 @@
     <section class="span7 offset1 content">
         <article class="blogpost">
             <header>
-                <h1>Packaging&nbsp;checklist</h1>
-                <p class="postdate" title="2018-05-21T19:00:00+01:00">- Posted May 21, 2018</p>
+                <h1>Flake8-<span class="caps">AAA</span> 0.6 Dev&nbsp;Log</h1>
+                <p class="postdate" title="2019-01-31T19:00:00+00:00">- Posted Jan 31, 2019</p>
             </header>
             <div class='article-content'>
-                <div class="section" id="tox-is-great-for-testing-packages">
-<h2>Tox is great for testing&nbsp;packages</h2>
-<p><a class="reference external" href="https://tox.readthedocs.io/en/latest/">Tox</a> is a fantastic tool and it comes
-into its own when you are creating a package. When I found I&#8217;d broken
-installation of <tt class="docutils literal">pysyncgateway</tt> by missing a dependency from the <tt class="docutils literal">setup.py</tt>
-<tt class="docutils literal">install_requires</tt> list, I created a special install test environment in <tt class="docutils literal">tox.ini</tt>.</p>
-<p>It installs the package with <a class="reference external" href="https://github.com/constructpm/pysyncgateway/blob/8e287e4271fcbb61886de11cdd0819b46e595ab1/tox.ini#L12">no other requirements present</a>
-and gave me added confidence that I&#8217;d captured the install requirements&nbsp;correctly.</p>
+                <div class="section" id="line-wise-versus-node-wise-analysis-and-footprints">
+<h2>Line-wise versus node-wise analysis and&nbsp;footprints</h2>
+<p>As of this new version the analysis of spacing is now fully moved over to a
+line based analysis. The general&nbsp;strategy.</p>
+<p>Link&nbsp;to</p>
+<p>To help with debugging, I&#8217;ve had the idea that a command line output would be
+helpful and I&#8217;ve finally got it in place. This was a great help for checking on
+the generation of&nbsp;footprints.</p>
+<div class="section" id="act-blocks-are-not-act-nodes">
+<h3>Act Blocks are not Act&nbsp;Nodes</h3>
+<p>As a result of new footprinting code, I ran into a bug where <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/issues/60">footprinting
+failed when the Act Block is inside a context manager</a>. This often happens when
+mocks are deployed using the <tt class="docutils literal">with mock.patch()</tt> structure.</p>
+<p>As a result of this, I&#8217;ve had the realisation that what I&#8217;ve so far defined as
+an Act Block is really a smaller thing - an Act&nbsp;Node.</p>
 </div>
-<div class="section" id="lint">
-<h2>Lint</h2>
-<p>It&#8217;s very easy to break documentation but having an <span class="caps">RST</span> linter really helps.
-I&#8217;ve added a step to the code linting which uses <a class="reference external" href="https://pypi.python.org/pypi/restructuredtext_lint">restructuredtext-lint</a> to ensure that all <span class="caps">RST</span>
-is valid - this means that it&#8217;s much more likely that Github and Read The Docs
-will render it as&nbsp;expected.</p>
-<p>Even though the code has been in beta and the <span class="caps">API</span> server is (probably) the
-only production system using it right now, writing a Changelog really helped
-me to clarify what changes I was making to the&nbsp;library.</p>
+<div class="section" id="writing-up-strategy">
+<h3>Writing up&nbsp;strategy</h3>
+<p>Mypy is good,&nbsp;but</p>
+</div>
+<div class="section" id="github-projects-are-odd">
+<h3>Github projects are&nbsp;odd</h3>
+<p>In order to capture the bunch of work around how spacing between blocks was
+checked, I tried out Github&#8217;s Projects tab and created an <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/projects/1">Improve analysis of
+spacing</a> project. For me
+on this small project with very low volume, I found it overkill compared to
+Issue Timelines. I completely understand that development tools need to be
+customisable - and there&#8217;s probably some great uses for larger projects, but
+this didn&#8217;t work for me this&nbsp;time.</p>
+</div>
+</div>
+<div class="section" id="next-to-do">
+<h2>Next to&nbsp;do</h2>
+<p>These are the items that I&#8217;m thinking about, but haven&#8217;t created tickets&nbsp;for.</p>
+<div class="section" id="noqa">
+<h3>noqa</h3>
+<p>I&#8217;m pretty sure that many of the rules built so far can not be properly ignored
+by the use of the <tt class="docutils literal"># noqa</tt> comment marker at the end of the offending line.
+My plan is to build out a set of tests in the <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/tree/master/examples">examples folder</a> called
+&#8220;ignores&#8221;. These will have failing examples for each rule, but with <tt class="docutils literal"># noqa</tt>
+appended to each so that testing&nbsp;passes.</p>
+</div>
 </div>
 
             </div>
@@ -79,7 +103,7 @@ me to clarify what changes I was making to the&nbsp;library.</p>
                 with
 tag                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>
                 <br>
-                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1805-packaging-checklist.rst'>View, comment, edit source on GitHub</a>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1901_flake8_aaa_dev_log.rst'>View, comment, edit source on GitHub</a>
                 <br>
                 &ndash; Further reading:
                 <ul>
