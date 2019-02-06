@@ -16,9 +16,9 @@ provide recipes for managing requirements and specifying the dependencies
 between the requirements files.
 
 If you are not aware of the excellent ``pip-tools`` `package
-<https://github.com>`_ it provides two commands: ``pip-compile`` and
-``pip-sync``. In this post I will be focusing on using ``pip-compile`` to
-compile ``.in`` files consisting of top level requirements.
+<https://github.com/jazzband/pip-tools>`_ it provides two commands: 
+``pip-compile`` and ``pip-sync``. In this post I will be focusing on using 
+``pip-compile`` to compile ``.in`` files consisting of top level requirements.
 
 ``pip-compile`` consults the PyPI index for each top level package required,
 looking up the package versions available, outputting a specific list of pinned
