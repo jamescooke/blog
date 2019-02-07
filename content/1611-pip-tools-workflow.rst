@@ -16,9 +16,9 @@ provide recipes for managing requirements and specifying the dependencies
 between the requirements files.
 
 If you are not aware of the excellent ``pip-tools`` `package
-<https://github.com>`_ it provides two commands: ``pip-compile`` and
-``pip-sync``. In this post I will be focusing on using ``pip-compile`` to
-compile ``.in`` files consisting of top level requirements.
+<https://github.com/jazzband/pip-tools>`_ it provides two commands: 
+``pip-compile`` and ``pip-sync``. In this post I will be focusing on using 
+``pip-compile`` to compile ``.in`` files consisting of top level requirements.
 
 ``pip-compile`` consults the PyPI index for each top level package required,
 looking up the package versions available, outputting a specific list of pinned
@@ -66,7 +66,7 @@ files:
 
 * ``test.in`` compiles to ``test.txt``
 
-I want the test requirements add to the base requirements **without changing
+I want the test requirements added to the base requirements **without changing
 the versions** of the packages compiled for base. Therefore I set ``test.in``
 to ``-r`` require the ``base.txt`` compiled requirements:
 
@@ -81,7 +81,7 @@ to ``-r`` require the ``base.txt`` compiled requirements:
       test-packages
 
 Setting ``test.in`` to depend on ``base.txt`` rather than ``base.in`` means
-that the top level requirements for testing and do not override the packages
+that the top level requirements for testing do not override the packages
 needed by the main project.
 
 
@@ -248,8 +248,8 @@ To update a particular file, ask for it by name:
 
     $ make test.txt
 
-If make tells you that a file is up-to-date but you want to force it to be
-rebuilt you should ``touch`` the ``.in`` file.
+If ``make`` tells you that a file is up-to-date but you want to force it to
+be rebuilt you should ``touch`` the ``.in`` file.
 
 .. code-block:: sh
 
