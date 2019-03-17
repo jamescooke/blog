@@ -113,14 +113,18 @@ place it in the requirements folder.
 
 .. **
 
-Here is that same file `in a current project
-<https://github.com/jamescooke/prlint/blob/master/requirements/Makefile>`_.
-**NOTE** that because ``make`` requires recipes to be indented by tabs, if you
-want to copy this file then it could be helpful to pull the `raw file from
-Github
-<https://raw.githubusercontent.com/jamescooke/prlint/master/requirements/Makefile>`_
-rather than copying and pasting out of this webpage where the tabs have not
-been reproduced.
+Here is [a similar] file `in a current project
+<https://github.com/jamescooke/flake8-aaa/blob/master/requirements/Makefile>`_.
+
+    Note 1: This is an updated version of the Makefile that I have been using.
+    There are no ``clean`` or ``check`` recipes.
+
+    Note 2: ``make`` requires recipes to be indented by tabs, so if you
+    want to copy this file then it could be helpful to pull the `raw file from
+    Github
+    <https://raw.githubusercontent.com/jamescooke/flake8-aaa/master/requirements/Makefile>`_
+    rather than copying and pasting from this page which does not show tab
+    characters.
 
 Let's go over the key functionality provided by this Makefile:
 
