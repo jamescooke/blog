@@ -28,7 +28,7 @@ with ``pip freeze``) is very helpful for managing requirements, but does create
 some complications which mean that a solid workflow is essential for stable
 package management.
 
-    *Update 24/09/2019*
+    *Update 13/10/2019*
 
     This post has been updated to use ``-c`` constraint files rather than
     ``-r`` recursive inclusion. More info at the end of the post.
@@ -363,3 +363,17 @@ See also `this comment on GitHub
     ... corrects the annoyance ``-e file:///Users/dfee/code/zebra -> -e .``,
     making the file useful for users who don't develop / deploy from your
     directory.
+
+Update 13/10/2019
+-----------------
+
+`This pull request <https://github.com/jazzband/pip-tools/pull/905>`_ updated
+the ``pip-tools`` README to include `info on creating layered requirements
+files
+<https://github.com/jazzband/pip-tools#workflow-for-layered-requirements>`_
+using ``-c`` constraints. The use of ``-c`` came up in `this long running issue
+<https://github.com/jazzband/pip-tools/issues/398>`_ discussing layered
+requirements and how to ensure that each layer is compatible with the others.
+
+I think that ``-c`` constraints are much better than ``-r`` inclusion and have
+updated the post to reflect that.
