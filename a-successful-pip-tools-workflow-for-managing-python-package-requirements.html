@@ -63,6 +63,11 @@ containing top level requirements rather than just outputting <tt class="docutil
 with <tt class="docutils literal">pip freeze</tt>) is very helpful for managing requirements, but does create
 some complications which mean that a solid workflow is essential for stable
 package&nbsp;management.</p>
+<blockquote>
+<p><em>Update&nbsp;13/10/2019</em></p>
+<p>This post has been updated to use <tt class="docutils literal"><span class="pre">-c</span></tt> constraint files rather than
+<tt class="docutils literal"><span class="pre">-r</span></tt> recursive inclusion. More info at the end of the&nbsp;post.</p>
+</blockquote>
 <div class="section" id="keep-requirements-files-in-their-own-folder">
 <h2>Keep requirements files in their own&nbsp;folder</h2>
 <p>In order to preserve sanity, I keep my project requirements in their own folder
@@ -89,22 +94,20 @@ check the diff of <tt class="docutils literal">.txt</tt> files when upgrading&nb
 <li><tt class="docutils literal">base.in</tt> compiles to <tt class="docutils literal">base.txt</tt></li>
 <li><tt class="docutils literal">test.in</tt> compiles to <tt class="docutils literal">test.txt</tt></li>
 </ul>
-<p>I want the test requirements added to the base requirements <strong>without changing
-the versions</strong> of the packages compiled for base. Therefore I set <tt class="docutils literal">test.in</tt>
-to <tt class="docutils literal"><span class="pre">-r</span></tt> require the <tt class="docutils literal">base.txt</tt> compiled&nbsp;requirements:</p>
+<p>I want the test requirements to be compiled to respect the versions of the base
+packages so that they can be installed without disrupting those selected
+versions. Therefore I set <tt class="docutils literal">test.in</tt> to be constrained by the <tt class="docutils literal">base.txt</tt>
+compiled requirements with <tt class="docutils literal"><span class="pre">-c</span></tt>:</p>
 <p><tt class="docutils literal">base.in</tt> contains:</p>
 <pre class="literal-block">
 project-packages
 </pre>
 <p><tt class="docutils literal">test.in</tt> contains:</p>
 <pre class="literal-block">
--r base.txt
+-c base.txt
 
 test-packages
 </pre>
-<p>Setting <tt class="docutils literal">test.in</tt> to depend on <tt class="docutils literal">base.txt</tt> rather than <tt class="docutils literal">base.in</tt> means
-that the top level requirements for testing do not override the packages
-needed by the main&nbsp;project.</p>
 </div>
 <div class="section" id="use-a-makefile-for-common-tasks">
 <h2>Use a Makefile for common&nbsp;tasks</h2>
@@ -195,9 +198,9 @@ $ make -n test.txt    <span class="c1"># What commands will be run to build test
 pip-compile -v --output-file base.txt base.in
 pip-compile -v --output-file test.txt test.in
 </pre></div>
-<p>This is exactly what we want for requirements inheritance. If the
+<p>This is exactly what we want for requirements constraining. If the
 requirements in our base have changed, then we want our test file to be
-recompiled too because of the <tt class="docutils literal"><span class="pre">-r</span> base.txt</tt> line we added to the
+recompiled too because of the <tt class="docutils literal"><span class="pre">-c</span> base.txt</tt> line we added to the
 <tt class="docutils literal">test.in</tt> file.</p>
 <p>Of course, this is a trivial example, but I have used
 multiple lines of dependency in Makefiles to manage multiple levels of
@@ -308,6 +311,16 @@ recommend pointing at <tt class="docutils literal">.txt</tt> files with <tt clas
 making the file useful for users who don&#8217;t develop / deploy from your
 directory.</blockquote>
 </div>
+<div class="section" id="update-13-10-2019">
+<h2>Update&nbsp;13/10/2019</h2>
+<p><a class="reference external" href="https://github.com/jazzband/pip-tools/pull/905">This pull request</a> updated
+the <tt class="docutils literal"><span class="pre">pip-tools</span></tt> <span class="caps">README</span> to include <a class="reference external" href="https://github.com/jazzband/pip-tools#workflow-for-layered-requirements">info on creating layered requirements
+files</a>
+using <tt class="docutils literal"><span class="pre">-c</span></tt> constraints. The use of <tt class="docutils literal"><span class="pre">-c</span></tt> came up in <a class="reference external" href="https://github.com/jazzband/pip-tools/issues/398">this long running issue</a> discussing layered
+requirements and how to ensure that each layer is compatible with the&nbsp;others.</p>
+<p>I think that <tt class="docutils literal"><span class="pre">-c</span></tt> constraints are much better than <tt class="docutils literal"><span class="pre">-r</span></tt> inclusion and have
+updated the post to reflect&nbsp;that.</p>
+</div>
 
             </div>
         </article>
@@ -325,19 +338,18 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
+                        <p class="first last">Thoughts on the benefits of extracting library code from Python
+projects into their own&nbsp;packages.</p>
+</li>
+                    <li>
                         <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
                         <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
 they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
-                        <p class="first last">This post explores how to extract arrangement code when working with
-the Arrange Act Assert pattern so that it can be used with certainty
-across the test&nbsp;suite.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html">Pyramid London talk - A testing strategy for Pyramid&nbsp;Applications</a>
-                        <p class="first last">Talk at Pyramid London meetup about testing strategies for Pyramid&nbsp;applications.</p>
+                        <a href="https://jamescooke.info/things-to-remember-about-decorators.html">Things to remember about&nbsp;decorators</a>
+                        <p class="first last">Notes to myself about Python decorators with a focus on making them&nbsp;testable.</p>
 </li>
                 </ul>
         </p>

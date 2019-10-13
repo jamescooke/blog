@@ -779,6 +779,11 @@ containing top level requirements rather than just outputting &lt;tt class="docu
 with &lt;tt class="docutils literal"&gt;pip freeze&lt;/tt&gt;) is very helpful for managing requirements, but does create
 some complications which mean that a solid workflow is essential for stable
 package&amp;nbsp;management.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Update&amp;nbsp;13/10/2019&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This post has been updated to use &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; constraint files rather than
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-r&lt;/span&gt;&lt;/tt&gt; recursive inclusion. More info at the end of the&amp;nbsp;post.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;div class="section" id="keep-requirements-files-in-their-own-folder"&gt;
 &lt;h2&gt;Keep requirements files in their own&amp;nbsp;folder&lt;/h2&gt;
 &lt;p&gt;In order to preserve sanity, I keep my project requirements in their own folder
@@ -805,22 +810,20 @@ check the diff of &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; files when 
 &lt;li&gt;&lt;tt class="docutils literal"&gt;base.in&lt;/tt&gt; compiles to &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;&lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt; compiles to &lt;tt class="docutils literal"&gt;test.txt&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;I want the test requirements added to the base requirements &lt;strong&gt;without changing
-the versions&lt;/strong&gt; of the packages compiled for base. Therefore I set &lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt;
-to &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-r&lt;/span&gt;&lt;/tt&gt; require the &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt; compiled&amp;nbsp;requirements:&lt;/p&gt;
+&lt;p&gt;I want the test requirements to be compiled to respect the versions of the base
+packages so that they can be installed without disrupting those selected
+versions. Therefore I set &lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt; to be constrained by the &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt;
+compiled requirements with &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt;:&lt;/p&gt;
 &lt;p&gt;&lt;tt class="docutils literal"&gt;base.in&lt;/tt&gt; contains:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
 project-packages
 &lt;/pre&gt;
 &lt;p&gt;&lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt; contains:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
--r base.txt
+-c base.txt
 
 test-packages
 &lt;/pre&gt;
-&lt;p&gt;Setting &lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt; to depend on &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt; rather than &lt;tt class="docutils literal"&gt;base.in&lt;/tt&gt; means
-that the top level requirements for testing do not override the packages
-needed by the main&amp;nbsp;project.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="use-a-makefile-for-common-tasks"&gt;
 &lt;h2&gt;Use a Makefile for common&amp;nbsp;tasks&lt;/h2&gt;
@@ -911,9 +914,9 @@ $ make -n test.txt    &lt;span class="c1"&gt;# What commands will be run to buil
 pip-compile -v --output-file base.txt base.in
 pip-compile -v --output-file test.txt test.in
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This is exactly what we want for requirements inheritance. If the
+&lt;p&gt;This is exactly what we want for requirements constraining. If the
 requirements in our base have changed, then we want our test file to be
-recompiled too because of the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-r&lt;/span&gt; base.txt&lt;/tt&gt; line we added to the
+recompiled too because of the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt; base.txt&lt;/tt&gt; line we added to the
 &lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt; file.&lt;/p&gt;
 &lt;p&gt;Of course, this is a trivial example, but I have used
 multiple lines of dependency in Makefiles to manage multiple levels of
@@ -1023,6 +1026,16 @@ recommend pointing at &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; files w
 &amp;#8230; corrects the annoyance &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-e&lt;/span&gt; &lt;span class="pre"&gt;file:///Users/dfee/code/zebra&lt;/span&gt; &lt;span class="pre"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="pre"&gt;-e&lt;/span&gt; .&lt;/tt&gt;,
 making the file useful for users who don&amp;#8217;t develop / deploy from your
 directory.&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="update-13-10-2019"&gt;
+&lt;h2&gt;Update&amp;nbsp;13/10/2019&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/jazzband/pip-tools/pull/905"&gt;This pull request&lt;/a&gt; updated
+the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pip-tools&lt;/span&gt;&lt;/tt&gt; &lt;span class="caps"&gt;README&lt;/span&gt; to include &lt;a class="reference external" href="https://github.com/jazzband/pip-tools#workflow-for-layered-requirements"&gt;info on creating layered requirements
+files&lt;/a&gt;
+using &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; constraints. The use of &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; came up in &lt;a class="reference external" href="https://github.com/jazzband/pip-tools/issues/398"&gt;this long running issue&lt;/a&gt; discussing layered
+requirements and how to ensure that each layer is compatible with the&amp;nbsp;others.&lt;/p&gt;
+&lt;p&gt;I think that &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; constraints are much better than &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-r&lt;/span&gt;&lt;/tt&gt; inclusion and have
+updated the post to reflect&amp;nbsp;that.&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="language:python"></category></entry><entry><title>Django Factory Audit</title><link href="https://jamescooke.info/django-factory-audit.html" rel="alternate"></link><published>2016-10-12T10:00:00+01:00</published><updated>2016-10-12T10:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-10-12:/django-factory-audit.html</id><summary type="html">&lt;p class="first last"&gt;Exploring the various model instance factories available for Django.
 Each factory is tested based on the quality of the instances it
