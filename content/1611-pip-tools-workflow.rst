@@ -28,6 +28,11 @@ with ``pip freeze``) is very helpful for managing requirements, but does create
 some complications which mean that a solid workflow is essential for stable
 package management.
 
+    *Update 13/10/2019*
+
+    This post has been updated to use ``-c`` constraint files rather than
+    ``-r`` recursive inclusion. More info at the end of the post.
+
 
 Keep requirements files in their own folder
 -------------------------------------------
@@ -66,9 +71,10 @@ files:
 
 * ``test.in`` compiles to ``test.txt``
 
-I want the test requirements added to the base requirements **without changing
-the versions** of the packages compiled for base. Therefore I set ``test.in``
-to ``-r`` require the ``base.txt`` compiled requirements:
+I want the test requirements to be compiled to respect the versions of the base
+packages so that they can be installed without disrupting those selected
+versions. Therefore I set ``test.in`` to be constrained by the ``base.txt``
+compiled requirements with ``-c``:
 
 ``base.in`` contains::
 
@@ -76,13 +82,9 @@ to ``-r`` require the ``base.txt`` compiled requirements:
 
 ``test.in`` contains::
 
-      -r base.txt
+      -c base.txt
 
       test-packages
-
-Setting ``test.in`` to depend on ``base.txt`` rather than ``base.in`` means
-that the top level requirements for testing do not override the packages
-needed by the main project.
 
 
 Use a Makefile for common tasks
@@ -205,9 +207,9 @@ Let's go over the key functionality provided by this Makefile:
       pip-compile -v --output-file base.txt base.in
       pip-compile -v --output-file test.txt test.in
 
-  This is exactly what we want for requirements inheritance. If the
+  This is exactly what we want for requirements constraining. If the
   requirements in our base have changed, then we want our test file to be
-  recompiled too because of the ``-r base.txt`` line we added to the
+  recompiled too because of the ``-c base.txt`` line we added to the
   ``test.in`` file.
 
   Of course, this is a trivial example, but I have used
@@ -361,3 +363,17 @@ See also `this comment on GitHub
     ... corrects the annoyance ``-e file:///Users/dfee/code/zebra -> -e .``,
     making the file useful for users who don't develop / deploy from your
     directory.
+
+Update 13/10/2019
+-----------------
+
+`This pull request <https://github.com/jazzband/pip-tools/pull/905>`_ updated
+the ``pip-tools`` README to include `info on creating layered requirements
+files
+<https://github.com/jazzband/pip-tools#workflow-for-layered-requirements>`_
+using ``-c`` constraints. The use of ``-c`` came up in `this long running issue
+<https://github.com/jazzband/pip-tools/issues/398>`_ discussing layered
+requirements and how to ensure that each layer is compatible with the others.
+
+I think that ``-c`` constraints are much better than ``-r`` inclusion and have
+updated the post to reflect that.
