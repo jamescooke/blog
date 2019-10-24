@@ -1,13 +1,13 @@
 Pytest_cache and gitignore
 ==========================
 
-:date: 2019-10-20 12:00
+:date: 2019-10-24 23:00
 :tags: language:python
 :category: Code
 :summary: Sanity checking Pytest's gitignore file.
 :scm_path: content/1804-pysyncgateway.rst
 
-This blog is about sanity checking.
+This post is about sanity checking.
 
 TL;DR
 -----
@@ -21,15 +21,18 @@ TL;DR
 The story
 ---------
 
-This week I have been working on a project that uses Pytest. I was getting some
-strange results with ``pytest --lf`` [1]. So to make sure that I start from a
-clean place, I went to clean out the Pytest cache.
+This week I was working on a project using Pytest.
 
-Pytest caches run state between test runs in ``.pytest_cache``. And we can
-inspect the cache with ``pytest --cache-show``.
+The problem I was having was that ``pytest --lf`` was not selecting all
+possible tests. The ``--lf`` flag tells Pytest to run `the tests that failed in
+the last run
+<https://docs.pytest.org/en/latest/cache.html#rerunning-only-failures-or-failures-first>`_
+and those test IDs are stored in Pytest's cache.
 
-However, while I'm looking at the ``.pytest_cache`` directory in this project,
-I had a mild panic - I've completely forgotten to add it to ``.gitignore``!
+To ensure that I started from a clean place, I went to clean out the Pytest
+cache ``.pytest_cache`` directory. But while I was looking at that directory, I
+had a mild panic - I had completely forgotten to add it to project's
+``.gitignore`` file!
 
 Have I accidentally committed it?! Is this why ``pytest --lf`` is being
 strange?!
@@ -116,13 +119,6 @@ better than projects that do too much. I would generally take trade-offs where
 less is done rather than more.
 
 
-
-
-
 [1] If you don't know this super helpful ``--lf , --last-failed`` flag, then
 it's great for running against large test suites where changes you're working
 on affect a number of tests.
-
-
-
-
