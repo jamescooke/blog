@@ -11,10 +11,13 @@ Tech
 ----
 
 Python is my programming language of choice. I've worked with other programming
-languages, but Python has been my favourite for about the last five years.
+languages, but Python has been my favourite for about the last eight years.
 
 I love Linux. I've used other operating systems, but for the last 20 years I've
 been using one or another Linux distribution at home and work.
+
+Work
+----
 
 At work, I usually focus on server-side development, so day to day I'm
 predominantly developing code that creates, validates and manages data, usually
