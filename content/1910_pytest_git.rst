@@ -12,7 +12,7 @@ This post is about sanity checking.
 TL;DR
 -----
 
-* Pytest protects its ``.pytest_cache`` directory from getting into Git
+* Pytest prevents its ``.pytest_cache`` directory from getting into Git
   repositories by adding a ``.gitignore`` file inside it.
 
 * You can check any path, real or imaginary, with ``git check-ignore`` to see
@@ -29,12 +29,12 @@ the last run
 <https://docs.pytest.org/en/latest/cache.html#rerunning-only-failures-or-failures-first>`_
 and those test IDs are stored in Pytest's cache.
 
-To ensure that I started from a clean place, I went to clean out the Pytest
-cache ``.pytest_cache`` directory. But while I was looking at that directory, I
-had a mild panic - I had completely forgotten to add it to project's
-``.gitignore`` file!
+To ensure that I started from a clean place, I went to clean out the
+``.pytest_cache`` directory. But while I was looking at that directory, I had a
+mild panic - I had completely forgotten to add it to project's ``.gitignore``
+file!
 
-Have I accidentally committed it?! Is this why ``pytest --lf`` is being
+Had I accidentally committed it?! Was this why ``pytest --lf`` was being
 strange?!
 
 Firstly I was able to reassure myself that I'd not accidentally committed it:
