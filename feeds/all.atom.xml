@@ -2616,10 +2616,13 @@ makes integrated &lt;span class="caps"&gt;API&lt;/span&gt; calls to Dropbox, sit
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
     mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -2633,6 +2636,8 @@ makes integrated &lt;span class="caps"&gt;API&lt;/span&gt; calls to Dropbox, sit
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -2653,6 +2658,8 @@ makes integrated &lt;span class="caps"&gt;API&lt;/span&gt; calls to Dropbox, sit
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 &lt;/script&gt;</content><category term="topic:testing"></category></entry><entry><title>Flat designs to website specification - a checklist</title><link href="https://jamescooke.info/flat-designs-to-website-specification-a-checklist.html" rel="alternate"></link><published>2014-03-29T16:00:00+00:00</published><updated>2014-03-29T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-03-29:/flat-designs-to-website-specification-a-checklist.html</id><summary type="html">&lt;p class="first last"&gt;Agencies often provide flat designs to web developers as a
@@ -3607,10 +3614,13 @@ what&amp;#8217;s&amp;nbsp;not.&lt;/p&gt;
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
     mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -3624,6 +3634,8 @@ what&amp;#8217;s&amp;nbsp;not.&lt;/p&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -3644,6 +3656,8 @@ what&amp;#8217;s&amp;nbsp;not.&lt;/p&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 &lt;/script&gt;</content><category term="work"></category></entry><entry><title>Pyramid London talk - A testing strategy for Pyramid Applications</title><link href="https://jamescooke.info/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html" rel="alternate"></link><published>2013-06-16T21:00:00+01:00</published><updated>2013-06-16T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-06-16:/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html</id><summary type="html">&lt;p class="first last"&gt;Talk at Pyramid London meetup about testing strategies for Pyramid&amp;nbsp;applications.&lt;/p&gt;

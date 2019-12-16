@@ -183,10 +183,13 @@ makes integrated <span class="caps">API</span> calls to Dropbox, sits on top of 
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
     mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -200,6 +203,8 @@ makes integrated <span class="caps">API</span> calls to Dropbox, sits on top of 
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -220,6 +225,8 @@ makes integrated <span class="caps">API</span> calls to Dropbox, sits on top of 
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -239,9 +246,9 @@ tag                    <a href="https://jamescooke.info/tag/topictesting.html">t
                 &ndash; Further reading:
                 <ul>
                     <li>
-                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
-                        <p class="first last">An updated simple assertion helper for comparing instances of
-Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
 </li>
                     <li>
                         <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
@@ -249,8 +256,9 @@ Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
 they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html">Pyramid London talk - A testing strategy for Pyramid&nbsp;Applications</a>
-                        <p class="first last">Talk at Pyramid London meetup about testing strategies for Pyramid&nbsp;applications.</p>
+                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
+                        <p class="first last">An updated simple assertion helper for comparing instances of
+Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
 </li>
                 </ul>
         </p>

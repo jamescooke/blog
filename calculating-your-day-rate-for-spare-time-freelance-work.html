@@ -133,10 +133,13 @@ what&#8217;s&nbsp;not.</p>
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
     mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -150,6 +153,8 @@ what&#8217;s&nbsp;not.</p>
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -170,6 +175,8 @@ what&#8217;s&nbsp;not.</p>
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -189,16 +196,16 @@ tag                    <a href="https://jamescooke.info/tag/work.html">work</a>
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/seinfeld-method-and-coding.html">Seinfeld method and&nbsp;coding</a>
+                        <p class="first last">A presentation I made at ustwo&#8217;s Tech Thursday about Seinfeld
+Technique and how it can help coders to get their personal projects&nbsp;moving.</p>
+</li>
+                    <li>
                         <a href="https://jamescooke.info/flat-designs-to-website-specification-a-checklist.html">Flat designs to website specification - a&nbsp;checklist</a>
                         <p class="first last">Agencies often provide flat designs to web developers as a
 specification, but these only scratch the surface of a true website
 functional specification. This is a check-list of features which can
 be fleshed out to start the journey towards a full functional&nbsp;spec.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/seinfeld-method-and-coding.html">Seinfeld method and&nbsp;coding</a>
-                        <p class="first last">A presentation I made at ustwo&#8217;s Tech Thursday about Seinfeld
-Technique and how it can help coders to get their personal projects&nbsp;moving.</p>
 </li>
                 </ul>
         </p>
