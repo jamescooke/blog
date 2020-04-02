@@ -75,7 +75,7 @@ created is&nbsp;hard.</p>
 <h2>A simple&nbsp;solution</h2>
 <p>Q objects generate great Unicode representations of&nbsp;themselves:</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">place</span><span class="o">=</span><span class="s1">&#39;Residential&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">people__gt</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">unicode</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="sa">u</span><span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Residential&#39;), (&#39;people__gt&#39;, 5))&quot;</span>
 </pre></div>
 <p>In addition, it is &#8220;good&#8221; testing practice to write assertion helpers whenever
@@ -102,8 +102,8 @@ that extends <tt class="docutils literal">unittest.TestCase</tt> (such as Django
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
-        <span class="n">left_u</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
-        <span class="n">right_u</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+        <span class="n">left_u</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right_u</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">left_u</span><span class="p">,</span> <span class="n">right_u</span><span class="p">)</span>
 </pre></div>
 <p>Disadvantage of this method is that it is simplistic and doesn&#8217;t find all the Q
@@ -144,19 +144,19 @@ directly into <tt class="docutils literal">Q.__cmp__</tt>.</p>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 
 <span class="c1"># Double negation would work</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="o">~~</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 
 <span class="c1"># Negation on expression would work</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 
 <span class="c1"># END IMAGINATION SECTION</span>
 </pre></div>
@@ -197,20 +197,21 @@ tags                    <a href="https://jamescooke.info/tag/topictesting.html">
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
+                        <p class="first last">An updated simple assertion helper for comparing instances of
+Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
+</li>
+                    <li>
                         <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
                         <p class="first last">Exploring the various model instance factories available for Django.
 Each factory is tested based on the quality of the instances it
 creates. Bonus: talk version and slides also&nbsp;available.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
-                        <p class="first last">An updated simple assertion helper for comparing instances of
-Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
-                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
-shows how it can be used in a Python context with&nbsp;Pytest.</p>
+                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
+                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
+using it can help us all make our tests cleaner, easier to read
+and as Pythonic as&nbsp;possible.</p>
 </li>
                 </ul>
         </p>

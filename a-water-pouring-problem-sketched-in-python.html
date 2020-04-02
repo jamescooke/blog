@@ -143,10 +143,10 @@ search, so here it is in full, comments&nbsp;removed.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_solvable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_goal</span><span class="p">():</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_trace</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_children</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solvable_child</span><span class="p">()</span>
 </pre></div>
@@ -167,9 +167,9 @@ the <tt class="docutils literal">Game.solvable_child</tt> helper function is the
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solvable_child</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">is_solvable</span><span class="p">():</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="kc">False</span>
 </pre></div>
 <p>There are two &#8220;interesting&#8221; features of this&nbsp;function:</p>
 <ul class="simple">

@@ -1,5 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2018-04-21T19:00:00+01:00</updated><entry><title>It’s good to extract</title><link href="https://jamescooke.info/its-good-to-extract.html" rel="alternate"></link><published>2018-04-21T19:00:00+01:00</published><updated>2018-04-21T19:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2018-04-21:/its-good-to-extract.html</id><summary type="html">&lt;p class="first last"&gt;Thoughts on the benefits of extracting library code from Python
+<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2020-04-02T23:00:00+01:00</updated><entry><title>Travis hitting GitHub’s API limits for Open Source projects</title><link href="https://jamescooke.info/travis-hitting-githubs-api-limits-for-open-source-projects.html" rel="alternate"></link><published>2020-04-02T23:00:00+01:00</published><updated>2020-04-02T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-02:/travis-hitting-githubs-api-limits-for-open-source-projects.html</id><summary type="html">&lt;p class="first last"&gt;GitHub&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt; rate limits are hurting Travis &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;#8217;s service quality.
+What does this mean for the future of the GitHub&amp;nbsp;ecosystem?&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Last week, GitHub&amp;#8217;s Dependabot created &lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138"&gt;a pull request&lt;/a&gt; with a fix to a
+vulnerability found the development dependencies of one of my &lt;span class="caps"&gt;FOSS&lt;/span&gt; projects.
+This was a bump to Mozilla&amp;#8217;s &lt;a class="reference external" href="https://github.com/mozilla/bleach"&gt;bleach&lt;/a&gt;, a
+project that GitHub states is used by more than 61,000 other&amp;nbsp;projects.&lt;/p&gt;
+&lt;a class="reference external image-reference" href="https://github.com/jamescooke/flake8-aaa/pull/138"&gt;&lt;img alt="GitHub's Dependabot opened a PR to bump bleach in Flake8-AAA." src="https://jamescooke.info/images/200402_pr.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa"&gt;Flake8-&lt;span class="caps"&gt;AAA&lt;/span&gt;&amp;#8217;s repository&lt;/a&gt; is wired
+into Travis &lt;span class="caps"&gt;CI&lt;/span&gt; to provide automated execution of its test suites across all
+supported versions of Python. Better still, because Flake8-&lt;span class="caps"&gt;AAA&lt;/span&gt; is an open
+source public repository, Travis provides the computing power to run these
+tests for free. I&amp;#8217;ve always found Travis reliable and stable, so it&amp;#8217;s a
+requirement that pull requests have a &amp;#8220;green&amp;#8221; Travis build before merging into
+Flake8-&lt;span class="caps"&gt;AAA&lt;/span&gt;&amp;#8217;s master&amp;nbsp;branch.&lt;/p&gt;
+&lt;div class="section" id="unreported-build-status"&gt;
+&lt;h2&gt;Unreported build&amp;nbsp;status&lt;/h2&gt;
+&lt;p&gt;However, when I checked on the Dependabot Pull Request, GitHub was still
+waiting for the status of its Travis build to be&amp;nbsp;reported.&lt;/p&gt;
+&lt;img alt="GitHub's merge dialogue box showing that expected tests have not completed." src="https://jamescooke.info/images/200401_some_checks_havent_completed_yet.png" /&gt;
+&lt;p&gt;You can see that the &amp;#8220;Merge pull request&amp;#8221; box is greyed out because the
+required Travis build has not completed yet according to&amp;nbsp;GitHub.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;But&lt;/strong&gt; here&amp;#8217;s the build at &lt;a class="reference external" href="https://travis-ci.org/github/jamescooke/flake8-aaa/builds/669024353"&gt;Travis&lt;/a&gt; - both
+green &lt;em&gt;and&lt;/em&gt; done within 3 minutes of Dependabot opening the &lt;span class="caps"&gt;PR&lt;/span&gt; at GitHub, so
+the call from Travis to GitHub to report the build status on the commit failed
+for some&amp;nbsp;reason.&lt;/p&gt;
+&lt;img alt="Travis build of the Dependabot PR is green." src="https://jamescooke.info/images/200402_green_build.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="debugging"&gt;
+&lt;h2&gt;Debugging&lt;/h2&gt;
+&lt;p&gt;Sometimes webhook and &lt;span class="caps"&gt;API&lt;/span&gt; calls to GitHub fail - I&amp;#8217;ve seen this with both
+personal and work projects. Often the simplest solution is to retrigger the
+build in some way. At first I tried to get a follow up build to work&amp;nbsp;by:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Creating a new commit on the branch with updated requirements and pushing
+that to the&amp;nbsp;branch.&lt;/li&gt;
+&lt;li&gt;Amending the existing commit and pushing with &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;--force&lt;/span&gt;&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;Creating and pushing a new branch with an update to all&amp;nbsp;requirements.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All of these strategies had the same effect - a new build was triggered on
+Travis and that build was green, but it was not reported to GitHub. So it
+looked like all &lt;span class="caps"&gt;API&lt;/span&gt; calls were failing from Travis to&amp;nbsp;GitHub.&lt;/p&gt;
+&lt;p&gt;Next, while checking the &lt;a class="reference external" href="https://www.githubstatus.com/"&gt;GitHub status page&lt;/a&gt;
+and &lt;a class="reference external" href="https://www.traviscistatus.com/"&gt;Travis status page&lt;/a&gt;, I found this
+status update on the Travis&amp;nbsp;site:&lt;/p&gt;
+&lt;a class="reference external image-reference" href="https://www.traviscistatus.com/incidents/rx6fhs3wqcln"&gt;&lt;img alt="Travis status page shows GitHub commit status issue: GitHub status may not be posted on commits occasionally from builds using the legacy Services integration." src="https://jamescooke.info/images/200402_travis_status.png" /&gt;&lt;/a&gt;
+&lt;p&gt;In light of that status message, I tried installing the Travis app integration,
+but had no success getting it to link to Flake8-&lt;span class="caps"&gt;AAA&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The message&amp;nbsp;says:&lt;/p&gt;
+&lt;blockquote&gt;
+Please write to &lt;a class="reference external" href="mailto:support&amp;#64;travis-ci.com"&gt;support&amp;#64;travis-ci.com&lt;/a&gt; if you encounter any similar
+problems.&lt;/blockquote&gt;
+&lt;p&gt;So I&amp;nbsp;emailed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reply-from-travis-support"&gt;
+&lt;h2&gt;Reply from Travis&amp;nbsp;Support&lt;/h2&gt;
+&lt;p&gt;Here&amp;#8217;s the full text of the reply from Travis&amp;nbsp;support:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class="caps"&gt;MK&lt;/span&gt; (Travis &lt;span class="caps"&gt;CI&lt;/span&gt;)&lt;/p&gt;
+&lt;p&gt;Mar 31, 15:38 &lt;span class="caps"&gt;EDT&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Hello&amp;nbsp;,&lt;/p&gt;
+&lt;p&gt;Thanks for your patience on this&amp;nbsp;issue.&lt;/p&gt;
+&lt;p&gt;We want to provide some visibility into the issues we are facing, the
+effects on our infrastructure and efforts made so far to restore&amp;nbsp;normalcy.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;We recently started hitting &lt;span class="caps"&gt;API&lt;/span&gt; rate limits for Github calls and on
+March 25, 2020, we contacted Github to ask for increases and are
+awaiting their feedback in this&amp;nbsp;regard.&lt;/li&gt;
+&lt;li&gt;On the Travis &lt;span class="caps"&gt;CI&lt;/span&gt; end, we have made improvements on how our code accesses
+the Github &lt;span class="caps"&gt;API&lt;/span&gt;, which has led to improvements, albeit&amp;nbsp;minimal.&lt;/li&gt;
+&lt;li&gt;While we occasionally hit &lt;span class="caps"&gt;API&lt;/span&gt; limits, it&amp;#8217;s important to note that we
+haven&amp;#8217;t hit these kinds of limits before now. In the interim, the
+best course of action would be to retry the action you wanted to&amp;nbsp;perform.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For next&amp;nbsp;steps,&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;We are following up with Github via various channels to get the
+requested &lt;span class="caps"&gt;API&lt;/span&gt; rate limit&amp;nbsp;increased.&lt;/li&gt;
+&lt;li&gt;In addition, we are looking for more avenues to remove
+invalid/unnecessary Github &lt;span class="caps"&gt;API&lt;/span&gt; calls in our codebase to ensure we stay
+under the limit and avoid disruptions like&amp;nbsp;this.&lt;/li&gt;
+&lt;li&gt;We are coordinating internally to ensure customers are up-to-date on
+progress made so&amp;nbsp;far.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We know how critical our platform is to your business and our goal is to
+provide the best experience for our customers. In line with this, we extend
+our sincere apologies for inconveniences this is&amp;nbsp;causing.&lt;/p&gt;
+&lt;p&gt;Thank you and we will provide periodic updates as we have&amp;nbsp;more.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Firstly, thanks to Travis support for this helpful message - it&amp;#8217;s pretty
+unusual for a service that offers a free tier to be open and responsive to
+messages from freeloading users like&amp;nbsp;myself.&lt;/p&gt;
+&lt;p&gt;Secondly, I assumed that Travis would not be opposed to publishing the text of
+the email since it should help other developers in my&amp;nbsp;situation.&lt;/p&gt;
+&lt;p&gt;In response to the mail&amp;nbsp;itself:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p class="first"&gt;My understanding is that this issue mainly affects open source projects on
+Travis dot&amp;nbsp;org.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;This message makes no mention of migrating to the Travis dot com GitHub Apps
+integration, so I assume that it wouldn&amp;#8217;t work for Flake8-&lt;span class="caps"&gt;AAA&lt;/span&gt; or other open
+source&amp;nbsp;projects.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;The mail&amp;nbsp;states:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In the interim, the best course of action would be to retry the action
+you wanted to&amp;nbsp;perform.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Unfortunately I&amp;#8217;ve had no success with this yet, but will continue to&amp;nbsp;try.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although I&amp;#8217;m happy with the Travis response so far, I&amp;#8217;m worried about what this
+means about the future of&amp;nbsp;GitHub.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="thoughts-on-the-github-ecosystem"&gt;
+&lt;h2&gt;Thoughts on the GitHub&amp;nbsp;ecosystem&lt;/h2&gt;
+&lt;p&gt;I was not part of the &amp;#8220;mass exodus&amp;#8221; from GitHub in 2018 after &lt;a class="reference external" href="https://github.blog/2018-10-26-github-and-microsoft/"&gt;Microsoft
+completed its purchase&lt;/a&gt; of the platform. At
+the time I thought that this could only be good for the site, however, now I&amp;#8217;m
+reconsidering, especially in the light of the situation above. Let me explain&amp;nbsp;why&amp;#8230;&lt;/p&gt;
+&lt;div class="section" id="github-wants-actions-to-replace-travis"&gt;
+&lt;h3&gt;GitHub wants Actions to replace&amp;nbsp;Travis&lt;/h3&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/features/actions"&gt;GitHub Actions&lt;/a&gt; is what GitHub calls
+its &amp;#8220;world-class &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt;&amp;#8221; system. &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; has been supported by Actions since
+August 2019 and is free for open source projects - GitHub has &amp;#8220;embraced&amp;#8221; &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Travis dot org is now a &lt;strong&gt;competitor&lt;/strong&gt; to GitHub rather than the helpful
+addition to the ecosystem it was&amp;nbsp;before.&lt;/p&gt;
+&lt;p&gt;Also the existence of &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; in Actions means that GitHub can allow the
+degradation of other &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; integrations because it&amp;#8217;s able to offer a &amp;#8220;better&amp;#8221;
+replacement - use Actions instead. My guess would be that GitHub intends
+Actions to replace all &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; building on GitHub for open source&amp;nbsp;projects.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="github-wants-developers-to-stay-on-github"&gt;
+&lt;h3&gt;GitHub wants developers to stay on&amp;nbsp;GitHub&lt;/h3&gt;
+&lt;p&gt;In the final paragraph of the &lt;a class="reference external" href="https://github.blog/2018-10-26-github-and-microsoft/"&gt;GitHub blog post above&lt;/a&gt;, Nat Friedman&amp;nbsp;states:&lt;/p&gt;
+&lt;blockquote&gt;
+Our vision is to serve every developer on the planet, by being the best
+place to build software.&lt;/blockquote&gt;
+&lt;p&gt;Building software includes &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; and GitHub&amp;#8217;s vision means that every developer
+that needs a &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; function would stay on GitHub while &amp;#8220;building software&amp;#8221;, not
+traverse external systems like Travis, Circle &lt;span class="caps"&gt;CI&lt;/span&gt; or&amp;nbsp;Codeship.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="github-can-make-it-harder-for-ci-cd-integrations-to-keep-up"&gt;
+&lt;h3&gt;GitHub can make it harder for &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; integrations to keep&amp;nbsp;up&lt;/h3&gt;
+&lt;p&gt;Since GitHub (and therefore Microsoft) &lt;a class="reference external" href="https://dependabot.com/blog/hello-github/"&gt;acquired Dependabot in 2019&lt;/a&gt;, GitHub now has a tool which it
+can use generate a larger number of builds on &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; services integrated with
+its platform like Travis. This will have the knock on effect of making it
+harder for those &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; services to keep within their &lt;span class="caps"&gt;API&lt;/span&gt; rate limits and more
+expensive to run because they will need to buy more computing power from &lt;span class="caps"&gt;AWS&lt;/span&gt;
+and or Google to run&amp;nbsp;builds.&lt;/p&gt;
+&lt;p&gt;Best of all for GitHub, they can put this pressure on others while maintaining
+the guise of &lt;a class="reference external" href="https://github.blog/2019-05-23-introducing-new-ways-to-keep-your-code-secure/#automated-security-fixes-with-dependabot"&gt;making &amp;#8220;dependency upgrades easy&amp;#8221;&lt;/a&gt;.
+Now GitHub automatically creates a pull request for any project owned by an
+account with security alerts enabled when it finds a relevant security
+vulnerability&amp;nbsp;alert.&lt;/p&gt;
+&lt;p&gt;In the case of the pull request above that started this post, that was a
+vulnerability in bleach. As I mentioned this is a project used by over 60k
+projects on GitHub. So when a security advisory on bleach occurs, Dependabot
+creates a pull request on GitHub, each pull request will then be built by a
+&lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; system for those repositories that have one wired in. For an external
+&lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; system like Travis, that flood of builds requires a large volume of
+computing resources &lt;strong&gt;and&lt;/strong&gt; GitHub &lt;span class="caps"&gt;API&lt;/span&gt;&amp;nbsp;calls.&lt;/p&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://developer.github.com/v3/#rate-limiting"&gt;GitHub rate limit documentation&lt;/a&gt; currently states a quota of
+5,000 requests per hour. If each &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; build requires 2 &lt;span class="caps"&gt;API&lt;/span&gt; calls (one to say
+&amp;#8220;in progress&amp;#8221; and one to post the result), then once 2,500 builds are completed
+in an hour the quota will be exhausted. If  4% of all the repositories that
+depend on bleach are using Travis for builds, then a single bump to the bleach
+release would exhaust a 5,000 request quota immediately - and that&amp;#8217;s before any
+&amp;#8220;normal&amp;#8221; human-driven regular build activity is taken into&amp;nbsp;consideration.&lt;/p&gt;
+&lt;p&gt;Now I&amp;#8217;m pretty sure that Travis has an hourly quota that&amp;#8217;s greater than 5,000
+requests per hour, probably granted to them when GitHub saw them as augmenting
+the GitHub ecosystem, but when the Travis email above&amp;nbsp;stated:&lt;/p&gt;
+&lt;blockquote&gt;
+We are following up with Github via various channels to get the requested
+&lt;span class="caps"&gt;API&lt;/span&gt; rate limit increased.&lt;/blockquote&gt;
+&lt;p&gt;&amp;#8230; why would GitHub bump this&amp;nbsp;now?&lt;/p&gt;
+&lt;p&gt;Instead, GitHub can leave Travis in an awkward situation: choose to throttle
+builds and get reliable status calls back to the GitHub &lt;span class="caps"&gt;API&lt;/span&gt;, or make open
+source projects have a less reliable and smooth experience when status update
+&lt;span class="caps"&gt;API&lt;/span&gt; calls are dropped. Either option makes GitHub Actions look &amp;#8220;better&amp;#8221; as a
+&lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; solution - a win for&amp;nbsp;GitHub.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="finally-hope"&gt;
+&lt;h2&gt;Finally,&amp;nbsp;hope&lt;/h2&gt;
+&lt;p&gt;I hope that my thoughts on the GitHub ecosystem above are overly negative and
+that these issues with Travis are not the start of an &amp;#8220;extinguish&amp;#8221; strategy by
+GitHub towards external &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; systems (see &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Embrace,_extend,_and_extinguish"&gt;Embrace, extend, extinguish&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;I hope I&amp;#8217;m completely wrong and that GitHub open up their &lt;span class="caps"&gt;API&lt;/span&gt; limits to Travis
+so that open source projects like Flake8-&lt;span class="caps"&gt;AAA&lt;/span&gt; can still use it for reliable
+&lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt;. But if things don&amp;#8217;t go well then I&amp;#8217;m certainly more ready to join the
+GitHub exodus, just 18 months behind the&amp;nbsp;curve.&lt;/p&gt;
+&lt;p&gt;Thanks Travis &lt;span class="caps"&gt;CI&lt;/span&gt; for all the builds, I hope we have many more to&amp;nbsp;come!&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Code"></category><category term="topic:testing"></category></entry><entry><title>It’s good to extract</title><link href="https://jamescooke.info/its-good-to-extract.html" rel="alternate"></link><published>2018-04-21T19:00:00+01:00</published><updated>2018-04-21T19:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2018-04-21:/its-good-to-extract.html</id><summary type="html">&lt;p class="first last"&gt;Thoughts on the benefits of extracting library code from Python
 projects into their own&amp;nbsp;packages.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Last week we released version 1 of &lt;a class="reference external" href="https://pypi.org/project/pysyncgateway/"&gt;pysyncgateway&lt;/a&gt; - a Python package for
 communicating with &lt;a class="reference external" href="https://github.com/couchbase/sync_gateway"&gt;Couchbase&amp;#8217;s Sync Gateway&lt;/a&gt; via its &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt;.&lt;/p&gt;
@@ -88,7 +281,7 @@ the library&amp;#8217;s test suite as a dedicated area to test the nuanced edge 
 Nextcloud&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt;.&lt;/p&gt;
 &lt;p&gt;Happy code&amp;nbsp;extraction!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category></entry><entry><title>AAA Part 2: Extracting Arrange code to make fixtures</title><link href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html" rel="alternate"></link><published>2017-08-07T00:00:00+01:00</published><updated>2017-08-07T00:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-08-07:/aaa-part-2-extracting-arrange-code-to-make-fixtures.html</id><summary type="html">&lt;p class="first last"&gt;This post explores how to extract arrangement code when working with
+</content><category term="Code"></category><category term="language:python"></category></entry><entry><title>AAA Part 2: Extracting Arrange code to make fixtures</title><link href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html" rel="alternate"></link><published>2017-08-07T00:00:00+01:00</published><updated>2017-08-07T00:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-08-07:/aaa-part-2-extracting-arrange-code-to-make-fixtures.html</id><summary type="html">&lt;p class="first last"&gt;This post explores how to extract arrangement code when working with
 the Arrange Act Assert pattern so that it can be used with certainty
 across the test&amp;nbsp;suite.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;In this post I will describe how code in tests&amp;#8217; Arrange blocks can become
@@ -173,7 +366,7 @@ they break the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern because there s
 
     &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leela&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new_project&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;invite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bender&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;messages&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Tests on the arrangement of the &lt;span class="caps"&gt;SUT&lt;/span&gt; will often be informed by the tests that are about
@@ -189,7 +382,7 @@ called with some arrangement functions like &lt;tt class="docutils literal"&gt;a
 &lt;p&gt;Now applying this process to the Futurama account test above I get the
 following fixture with its own dedicated test and a much simpler test for the
 invite&amp;nbsp;behaviour.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fixture&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;account_members&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Returns:&lt;/span&gt;
@@ -251,7 +444,7 @@ invite&amp;nbsp;behaviour.&lt;/p&gt;
 
     &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leela&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new_project&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;invite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bender&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;messages&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Even though this example is long winded, I hope you can see that the
@@ -343,7 +536,7 @@ follow-up post.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Arrange Act Assert pattern for Python developers</title><link href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html" rel="alternate"></link><published>2017-07-06T23:00:00+01:00</published><updated>2017-07-06T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-07-06:/arrange-act-assert-pattern-for-python-developers.html</id><summary type="html">&lt;p class="first last"&gt;This post introduces the Arrange Act Assert pattern of testing and
+</content><category term="Code"></category><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Arrange Act Assert pattern for Python developers</title><link href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html" rel="alternate"></link><published>2017-07-06T23:00:00+01:00</published><updated>2017-07-06T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-07-06:/arrange-act-assert-pattern-for-python-developers.html</id><summary type="html">&lt;p class="first last"&gt;This post introduces the Arrange Act Assert pattern of testing and
 shows how it can be used in a Python context with&amp;nbsp;Pytest.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;This is the first of two posts exploring the Arrange Act Assert pattern and
 how to apply it to Python tests.
@@ -542,7 +735,7 @@ this case your action will be two lines surrounded by empty&amp;nbsp;lines.&lt;/
 the&amp;nbsp;action.&lt;/p&gt;
 &lt;div class="section" id="id7"&gt;
 &lt;h3&gt;Example&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;
 &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;greek&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;delta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gamma&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;beta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -570,7 +763,7 @@ it, then consider extracting an assertion&amp;nbsp;helper.&lt;/li&gt;
 
     &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;greek&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;greek&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;delta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gamma&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;beta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -587,7 +780,7 @@ Assert pattern outlined&amp;nbsp;above.&lt;/p&gt;
 &lt;p&gt;Thanks to &lt;a class="reference external" href="https://adamj.eu/"&gt;Adam&lt;/a&gt; for reviewing this post and his helpful&amp;nbsp;feedback.&lt;/p&gt;
 &lt;p&gt;Thanks for reading and happy&amp;nbsp;testing!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Comparing Django Q Objects in Python 3 with pytest</title><link href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html" rel="alternate"></link><published>2017-05-30T22:00:00+01:00</published><updated>2017-05-30T22:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-05-30:/comparing-django-q-objects-in-python-3-with-pytest.html</id><summary type="html">&lt;p class="first last"&gt;An updated simple assertion helper for comparing instances of
+</content><category term="Code"></category><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Comparing Django Q Objects in Python 3 with pytest</title><link href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html" rel="alternate"></link><published>2017-05-30T22:00:00+01:00</published><updated>2017-05-30T22:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-05-30:/comparing-django-q-objects-in-python-3-with-pytest.html</id><summary type="html">&lt;p class="first last"&gt;An updated simple assertion helper for comparing instances of
 Django&amp;#8217;s Q objects using pytest in Python&amp;nbsp;3.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="background"&gt;
 &lt;h2&gt;Background&lt;/h2&gt;
@@ -621,9 +814,9 @@ the original strategy of comparing the string versions of the Q&amp;nbsp;objects
 &lt;span class="sd"&gt;            * `left` or `right` are not an instance of `Q`&lt;/span&gt;
 &lt;span class="sd"&gt;            * `left` and `right` are not considered equal.&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{left.__class__} is not subclass of Q&amp;#39;&lt;/span&gt;
-    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{right.__class__} is not subclass of Q&amp;#39;&lt;/span&gt;
-    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Q{left} != Q{right}&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt; is not subclass of Q&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt; is not subclass of Q&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Q&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt; != Q&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This time the helper is just a function rather than a mixin for
 &lt;tt class="docutils literal"&gt;unittest.TestCase&lt;/tt&gt;.&lt;/p&gt;
@@ -655,7 +848,7 @@ provide helpful&amp;nbsp;output.&lt;/p&gt;
 &lt;p&gt;Tests for &lt;tt class="docutils literal"&gt;assert_q_equal&lt;/tt&gt; and its original code are &lt;a class="reference external" href="https://gist.github.com/jamescooke/1bed3414fee7d5c72540e567bcd63887"&gt;in this gist&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Happy&amp;nbsp;testing!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="topic:testing"></category><category term="language:python"></category><category term="topic:django"></category></entry><entry><title>My Vim setup for Python development</title><link href="https://jamescooke.info/my-vim-setup-for-python-development.html" rel="alternate"></link><published>2017-01-04T14:30:00+00:00</published><updated>2017-01-04T14:30:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-01-04:/my-vim-setup-for-python-development.html</id><summary type="html">&lt;p class="first last"&gt;My current Vim setup for Python&amp;nbsp;development.&lt;/p&gt;
+</content><category term="Code"></category><category term="topic:testing"></category><category term="language:python"></category><category term="topic:django"></category></entry><entry><title>My Vim setup for Python development</title><link href="https://jamescooke.info/my-vim-setup-for-python-development.html" rel="alternate"></link><published>2017-01-04T14:30:00+00:00</published><updated>2017-01-04T14:30:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2017-01-04:/my-vim-setup-for-python-development.html</id><summary type="html">&lt;p class="first last"&gt;My current Vim setup for Python&amp;nbsp;development.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Below is a list of my Vim plug-ins and&amp;nbsp;configurations.&lt;/p&gt;
 &lt;p&gt;My goal has been to make Vim more useful for (primarily) Python development.
 This post refers to Vim 7, because I have not yet updated to Vim 8. I&amp;#8217;m using
@@ -761,7 +954,7 @@ Driessen&amp;#8217;s vim-flake8&lt;/a&gt;:&lt;/p&gt;
 &lt;p&gt;Happy&amp;nbsp;Vimming!&lt;/p&gt;
 &lt;p&gt;&lt;tt class="docutils literal"&gt;:xa&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="topic:vim"></category></entry><entry><title>A successful pip-tools workflow for managing Python package requirements</title><link href="https://jamescooke.info/a-successful-pip-tools-workflow-for-managing-python-package-requirements.html" rel="alternate"></link><published>2016-11-13T23:00:00+00:00</published><updated>2016-11-13T23:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-11-13:/a-successful-pip-tools-workflow-for-managing-python-package-requirements.html</id><summary type="html">&lt;p class="first last"&gt;Using pip-tools with multiple requirements files can be difficult.
+</content><category term="Code"></category><category term="topic:vim"></category></entry><entry><title>A successful pip-tools workflow for managing Python package requirements</title><link href="https://jamescooke.info/a-successful-pip-tools-workflow-for-managing-python-package-requirements.html" rel="alternate"></link><published>2016-11-13T23:00:00+00:00</published><updated>2016-11-13T23:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-11-13:/a-successful-pip-tools-workflow-for-managing-python-package-requirements.html</id><summary type="html">&lt;p class="first last"&gt;Using pip-tools with multiple requirements files can be difficult.
 This post describes my current workflow that manages the complexity with a
 &lt;tt class="docutils literal"&gt;Makefile&lt;/tt&gt;.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;In this post I present the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pip-tools&lt;/span&gt;&lt;/tt&gt; workflow I&amp;#8217;ve been using over a number
@@ -1037,7 +1230,7 @@ requirements and how to ensure that each layer is compatible with the&amp;nbsp;o
 &lt;p&gt;I think that &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; constraints are much better than &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-r&lt;/span&gt;&lt;/tt&gt; inclusion and have
 updated the post to reflect&amp;nbsp;that.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category></entry><entry><title>Django Factory Audit</title><link href="https://jamescooke.info/django-factory-audit.html" rel="alternate"></link><published>2016-10-12T10:00:00+01:00</published><updated>2016-10-12T10:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-10-12:/django-factory-audit.html</id><summary type="html">&lt;p class="first last"&gt;Exploring the various model instance factories available for Django.
+</content><category term="Code"></category><category term="language:python"></category></entry><entry><title>Django Factory Audit</title><link href="https://jamescooke.info/django-factory-audit.html" rel="alternate"></link><published>2016-10-12T10:00:00+01:00</published><updated>2016-10-12T10:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-10-12:/django-factory-audit.html</id><summary type="html">&lt;p class="first last"&gt;Exploring the various model instance factories available for Django.
 Each factory is tested based on the quality of the instances it
 creates. Bonus: talk version and slides also&amp;nbsp;available.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Factories build instances of models, primarily for testing, but can be used
@@ -1123,7 +1316,7 @@ test model defined &lt;a class="reference external" href="https://github.com/jam
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Single Item with one required field &amp;#39;name&amp;#39;&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This example has been taken from the &lt;a class="reference external" href="https://github.com/jamescooke/factory_audit"&gt;Factory_Djoy &lt;span class="caps"&gt;README&lt;/span&gt;&lt;/a&gt; but with a reduced length of
 name down to one character to more easily force name&amp;nbsp;collisions.&lt;/p&gt;
@@ -1476,7 +1669,7 @@ something that&amp;#8217;s just fundamentally simpler&amp;#8221;&lt;/blockquote&
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category><category term="topic:testing"></category><category term="topic:django"></category></entry><entry><title>Cleaner unit testing with the Arrange Act Assert pattern</title><link href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html" rel="alternate"></link><published>2016-09-18T20:00:00+01:00</published><updated>2016-09-18T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-09-18:/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html</id><summary type="html">&lt;p class="first last"&gt;My PyConUK 2016 talk about the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern for unit tests and how
+</content><category term="Code"></category><category term="language:python"></category><category term="topic:testing"></category><category term="topic:django"></category></entry><entry><title>Cleaner unit testing with the Arrange Act Assert pattern</title><link href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html" rel="alternate"></link><published>2016-09-18T20:00:00+01:00</published><updated>2016-09-18T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-09-18:/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html</id><summary type="html">&lt;p class="first last"&gt;My PyConUK 2016 talk about the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern for unit tests and how
 using it can help us all make our tests cleaner, easier to read
 and as Pythonic as&amp;nbsp;possible.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;At &lt;a class="reference external" href="https://2016.pyconuk.org/talks/cleaner-unit-testing-with-the-arrange-act-assert-pattern/"&gt;PyConUK 2016&lt;/a&gt;
@@ -1541,7 +1734,7 @@ makes it easier to write tests that follow the Arrange Act Assert&amp;nbsp;patte
 &lt;p&gt;Thanks again to &lt;a class="reference external" href="https://github.com/txels"&gt;Carles&lt;/a&gt; for introducing me to the
 &lt;span class="caps"&gt;AAA&lt;/span&gt;&amp;nbsp;pattern.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Python unittest: assertTrue is truthy, assertFalse is falsy</title><link href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html" rel="alternate"></link><published>2016-05-12T14:00:00+01:00</published><updated>2016-05-12T14:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-05-12:/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html</id><summary type="html">&lt;p class="first last"&gt;Exploring Python&amp;#8217;s &lt;tt class="docutils literal"&gt;unittest&lt;/tt&gt; module boolean assert methods and how
+</content><category term="Talk"></category><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Python unittest: assertTrue is truthy, assertFalse is falsy</title><link href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html" rel="alternate"></link><published>2016-05-12T14:00:00+01:00</published><updated>2016-05-12T14:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-05-12:/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html</id><summary type="html">&lt;p class="first last"&gt;Exploring Python&amp;#8217;s &lt;tt class="docutils literal"&gt;unittest&lt;/tt&gt; module boolean assert methods and how
 they can be misleading in certain situations, but not if you &lt;span class="caps"&gt;RTFM&lt;/span&gt; of&amp;nbsp;course.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;In this post, I explore the differences between the unittest boolean assert
 methods &lt;tt class="docutils literal"&gt;assertTrue&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;assertFalse&lt;/tt&gt; and the &lt;tt class="docutils literal"&gt;assertIs&lt;/tt&gt; identity&amp;nbsp;assertion.&lt;/p&gt;
@@ -1556,10 +1749,10 @@ code&amp;nbsp;highlighted:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Test that &lt;em&gt;expr&lt;/em&gt; is true (or&amp;nbsp;false).&lt;/p&gt;
 &lt;p&gt;Note that this is equivalent&amp;nbsp;to&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;and not&amp;nbsp;to&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;(use &lt;tt class="docutils literal"&gt;assertIs(expr, True)&lt;/tt&gt; for the&amp;nbsp;latter).&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -1568,7 +1761,7 @@ code&amp;nbsp;highlighted:&lt;/p&gt;
 &lt;blockquote&gt;
 A value that translates to true when evaluated in a Boolean context.&lt;/blockquote&gt;
 &lt;p&gt;In Python this is equivalent&amp;nbsp;to:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Which exactly matches what &lt;tt class="docutils literal"&gt;assertTrue&lt;/tt&gt; is testing&amp;nbsp;for.&lt;/p&gt;
 &lt;p&gt;Therefore the documentation already indicates &lt;tt class="docutils literal"&gt;assertTrue&lt;/tt&gt; is truthy and
@@ -1605,7 +1798,7 @@ code and see how the tests&amp;nbsp;perform.&lt;/p&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;always_true&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Here&amp;#8217;s the code for our simple function in &lt;tt class="docutils literal"&gt;func.py&lt;/tt&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;always_true&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
@@ -1615,7 +1808,7 @@ code and see how the tests&amp;nbsp;perform.&lt;/p&gt;
 &lt;span class="sd"&gt;    Returns:&lt;/span&gt;
 &lt;span class="sd"&gt;        bool: True&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;When run, everything&amp;nbsp;passes:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -1674,10 +1867,10 @@ the &lt;tt class="docutils literal"&gt;assertIsTrue&lt;/tt&gt; and &lt;tt class=
 &lt;p&gt;This doesn&amp;#8217;t save a particularly large amount of code, but it does improve
 readability in my&amp;nbsp;opinion.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;assertIsTrue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;assertIsFalse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="summary"&gt;
@@ -1700,7 +1893,7 @@ the appropriate place. Maybe those &lt;tt class="docutils literal"&gt;if&lt;/tt&
 within the function under&amp;nbsp;test.&lt;/p&gt;
 &lt;p&gt;Happy&amp;nbsp;testing!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>API Documentation and the Communication Illusion</title><link href="https://jamescooke.info/api-documentation-and-the-communication-illusion.html" rel="alternate"></link><published>2016-05-04T12:00:00+01:00</published><updated>2016-05-04T12:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-05-04:/api-documentation-and-the-communication-illusion.html</id><summary type="html">&lt;p class="first last"&gt;How can documenting an &lt;span class="caps"&gt;API&lt;/span&gt; help us to communicate with our team and
+</content><category term="Code"></category><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>API Documentation and the Communication Illusion</title><link href="https://jamescooke.info/api-documentation-and-the-communication-illusion.html" rel="alternate"></link><published>2016-05-04T12:00:00+01:00</published><updated>2016-05-04T12:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-05-04:/api-documentation-and-the-communication-illusion.html</id><summary type="html">&lt;p class="first last"&gt;How can documenting an &lt;span class="caps"&gt;API&lt;/span&gt; help us to communicate with our team and
 &lt;span class="caps"&gt;API&lt;/span&gt; consumer developers&amp;nbsp;efficiently?&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;In this post I talk quite a lot about the &amp;#8220;Communication Illusion&amp;#8221; - a quote
 often &lt;a class="reference external" href="https://en.wikiquote.org/wiki/George_Bernard_Shaw#Misattributed"&gt;misattributed to George Bernard Shaw&lt;/a&gt;:&lt;/p&gt;
@@ -1825,7 +2018,7 @@ believe it&amp;#8217;s even more true than&amp;nbsp;before.&lt;/p&gt;
 &lt;li&gt;&lt;a class="reference external" href="https://news.ycombinator.com/item?id=11666301"&gt;Read comments on Hacker&amp;nbsp;News&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</content><category term="topic:api"></category><category term="topic:documentation"></category></entry><entry><title>Comparing Django Q Objects</title><link href="https://jamescooke.info/comparing-django-q-objects.html" rel="alternate"></link><published>2016-03-28T12:00:00+01:00</published><updated>2016-03-28T12:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-03-28:/comparing-django-q-objects.html</id><summary type="html">&lt;p class="first last"&gt;A super simple assertion helper for comparing instances of Django&amp;#8217;s Q&amp;nbsp;objects.&lt;/p&gt;
+</content><category term="Code"></category><category term="topic:api"></category><category term="topic:documentation"></category></entry><entry><title>Comparing Django Q Objects</title><link href="https://jamescooke.info/comparing-django-q-objects.html" rel="alternate"></link><published>2016-03-28T12:00:00+01:00</published><updated>2016-03-28T12:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2016-03-28:/comparing-django-q-objects.html</id><summary type="html">&lt;p class="first last"&gt;A super simple assertion helper for comparing instances of Django&amp;#8217;s Q&amp;nbsp;objects.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="background"&gt;
 &lt;h2&gt;Background&lt;/h2&gt;
 &lt;blockquote&gt;
@@ -1853,7 +2046,7 @@ created is&amp;nbsp;hard.&lt;/p&gt;
 &lt;h2&gt;A simple&amp;nbsp;solution&lt;/h2&gt;
 &lt;p&gt;Q objects generate great Unicode representations of&amp;nbsp;themselves:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;place&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Residential&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;people__gt&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;unicode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;unicode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(AND: (&amp;#39;place&amp;#39;, &amp;#39;Residential&amp;#39;), (&amp;#39;people__gt&amp;#39;, 5))&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In addition, it is &amp;#8220;good&amp;#8221; testing practice to write assertion helpers whenever
@@ -1880,8 +2073,8 @@ that extends &lt;tt class="docutils literal"&gt;unittest.TestCase&lt;/tt&gt; (su
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIsInstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertIsInstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;left_u&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;unicode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;right_u&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;unicode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;left_u&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;unicode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;right_u&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;unicode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertEqual&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left_u&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;right_u&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Disadvantage of this method is that it is simplistic and doesn&amp;#8217;t find all the Q
@@ -1922,19 +2115,19 @@ directly into &lt;tt class="docutils literal"&gt;Q.__cmp__&lt;/tt&gt;.&lt;/p&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;
-&lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;span class="kc"&gt;True&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Double negation would work&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;~~&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;
-&lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;span class="kc"&gt;True&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Negation on expression would work&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;
-&lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;span class="kc"&gt;True&lt;/span&gt;
 
 &lt;span class="c1"&gt;# END IMAGINATION SECTION&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1958,7 +2151,7 @@ informative assertion errors are when they&amp;nbsp;occur.&lt;/li&gt;
 &lt;tt class="docutils literal"&gt;assertQNotEquals&lt;/tt&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</content><category term="topic:testing"></category><category term="language:python"></category><category term="topic:django"></category></entry><entry><title>Django’s model save vs full_clean</title><link href="https://jamescooke.info/djangos-model-save-vs-full_clean.html" rel="alternate"></link><published>2015-11-15T17:00:00+00:00</published><updated>2015-11-15T17:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-11-15:/djangos-model-save-vs-full_clean.html</id><summary type="html">&lt;p class="first last"&gt;Confirming that Django can screw up your data when saving, and
+</content><category term="Code"></category><category term="topic:testing"></category><category term="language:python"></category><category term="topic:django"></category></entry><entry><title>Django’s model save vs full_clean</title><link href="https://jamescooke.info/djangos-model-save-vs-full_clean.html" rel="alternate"></link><published>2015-11-15T17:00:00+00:00</published><updated>2015-11-15T17:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-11-15:/djangos-model-save-vs-full_clean.html</id><summary type="html">&lt;p class="first last"&gt;Confirming that Django can screw up your data when saving, and
 exploring why this is still the&amp;nbsp;case.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="screwing-up-data"&gt;
 &lt;h2&gt;Screwing up&amp;nbsp;data&lt;/h2&gt;
@@ -2021,7 +2214,7 @@ mentions things like backwards compatibility and the &lt;tt class="docutils lite
 of dislike Django&amp;#8221; post and discussing Django project structures with&amp;nbsp;me.&lt;/p&gt;
 &lt;p&gt;Thanks for&amp;nbsp;reading!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="topic:django"></category></entry><entry><title>Irregular Vim</title><link href="https://jamescooke.info/irregular-vim.html" rel="alternate"></link><published>2015-08-16T21:00:00+01:00</published><updated>2015-08-16T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-08-16:/irregular-vim.html</id><summary type="html">&lt;p class="first last"&gt;At July&amp;#8217;s Vim London I gave a talk about some of Vim&amp;#8217;s irregular
+</content><category term="Code"></category><category term="topic:django"></category></entry><entry><title>Irregular Vim</title><link href="https://jamescooke.info/irregular-vim.html" rel="alternate"></link><published>2015-08-16T21:00:00+01:00</published><updated>2015-08-16T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-08-16:/irregular-vim.html</id><summary type="html">&lt;p class="first last"&gt;At July&amp;#8217;s Vim London I gave a talk about some of Vim&amp;#8217;s irregular
 behaviours. Using bare-bones Vim to present and demonstrate from is a
 risky&amp;nbsp;business!&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;My frustrations with Vim arise when it makes actions that are unexpected. At
@@ -2127,7 +2320,7 @@ meet your standard&amp;nbsp;Kris).&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;And thanks to you for&amp;nbsp;reading!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="topic:vim"></category></entry><entry><title>Things I wish I’d known about Django</title><link href="https://jamescooke.info/things-i-wish-id-known-about-django.html" rel="alternate"></link><published>2015-07-18T20:00:00+01:00</published><updated>2015-07-18T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-07-18:/things-i-wish-id-known-about-django.html</id><summary type="html">&lt;p class="first last"&gt;Django has been my go-to web framework for about three years. But I
+</content><category term="Talk"></category><category term="topic:vim"></category></entry><entry><title>Things I wish I’d known about Django</title><link href="https://jamescooke.info/things-i-wish-id-known-about-django.html" rel="alternate"></link><published>2015-07-18T20:00:00+01:00</published><updated>2015-07-18T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-07-18:/things-i-wish-id-known-about-django.html</id><summary type="html">&lt;p class="first last"&gt;Django has been my go-to web framework for about three years. But I
 wish I&amp;#8217;d started with it sooner. This became a talk which I gave at
 the London Django meetup in July this&amp;nbsp;year.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;This month at &lt;a class="reference external" href="https://www.meetup.com/The-London-Django-Meetup-Group/events/223297765/"&gt;The London Django meetup&lt;/a&gt; I
@@ -2164,7 +2357,7 @@ it, it&amp;#8217;s responded&amp;nbsp;well.&lt;/li&gt;
 it, see what you can do today. I think it pays back in the long&amp;nbsp;run.&lt;/p&gt;
 &lt;p&gt;Thanks for&amp;nbsp;reading.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="django"></category></entry><entry><title>A water pouring problem sketched in Python</title><link href="https://jamescooke.info/a-water-pouring-problem-sketched-in-python.html" rel="alternate"></link><published>2015-01-09T10:00:00+00:00</published><updated>2015-01-09T10:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-01-09:/a-water-pouring-problem-sketched-in-python.html</id><summary type="html">&lt;p class="first last"&gt;A small Python 3 sketch of a solution to a water pouring&amp;nbsp;problem.&lt;/p&gt;
+</content><category term="Talk"></category><category term="django"></category></entry><entry><title>A water pouring problem sketched in Python</title><link href="https://jamescooke.info/a-water-pouring-problem-sketched-in-python.html" rel="alternate"></link><published>2015-01-09T10:00:00+00:00</published><updated>2015-01-09T10:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2015-01-09:/a-water-pouring-problem-sketched-in-python.html</id><summary type="html">&lt;p class="first last"&gt;A small Python 3 sketch of a solution to a water pouring&amp;nbsp;problem.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="the-problem"&gt;
 &lt;h2&gt;The&amp;nbsp;problem&lt;/h2&gt;
 &lt;p&gt;At the end of last year, I came across the following water pouring problem
@@ -2260,10 +2453,10 @@ search, so here it is in full, comments&amp;nbsp;removed.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_solvable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_goal&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;print_trace&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;make_children&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;solvable_child&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -2284,9 +2477,9 @@ the &lt;tt class="docutils literal"&gt;Game.solvable_child&lt;/tt&gt; helper fun
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solvable_child&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;child&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;children&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;child&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_solvable&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;There are two &amp;#8220;interesting&amp;#8221; features of this&amp;nbsp;function:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -2364,7 +2557,7 @@ It used a very simple algorithm, which is effectively a weighted graph, to
 outline for building a code version&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Thanks for&amp;nbsp;reading.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="python"></category></entry><entry><title>Django Contexts and get</title><link href="https://jamescooke.info/django-contexts-and-get.html" rel="alternate"></link><published>2014-11-17T20:00:00+00:00</published><updated>2014-11-17T20:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-11-17:/django-contexts-and-get.html</id><summary type="html">&lt;p class="first last"&gt;Found that tests on a recent project started breaking for no clear
+</content><category term="Code"></category><category term="python"></category></entry><entry><title>Django Contexts and get</title><link href="https://jamescooke.info/django-contexts-and-get.html" rel="alternate"></link><published>2014-11-17T20:00:00+00:00</published><updated>2014-11-17T20:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-11-17:/django-contexts-and-get.html</id><summary type="html">&lt;p class="first last"&gt;Found that tests on a recent project started breaking for no clear
 reason, and it turned out it was because I&amp;#8217;d used &lt;tt class="docutils literal"&gt;get&lt;/tt&gt; to retrieve
 values from&amp;nbsp;Contexts.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="background"&gt;
@@ -2478,7 +2671,7 @@ returned by the Django Test Client where possible when checking values passed
 through to&amp;nbsp;templating.&lt;/p&gt;
 &lt;p&gt;Thanks for&amp;nbsp;reading.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="python"></category><category term="django"></category></entry><entry><title>Current state of Codeship</title><link href="https://jamescooke.info/current-state-of-codeship.html" rel="alternate"></link><published>2014-10-12T18:00:00+01:00</published><updated>2014-10-12T18:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-10-12:/current-state-of-codeship.html</id><summary type="html">&lt;p class="first last"&gt;For the last month I&amp;#8217;ve been using Codeship for Continuous
+</content><category term="Code"></category><category term="python"></category><category term="django"></category></entry><entry><title>Current state of Codeship</title><link href="https://jamescooke.info/current-state-of-codeship.html" rel="alternate"></link><published>2014-10-12T18:00:00+01:00</published><updated>2014-10-12T18:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-10-12:/current-state-of-codeship.html</id><summary type="html">&lt;p class="first last"&gt;For the last month I&amp;#8217;ve been using Codeship for Continuous
 Integration on my current client project. These are my current
 thoughts on this hosted service that works with Github and BitBucket&amp;nbsp;repositories.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="background"&gt;
@@ -2662,7 +2855,7 @@ makes integrated &lt;span class="caps"&gt;API&lt;/span&gt; calls to Dropbox, sit
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="topic:testing"></category></entry><entry><title>Flat designs to website specification - a checklist</title><link href="https://jamescooke.info/flat-designs-to-website-specification-a-checklist.html" rel="alternate"></link><published>2014-03-29T16:00:00+00:00</published><updated>2014-03-29T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-03-29:/flat-designs-to-website-specification-a-checklist.html</id><summary type="html">&lt;p class="first last"&gt;Agencies often provide flat designs to web developers as a
+&lt;/script&gt;</content><category term="Code"></category><category term="topic:testing"></category></entry><entry><title>Flat designs to website specification - a checklist</title><link href="https://jamescooke.info/flat-designs-to-website-specification-a-checklist.html" rel="alternate"></link><published>2014-03-29T16:00:00+00:00</published><updated>2014-03-29T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-03-29:/flat-designs-to-website-specification-a-checklist.html</id><summary type="html">&lt;p class="first last"&gt;Agencies often provide flat designs to web developers as a
 specification, but these only scratch the surface of a true website
 functional specification. This is a check-list of features which can
 be fleshed out to start the journey towards a full functional&amp;nbsp;spec.&lt;/p&gt;
@@ -2783,7 +2976,7 @@ have been involved in the design stages early on have always been&amp;nbsp;succe
 &lt;p&gt;If there are items you think should be added you can contribute on &lt;a class="reference external" href="https://github.com/jamescooke/blog/blob/master/content/1403-spec-checklist.rst"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Thanks for&amp;nbsp;reading.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="work"></category></entry><entry><title>Seinfeld method and coding</title><link href="https://jamescooke.info/seinfeld-method-and-coding.html" rel="alternate"></link><published>2014-01-31T16:00:00+00:00</published><updated>2014-01-31T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-01-31:/seinfeld-method-and-coding.html</id><summary type="html">&lt;p class="first last"&gt;A presentation I made at ustwo&amp;#8217;s Tech Thursday about Seinfeld
+</content><category term="Code"></category><category term="work"></category></entry><entry><title>Seinfeld method and coding</title><link href="https://jamescooke.info/seinfeld-method-and-coding.html" rel="alternate"></link><published>2014-01-31T16:00:00+00:00</published><updated>2014-01-31T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2014-01-31:/seinfeld-method-and-coding.html</id><summary type="html">&lt;p class="first last"&gt;A presentation I made at ustwo&amp;#8217;s Tech Thursday about Seinfeld
 Technique and how it can help coders to get their personal projects&amp;nbsp;moving.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;This presentation focuses on using the Seinfeld method &amp;#8220;Don&amp;#8217;t break the chain&amp;#8221;
 to get going with personal projects. Those could be all types of things from
@@ -2810,12 +3003,12 @@ currently using &lt;a class="reference external" href="http://tomatoi.st/"&gt;to
 Output the &lt;span class="caps"&gt;JSON&lt;/span&gt; report that it creates into a couple of processors that count
 my hours and measure my efficiency. This means that I can ensure that I&amp;#8217;m
 working the right number of hours per week, but also taking a good number of&amp;nbsp;breaks.&lt;/p&gt;
-</content><category term="work"></category></entry><entry><title>Python generators and yield</title><link href="https://jamescooke.info/python-generators-and-yield.html" rel="alternate"></link><published>2013-12-14T16:00:00+00:00</published><updated>2013-12-14T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-12-14:/python-generators-and-yield.html</id><summary type="html">&lt;p class="first last"&gt;Notes to myself on generators and how to create them with generator
+</content><category term="Talk"></category><category term="work"></category></entry><entry><title>Python generators and yield</title><link href="https://jamescooke.info/python-generators-and-yield.html" rel="alternate"></link><published>2013-12-14T16:00:00+00:00</published><updated>2013-12-14T16:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-12-14:/python-generators-and-yield.html</id><summary type="html">&lt;p class="first last"&gt;Notes to myself on generators and how to create them with generator
 expressions and the yield&amp;nbsp;statement.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="it-started-with-an-interview"&gt;
 &lt;h2&gt;It started with an&amp;nbsp;interview&lt;/h2&gt;
 &lt;p&gt;Last week in an interview for a Django developer job, I was&amp;nbsp;asked:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;thing&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;xrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;thing&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;xrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;!--  --&gt;
 &lt;blockquote&gt;
@@ -2973,7 +3166,7 @@ with &lt;tt class="docutils literal"&gt;next&lt;/tt&gt;, but in 4 it&amp;#8217;s
 &lt;p&gt;That&amp;#8217;s all - have fun with&amp;nbsp;generators!&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</content><category term="language:python"></category></entry><entry><title>Git: To squash or not to squash?</title><link href="https://jamescooke.info/git-to-squash-or-not-to-squash.html" rel="alternate"></link><published>2013-11-19T11:00:00+00:00</published><updated>2013-11-19T11:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-11-19:/git-to-squash-or-not-to-squash.html</id><summary type="html">&lt;p class="first last"&gt;Should detailed history be kept for development features, if so,&amp;nbsp;where?&lt;/p&gt;
+</content><category term="Code"></category><category term="language:python"></category></entry><entry><title>Git: To squash or not to squash?</title><link href="https://jamescooke.info/git-to-squash-or-not-to-squash.html" rel="alternate"></link><published>2013-11-19T11:00:00+00:00</published><updated>2013-11-19T11:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-11-19:/git-to-squash-or-not-to-squash.html</id><summary type="html">&lt;p class="first last"&gt;Should detailed history be kept for development features, if so,&amp;nbsp;where?&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="it-started-with-a-tweet"&gt;
 &lt;h2&gt;It started with a&amp;nbsp;Tweet&lt;/h2&gt;
 &lt;p&gt;Over the weekend I spotted a tweet from &lt;a class="reference external" href="https://oli.me.uk/"&gt;Oliver&lt;/a&gt;&amp;#8230;&lt;/p&gt;
@@ -3359,7 +3552,7 @@ other developers love, rather than hate, reviewing your code.&lt;/blockquote&gt;
 &lt;p&gt;The Twitter account that I used in my conversations with Oliver above has been
 deleted. I&amp;#8217;ve replaced the links to tweets with the original&amp;nbsp;content.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="git"></category></entry><entry><title>vi-nature everywhere - lightning talk</title><link href="https://jamescooke.info/vi-nature-everywhere-lightning-talk.html" rel="alternate"></link><published>2013-11-01T20:00:00+00:00</published><updated>2013-11-01T20:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-11-01:/vi-nature-everywhere-lightning-talk.html</id><summary type="html">&lt;p class="first last"&gt;This week I presented at Vim-London about vi nature and the benefits
+</content><category term="Code"></category><category term="git"></category></entry><entry><title>vi-nature everywhere - lightning talk</title><link href="https://jamescooke.info/vi-nature-everywhere-lightning-talk.html" rel="alternate"></link><published>2013-11-01T20:00:00+00:00</published><updated>2013-11-01T20:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-11-01:/vi-nature-everywhere-lightning-talk.html</id><summary type="html">&lt;p class="first last"&gt;This week I presented at Vim-London about vi nature and the benefits
 for using it in more than&amp;nbsp;vim.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;vi-nature, the &amp;#8216;language&amp;#8217; of &lt;cite&gt;vim&lt;/cite&gt;. It&amp;#8217;s the reason that &lt;cite&gt;vim&lt;/cite&gt; works so well
 for me. However, it does take some learning, and even after many months of use,
@@ -3378,7 +3571,7 @@ that can be programmed to different keybindings. Thanks&amp;nbsp;Nestor.&lt;/li&
 &lt;/ul&gt;
 &lt;p&gt;Lots to follow up on and hopefully some ways to take vi-nature to more&amp;nbsp;places.&lt;/p&gt;
 &lt;p&gt;Thanks for&amp;nbsp;reading!&lt;/p&gt;
-</content><category term="topic:vim"></category></entry><entry><title>Things to remember about decorators</title><link href="https://jamescooke.info/things-to-remember-about-decorators.html" rel="alternate"></link><published>2013-10-22T20:00:00+01:00</published><updated>2013-10-22T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-10-22:/things-to-remember-about-decorators.html</id><summary type="html">&lt;p class="first last"&gt;Notes to myself about Python decorators with a focus on making them&amp;nbsp;testable.&lt;/p&gt;
+</content><category term="Talk"></category><category term="topic:vim"></category></entry><entry><title>Things to remember about decorators</title><link href="https://jamescooke.info/things-to-remember-about-decorators.html" rel="alternate"></link><published>2013-10-22T20:00:00+01:00</published><updated>2013-10-22T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-10-22:/things-to-remember-about-decorators.html</id><summary type="html">&lt;p class="first last"&gt;Notes to myself about Python decorators with a focus on making them&amp;nbsp;testable.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;After an interview question about Python decorators which I stumbled over, I
 promised myself that I would improve my knowledge of this metaprogramming&amp;nbsp;technique.&lt;/p&gt;
 &lt;p&gt;These are my notes to myself on decorators - maybe they&amp;#8217;ll be helpful to
@@ -3409,7 +3602,7 @@ is an example of a silly decorator that prints &amp;#8220;Hello World&amp;#8221;
 file is loaded - there is nothing else in the&amp;nbsp;file.&lt;/p&gt;
 &lt;p&gt;&lt;cite&gt;hello.py&lt;/cite&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;say_hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;
 
 &lt;span class="nd"&gt;@say_hello&lt;/span&gt;
@@ -3528,7 +3721,7 @@ between instances of the &lt;cite&gt;cache&lt;/cite&gt; decorator, it is appende
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;All suggested tips on decorators very welcome - thanks for&amp;nbsp;reading!&lt;/p&gt;
-</content><category term="language:python"></category></entry><entry><title>Calculating your day rate for spare time freelance work</title><link href="https://jamescooke.info/calculating-your-day-rate-for-spare-time-freelance-work.html" rel="alternate"></link><published>2013-07-14T20:00:00+01:00</published><updated>2013-07-14T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-07-14:/calculating-your-day-rate-for-spare-time-freelance-work.html</id><summary type="html">&lt;p class="first last"&gt;So you want to earn some extra cash on your weekends, what should you&amp;nbsp;charge?&lt;/p&gt;
+</content><category term="Code"></category><category term="language:python"></category></entry><entry><title>Calculating your day rate for spare time freelance work</title><link href="https://jamescooke.info/calculating-your-day-rate-for-spare-time-freelance-work.html" rel="alternate"></link><published>2013-07-14T20:00:00+01:00</published><updated>2013-07-14T20:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-07-14:/calculating-your-day-rate-for-spare-time-freelance-work.html</id><summary type="html">&lt;p class="first last"&gt;So you want to earn some extra cash on your weekends, what should you&amp;nbsp;charge?&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;So you want to do some freelance work and you&amp;#8217;re not sure how much to charge
 your new client. The most important thing is to not underestimate your value -
 it frustrates me so much when I hear of a talented coder selling themselves&amp;nbsp;short.&lt;/p&gt;
@@ -3660,7 +3853,7 @@ what&amp;#8217;s&amp;nbsp;not.&lt;/p&gt;
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="work"></category></entry><entry><title>Pyramid London talk - A testing strategy for Pyramid Applications</title><link href="https://jamescooke.info/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html" rel="alternate"></link><published>2013-06-16T21:00:00+01:00</published><updated>2013-06-16T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-06-16:/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html</id><summary type="html">&lt;p class="first last"&gt;Talk at Pyramid London meetup about testing strategies for Pyramid&amp;nbsp;applications.&lt;/p&gt;
+&lt;/script&gt;</content><category term="ZZZ Misc..."></category><category term="work"></category></entry><entry><title>Pyramid London talk - A testing strategy for Pyramid Applications</title><link href="https://jamescooke.info/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html" rel="alternate"></link><published>2013-06-16T21:00:00+01:00</published><updated>2013-06-16T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-06-16:/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html</id><summary type="html">&lt;p class="first last"&gt;Talk at Pyramid London meetup about testing strategies for Pyramid&amp;nbsp;applications.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Pyramid London meetup returned in June to &lt;a class="reference external" href="https://skillsmatter.com/"&gt;Skills Matter&lt;/a&gt;. This time I spoke about testing strategies for Pyramid&amp;nbsp;applications.&lt;/p&gt;
 &lt;p&gt;As outlined in the slides below, my current testing framework builds up with doctests, through unit and integration tests to functional / behaviour driven testing on the outside of the application. Hopefully my very basic &amp;#8220;drawn on Google Docs&amp;#8221; diagram of the Pyramid Framework illustrates how each of the testing methods fits within the&amp;nbsp;framework.&lt;/p&gt;
 &lt;p&gt;I would like to have been able to talk more about Behaviour Driven Development and &lt;a class="reference external" href="https://behave.readthedocs.io/en/latest/"&gt;testing with Behave&lt;/a&gt;, which I&amp;#8217;m enjoying at the moment, but maybe that&amp;#8217;s for another presentation. Again, putting together this presentation was really helpful - it helped me to reflect on the methods we&amp;#8217;re using at the moment, and how I might be able to improve and progress the level of test driven development in my daily&amp;nbsp;work.&lt;/p&gt;
@@ -3669,17 +3862,17 @@ what&amp;#8217;s&amp;nbsp;not.&lt;/p&gt;
 &lt;br&gt;&lt;p&gt;&lt;a class="reference external" href="https://skillsmatter.com/skillscasts/4265-pyramid-sqlalchemy-testing-and-auth-policy"&gt;Video is available via the SkillsMatter site&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Many thanks to &lt;a class="reference external" href="http://lucumr.pocoo.org/"&gt;Armin Ronacher&lt;/a&gt; for his talk on &lt;a class="reference external" href="https://docs.sqlalchemy.org/en/latest/"&gt;SQLAlchemy&lt;/a&gt; at the same Pyramid meetup - the &lt;a class="reference external" href="https://skillsmatter.com/skillscasts/4266-pyramid-sqlalchemy-testing-and-auth-policy-4266"&gt;video is also online at SkillsMatter&lt;/a&gt;. As well as the technical details and some hints for things to check out with &lt;span class="caps"&gt;SQLA&lt;/span&gt;, I found Armin&amp;#8217;s thoughts on how the Pyramid community might improve on how we introduce new developers to Pyramid and SQLAlchemy very helpful. I hope I might be able to contribute to that some time in the future.
 Hopefully we&amp;#8217;ll see more people at the next Pyramid Meetup which may include a talk on using &lt;a class="reference external" href="http://www.celeryproject.org/"&gt;Celery&lt;/a&gt; with&amp;nbsp;Pyramid.&lt;/p&gt;
-</content><category term="topic:pyramid"></category><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Pyramid London talk - Pyramid Router</title><link href="https://jamescooke.info/pyramid-london-talk-pyramid-router.html" rel="alternate"></link><published>2013-05-08T23:00:00+01:00</published><updated>2013-05-08T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-05-08:/pyramid-london-talk-pyramid-router.html</id><summary type="html">&lt;p class="first last"&gt;Talk at the first Pyramid London meetup about the Pyramid Router, &lt;span class="caps"&gt;URL&lt;/span&gt; Traversal and&amp;nbsp;Dispatch.&lt;/p&gt;
+</content><category term="Code"></category><category term="topic:pyramid"></category><category term="language:python"></category><category term="topic:testing"></category></entry><entry><title>Pyramid London talk - Pyramid Router</title><link href="https://jamescooke.info/pyramid-london-talk-pyramid-router.html" rel="alternate"></link><published>2013-05-08T23:00:00+01:00</published><updated>2013-05-08T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-05-08:/pyramid-london-talk-pyramid-router.html</id><summary type="html">&lt;p class="first last"&gt;Talk at the first Pyramid London meetup about the Pyramid Router, &lt;span class="caps"&gt;URL&lt;/span&gt; Traversal and&amp;nbsp;Dispatch.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Our first Pyramid London meetup was kindly hosted at &lt;a class="reference external" href="https://skillsmatter.com/"&gt;Skills Matter&lt;/a&gt;, who have &lt;a class="reference external" href="https://skillsmatter.com/skillscasts/4189-routing-traversal-and-url-dispatch"&gt;posted the video of my talk on their page for the meetup&lt;/a&gt;.&lt;/p&gt;
 &lt;br&gt;
 &lt;script async class="speakerdeck-embed" data-id="76686b40b8ed01307b196e084453428f" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"&gt;&lt;/script&gt;
 &lt;br&gt;&lt;p&gt;All the code I demonstrated is on &lt;a class="reference external" href="https://github.com/jamescooke/pyramid-london-talk"&gt;GitHub in the pyramid-london-talk repository&lt;/a&gt; - Please note that the traversal code is in the traversal branch, not in a separate&amp;nbsp;project.&lt;/p&gt;
 &lt;p&gt;I learned loads from preparing the demonstration code and chatting to everyone that attended - so thanks and hope to see you at the next meetup in&amp;nbsp;June!&lt;/p&gt;
-</content><category term="topic:pyramid"></category></entry><entry><title>Reincublog Django app</title><link href="https://jamescooke.info/reincublog-django-app.html" rel="alternate"></link><published>2013-04-28T13:00:00+01:00</published><updated>2013-04-28T13:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-04-28:/reincublog-django-app.html</id><summary type="html">&lt;p class="first last"&gt;Reincublog is a super mini Django blog weekend hack, coded as part of a recruitment&amp;nbsp;process.&lt;/p&gt;
+</content><category term="Code"></category><category term="topic:pyramid"></category></entry><entry><title>Reincublog Django app</title><link href="https://jamescooke.info/reincublog-django-app.html" rel="alternate"></link><published>2013-04-28T13:00:00+01:00</published><updated>2013-04-28T13:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-04-28:/reincublog-django-app.html</id><summary type="html">&lt;p class="first last"&gt;Reincublog is a super mini Django blog weekend hack, coded as part of a recruitment&amp;nbsp;process.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Reincublog is a Django app that I was asked to code as part of the recruitment process at Reincubate. It&amp;#8217;s a weekend of glue code which I was set to see if I am a competent Django programmer. I&amp;#8217;m not sure that it&amp;#8217;s the kind of test that I show my best at - I&amp;#8217;m more of an algorithm&amp;nbsp;guy.&lt;/p&gt;
 &lt;p&gt;However, after living on GitHub for a few months, the repo has picked up a couple of stars, and because I like to keep a super clean GitHub account, I&amp;#8217;ve decided to clean it out of my&amp;nbsp;account.&lt;/p&gt;
 &lt;p&gt;So, from today the &lt;a class="reference external" href="https://github.com/shonenada/reincublog"&gt;Reincublog code&lt;/a&gt; will live on &lt;a class="reference external" href="https://github.com/shonenada"&gt;shonenada&amp;#8217;s GitHub&lt;/a&gt; hopefully it can grow and be&amp;nbsp;useful.&lt;/p&gt;
-</content><category term="django"></category></entry><entry><title>Migrating from Django 1.4 to 1.5 - Lessons learned</title><link href="https://jamescooke.info/migrating-from-django-14-to-15-lessons-learned.html" rel="alternate"></link><published>2013-03-29T19:00:00+00:00</published><updated>2013-03-29T19:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-03-29:/migrating-from-django-14-to-15-lessons-learned.html</id><summary type="html">&lt;p class="first last"&gt;Migrating a project from Django 1.4 to Django 1.5 had a couple of gotchas that cost me dev&amp;nbsp;time.&lt;/p&gt;
+</content><category term="GitHub Contributions"></category><category term="django"></category></entry><entry><title>Migrating from Django 1.4 to 1.5 - Lessons learned</title><link href="https://jamescooke.info/migrating-from-django-14-to-15-lessons-learned.html" rel="alternate"></link><published>2013-03-29T19:00:00+00:00</published><updated>2013-03-29T19:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-03-29:/migrating-from-django-14-to-15-lessons-learned.html</id><summary type="html">&lt;p class="first last"&gt;Migrating a project from Django 1.4 to Django 1.5 had a couple of gotchas that cost me dev&amp;nbsp;time.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;From &lt;a class="reference external" href="https://twitter.com/ryankask/"&gt;Ryan Kaskel&lt;/a&gt;&amp;#8216;s talk at &lt;a class="reference external" href="https://www.meetup.com/The-London-Django-Meetup-Group/"&gt;Django London&lt;/a&gt; in November last
 year, I guessed that upgrading the &lt;a class="reference external" href="https://github.com/jamescooke/actionguide"&gt;Action Guide code&lt;/a&gt; from Django 1.4 to 1.5 might have
 created some issues with users (&lt;a class="reference external" href="https://docs.djangoproject.com/en/dev/releases/1.5/#configurable-user-model"&gt;user models have changed in Django 1.5 to
@@ -3713,22 +3906,22 @@ in dev mode, and just expected everything to deploy. With Captain Hindsight,
 I&amp;#8217;d have RTFMed much harder before deploying - a lesson for the&amp;nbsp;future.&lt;/p&gt;
 &lt;p&gt;Apart from that, everything works really well. &lt;strong&gt;Have&amp;nbsp;fun!&lt;/strong&gt;&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="django"></category></entry><entry><title>Pelican Svbtle theme tweaks</title><link href="https://jamescooke.info/pelican-svbtle-theme-tweaks.html" rel="alternate"></link><published>2013-02-21T19:40:00+00:00</published><updated>2013-02-21T19:40:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-02-21:/pelican-svbtle-theme-tweaks.html</id><summary type="html">&lt;p class="first last"&gt;A tweaked fork of the Pelican Svbtle theme with some cleaned &lt;span class="caps"&gt;CSS&lt;/span&gt; and &lt;span class="caps"&gt;HTML&lt;/span&gt;.&lt;/p&gt;
+</content><category term="Code"></category><category term="django"></category></entry><entry><title>Pelican Svbtle theme tweaks</title><link href="https://jamescooke.info/pelican-svbtle-theme-tweaks.html" rel="alternate"></link><published>2013-02-21T19:40:00+00:00</published><updated>2013-02-21T19:40:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-02-21:/pelican-svbtle-theme-tweaks.html</id><summary type="html">&lt;p class="first last"&gt;A tweaked fork of the Pelican Svbtle theme with some cleaned &lt;span class="caps"&gt;CSS&lt;/span&gt; and &lt;span class="caps"&gt;HTML&lt;/span&gt;.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;My first experiments with &lt;a class="reference external" href="https://blog.getpelican.com/"&gt;Pelican&lt;/a&gt; to run this blog have been good - it&amp;#8217;s a great way to publish static pages quickly and I find it much easier to manage than&amp;nbsp;Octopress.&lt;/p&gt;
 &lt;p&gt;It&amp;#8217;s built on a version of the &lt;a class="reference external" href="https://github.com/wting/pelican-svbtle"&gt;Pelican-svbtle theme&lt;/a&gt;. There were some problems with the theme in its current form, so I&amp;#8217;ve forked &lt;a class="reference external" href="https://github.com/CNBorn/pelican-svbtle"&gt;CNBorn&amp;#8217;s already adjusted version&lt;/a&gt; and cleaned out some of the &lt;span class="caps"&gt;LESS&lt;/span&gt; and templates - &lt;a class="reference external" href="https://github.com/jamescooke/pelican-svbtle"&gt;my fork is on GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;However, this theme isn&amp;#8217;t going to stay. &lt;a class="reference external" href="https://github.com/thesocialspaces"&gt;Paul&lt;/a&gt; has been working on some flat &lt;span class="caps"&gt;HTML&lt;/span&gt; based on Bootstrap to make a new clean theme. Once that&amp;#8217;s stable, I&amp;#8217;ll plug in some Pelican / Jinja2 tags and hopefully this site will have a new clean theme&amp;nbsp;soon.&lt;/p&gt;
-</content><category term="pelican"></category></entry><entry><title>jsFiddle documentation update</title><link href="https://jamescooke.info/jsfiddle-documentation-update.html" rel="alternate"></link><published>2013-01-25T19:40:00+00:00</published><updated>2013-01-25T19:40:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-01-25:/jsfiddle-documentation-update.html</id><summary type="html">&lt;p class="first last"&gt;A newly structured documentation site and tutorial for the online&amp;nbsp;editor.&lt;/p&gt;
+</content><category term="Code"></category><category term="pelican"></category></entry><entry><title>jsFiddle documentation update</title><link href="https://jamescooke.info/jsfiddle-documentation-update.html" rel="alternate"></link><published>2013-01-25T19:40:00+00:00</published><updated>2013-01-25T19:40:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-01-25:/jsfiddle-documentation-update.html</id><summary type="html">&lt;p class="first last"&gt;A newly structured documentation site and tutorial for the online&amp;nbsp;editor.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="http://doc.jsfiddle.net/"&gt;Updated documentation&lt;/a&gt; for &lt;a class="reference external" href="https://jsfiddle.net/"&gt;jsFiddle&lt;/a&gt;, &lt;a class="reference external" href="https://github.com/jsfiddle/jsfiddle-docs-alpha/commit/ef0f234e44e5a6d6791c09e672364fdf9518a31a"&gt;merged by Piotr&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Includes a new &lt;a class="reference external" href="http://doc.jsfiddle.net/tutorial.html"&gt;tutorial&lt;/a&gt; - but images are already out of&amp;nbsp;date!&lt;/p&gt;
 &lt;p&gt;jsFiddle is such a great tool and my goal for the tutorial was to create a simple introduction which first time students would be able to understand and&amp;nbsp;execute.&lt;/p&gt;
-</content><category term="documentation"></category></entry><entry><title>Setting up this homepage with Pelican</title><link href="https://jamescooke.info/setting-up-this-homepage-with-pelican.html" rel="alternate"></link><published>2013-01-20T17:25:00+00:00</published><updated>2013-01-20T17:25:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-01-20:/setting-up-this-homepage-with-pelican.html</id><summary type="html">&lt;p class="first last"&gt;Using Pelican to generate this blog, a move away from Jekyll and to
+</content><category term="GitHub Contributions"></category><category term="documentation"></category></entry><entry><title>Setting up this homepage with Pelican</title><link href="https://jamescooke.info/setting-up-this-homepage-with-pelican.html" rel="alternate"></link><published>2013-01-20T17:25:00+00:00</published><updated>2013-01-20T17:25:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-01-20:/setting-up-this-homepage-with-pelican.html</id><summary type="html">&lt;p class="first last"&gt;Using Pelican to generate this blog, a move away from Jekyll and to
 some pure&amp;nbsp;Python.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;This page has been through a lot in the last ten&amp;nbsp;years.&lt;/p&gt;
 &lt;p&gt;Since starting work at Quibly, I&amp;#8217;ve had a lot more time to code and it&amp;#8217;s exactly what I wanted, hopefully it&amp;#8217;ll continue. The result of that is that I&amp;#8217;ve got more to write about&amp;#8230; The code that I develop at work, fixes I make to open source libraries and general things I learn, primarily about Python and web - hopefully all valuable and worth&amp;nbsp;sharing.&lt;/p&gt;
 &lt;p&gt;I&amp;#8217;m experimenting with &lt;a class="reference external" href="https://github.com/getpelican/pelican"&gt;Pelican&lt;/a&gt; - a static blog generator written in Python. It&amp;#8217;s excellent and noticeably easier than Jekyll - probably because I&amp;#8217;m much more clued up in Python than Ruby. I&amp;#8217;m lazy, so I&amp;#8217;m hosting the outputted static files in the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;gh-pages&lt;/span&gt;&lt;/tt&gt; branch of the &lt;a class="reference external" href="https://github.com/jamescooke/blog/"&gt;blog&amp;#8217;s repository&lt;/a&gt; to take advantage of &lt;a class="reference external" href="https://pages.github.com/"&gt;GitHub Pages&amp;#8217; free hosting features&lt;/a&gt; - thanks&amp;nbsp;GitHub!&lt;/p&gt;
 &lt;p&gt;In addition, I found &lt;a class="reference external" href="https://www.davidfischer.name/2012/12/quick-note-pelican-github/"&gt;this article by David Fischer&lt;/a&gt; very helpful. Particularly the suggestion of adding the &lt;tt class="docutils literal"&gt;&lt;span class="caps"&gt;CNAME&lt;/span&gt;&lt;/tt&gt; copy command to the &lt;tt class="docutils literal"&gt;Makefile&lt;/tt&gt; to get GitHub Pages one configuration requirement and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;gph-import&lt;/span&gt;&lt;/tt&gt; working nicely together. Plus David pointed out that Pelican already has a &lt;tt class="docutils literal"&gt;github&lt;/tt&gt; target in the &lt;tt class="docutils literal"&gt;Makefile&lt;/tt&gt; which I hadn&amp;#8217;t noticed and is now what I use to push articles&amp;nbsp;live.&lt;/p&gt;
 &lt;p&gt;All in all - great and&amp;nbsp;simple.&lt;/p&gt;
-</content><category term="pelican"></category></entry><entry><title>Got the Stack Overflow tumbleweed badge for Mako filters question</title><link href="https://jamescooke.info/got-the-stack-overflow-tumbleweed-badge-for-mako-filters-question.html" rel="alternate"></link><published>2013-01-20T16:40:00+00:00</published><updated>2013-01-20T16:40:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-01-20:/got-the-stack-overflow-tumbleweed-badge-for-mako-filters-question.html</id><summary type="html">&lt;p class="first last"&gt;My Mako question got no views and no answers - should we be using Mako if things are so&amp;nbsp;quiet?&lt;/p&gt;
+</content><category term="ZZZ Misc..."></category><category term="pelican"></category></entry><entry><title>Got the Stack Overflow tumbleweed badge for Mako filters question</title><link href="https://jamescooke.info/got-the-stack-overflow-tumbleweed-badge-for-mako-filters-question.html" rel="alternate"></link><published>2013-01-20T16:40:00+00:00</published><updated>2013-01-20T16:40:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2013-01-20:/got-the-stack-overflow-tumbleweed-badge-for-mako-filters-question.html</id><summary type="html">&lt;p class="first last"&gt;My Mako question got no views and no answers - should we be using Mako if things are so&amp;nbsp;quiet?&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Last week I posted a question on Stack Overflow - &amp;#8220;&lt;a class="reference external" href="https://stackoverflow.com/questions/14215591/mako-template-filter-ordering"&gt;Mako template filter
 ordering&lt;/a&gt;&amp;#8221;
 - this week it earned the &lt;a class="reference external" href="https://stackoverflow.com/help/badges/63/tumbleweed"&gt;Tumbleweed badge&lt;/a&gt;.&lt;/p&gt;
@@ -3744,21 +3937,21 @@ at time of writing&amp;nbsp;right?&lt;/p&gt;
 strange - and I still think that the &lt;tt class="docutils literal"&gt;h&lt;/tt&gt; filter is putting itself last in the
 mako render order, but now I&amp;#8217;ve got a work around, I&amp;#8217;m going back to post&amp;nbsp;it.&lt;/p&gt;
 &lt;p&gt;Maybe 10 more people will see it before Easter - it might even help&amp;nbsp;someone.&lt;/p&gt;
-</content><category term="mako"></category><category term="python"></category></entry><entry><title>Password cases and test fixes on pyramid_simpleauth</title><link href="https://jamescooke.info/password-cases-and-test-fixes-on-pyramid_simpleauth.html" rel="alternate"></link><published>2012-11-30T12:00:00+00:00</published><updated>2012-11-30T12:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2012-11-30:/password-cases-and-test-fixes-on-pyramid_simpleauth.html</id><summary type="html">&lt;p class="first last"&gt;Updates to pyramid_simpleauth to allow for uppercase passwords and some bug&amp;nbsp;fixes.&lt;/p&gt;
+</content><category term="Code"></category><category term="mako"></category><category term="python"></category></entry><entry><title>Password cases and test fixes on pyramid_simpleauth</title><link href="https://jamescooke.info/password-cases-and-test-fixes-on-pyramid_simpleauth.html" rel="alternate"></link><published>2012-11-30T12:00:00+00:00</published><updated>2012-11-30T12:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2012-11-30:/password-cases-and-test-fixes-on-pyramid_simpleauth.html</id><summary type="html">&lt;p class="first last"&gt;Updates to pyramid_simpleauth to allow for uppercase passwords and some bug&amp;nbsp;fixes.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;At Quibly we&amp;#8217;re using Pyramid at the centre of a Python framework. Providing user functionality is the &lt;a class="reference external" href="https://github.com/thruflo/pyramid_simpleauth"&gt;pyramid_simpleauth&lt;/a&gt;&amp;nbsp;library.&lt;/p&gt;
 &lt;p&gt;While writing integration tests before we put the site live, I found that my test users we not able to authenticate with their testing passwords (usually just a simple string like &amp;#8216;Password&amp;#8217;). Digging inside the simpleauth library, I found some fixes necessary to how cases are handled by the lib - plus also fixed some doctests while I was at&amp;nbsp;it.&lt;/p&gt;
 &lt;p&gt;These &lt;a class="reference external" href="https://github.com/thruflo/pyramid_simpleauth/pull/7"&gt;changes&lt;/a&gt; all
 been merged now and the library rolled up a&amp;nbsp;version.&lt;/p&gt;
-</content><category term="topic:pyramid"></category></entry><entry><title>Django-mailchimp compatability with v1.3 API</title><link href="https://jamescooke.info/django-mailchimp-compatability-with-v13-api.html" rel="alternate"></link><published>2012-09-25T07:14:00+01:00</published><updated>2012-09-25T07:14:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2012-09-25:/django-mailchimp-compatability-with-v13-api.html</id><summary type="html">&lt;p class="first last"&gt;Some small updates to the django-mailchimp library to upgrade to the latest Mailchimp &lt;span class="caps"&gt;API&lt;/span&gt;.&lt;/p&gt;
+</content><category term="GitHub Contributions"></category><category term="topic:pyramid"></category></entry><entry><title>Django-mailchimp compatability with v1.3 API</title><link href="https://jamescooke.info/django-mailchimp-compatability-with-v13-api.html" rel="alternate"></link><published>2012-09-25T07:14:00+01:00</published><updated>2012-09-25T07:14:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2012-09-25:/django-mailchimp-compatability-with-v13-api.html</id><summary type="html">&lt;p class="first last"&gt;Some small updates to the django-mailchimp library to upgrade to the latest Mailchimp &lt;span class="caps"&gt;API&lt;/span&gt;.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;For a &lt;a class="reference external" href="/pages/fublo-ltd.html"&gt;Fublo&lt;/a&gt; project with &lt;a class="reference external" href="https://www.neuxpower.com/"&gt;Neuxpower&lt;/a&gt;, we had to communicate with &lt;a class="reference external" href="https://developer.mailchimp.com/"&gt;Mailchimp via their
 &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/a&gt;. On Django one of the best libraries for
 this is &lt;a class="reference external" href="https://github.com/piquadrat/django-mailchimp"&gt;django-mailchimp&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;However, in its previous state django-mailchimp wasn&amp;#8217;t able to specify a &lt;tt class="docutils literal"&gt;send_welcome&lt;/tt&gt; parameter which lets Mailchimp know whether it should send out a list welcome message when a new user subscribes. For the project, we were managing the signup explicitly with Neuxpower&amp;#8217;s code, so no welcome message was required and the default for Mailchimp was &lt;tt class="docutils literal"&gt;True&lt;/tt&gt; for sending meaning that Neuxpower&amp;#8217;s new customers would get hit with a double welcome message&amp;#8230; Not&amp;nbsp;desirable.&lt;/p&gt;
 &lt;p&gt;This &lt;a class="reference external" href="https://github.com/piquadrat/django-mailchimp/pull/6"&gt;small change&lt;/a&gt; is now merged in with the library, which has rolled up to a &amp;#8216;v1.3&amp;#8217; status as there is no backward&amp;nbsp;compatibility.&lt;/p&gt;
-</content><category term="topic:django"></category></entry><entry><title>Fixing exception in django-menu</title><link href="https://jamescooke.info/fixing-exception-in-django-menu.html" rel="alternate"></link><published>2012-05-05T19:40:00+01:00</published><updated>2012-05-05T19:40:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2012-05-05:/fixing-exception-in-django-menu.html</id><summary type="html">&lt;p class="first last"&gt;A tiny pull request to stop django-menu from throwing exceptions on
+</content><category term="GitHub Contributions"></category><category term="topic:django"></category></entry><entry><title>Fixing exception in django-menu</title><link href="https://jamescooke.info/fixing-exception-in-django-menu.html" rel="alternate"></link><published>2012-05-05T19:40:00+01:00</published><updated>2012-05-05T19:40:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2012-05-05:/fixing-exception-in-django-menu.html</id><summary type="html">&lt;p class="first last"&gt;A tiny pull request to stop django-menu from throwing exceptions on
 new unconfigured&amp;nbsp;sites.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="https://github.com/rossp/django-menu/"&gt;django-menu&lt;/a&gt; is a nice simple library for building very simple menus. However, when a site is loaded for the first time, the menu structure was not configured and so it was throwing a &lt;tt class="docutils literal"&gt;DoesNotExist&lt;/tt&gt; Exception.&lt;/p&gt;
 &lt;p&gt;This tiny &lt;a class="reference external" href="https://github.com/rossp/django-menu/pull/5"&gt;pull request&lt;/a&gt; simply
 wrapped the call to the menu in a &lt;tt class="docutils literal"&gt;try&lt;/tt&gt;/&lt;tt class="docutils literal"&gt;except&lt;/tt&gt; so that new sites using
 django-menu won&amp;#8217;t fall over on first&amp;nbsp;load.&lt;/p&gt;
-</content><category term="topic:django"></category></entry></feed>
+</content><category term="GitHub Contributions"></category><category term="topic:django"></category></entry></feed>

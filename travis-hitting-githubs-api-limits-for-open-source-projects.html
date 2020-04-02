@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="GitHub’s API rate limits are hurting Travis CI’s service quality. What does this mean for the future of the GitHub ecosystem?">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Travis hitting GitHub’s API limits for Open Source projects // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Travis hitting GitHub&#8217;s <span class="caps">API</span> limits for Open Source&nbsp;projects</h1>
+                <p class="postdate" title="2020-04-02T23:00:00+01:00">- Posted Apr 02, 2020</p>
+            </header>
+            <div class='article-content'>
+                <p>Last week, GitHub&#8217;s Dependabot created <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138">a pull request</a> with a fix to a
+vulnerability found the development dependencies of one of my <span class="caps">FOSS</span> projects.
+This was a bump to Mozilla&#8217;s <a class="reference external" href="https://github.com/mozilla/bleach">bleach</a>, a
+project that GitHub states is used by more than 61,000 other&nbsp;projects.</p>
+<a class="reference external image-reference" href="https://github.com/jamescooke/flake8-aaa/pull/138"><img alt="GitHub's Dependabot opened a PR to bump bleach in Flake8-AAA." src="https://jamescooke.info/images/200402_pr.png" /></a>
+<p><a class="reference external" href="https://github.com/jamescooke/flake8-aaa">Flake8-<span class="caps">AAA</span>&#8217;s repository</a> is wired
+into Travis <span class="caps">CI</span> to provide automated execution of its test suites across all
+supported versions of Python. Better still, because Flake8-<span class="caps">AAA</span> is an open
+source public repository, Travis provides the computing power to run these
+tests for free. I&#8217;ve always found Travis reliable and stable, so it&#8217;s a
+requirement that pull requests have a &#8220;green&#8221; Travis build before merging into
+Flake8-<span class="caps">AAA</span>&#8217;s master&nbsp;branch.</p>
+<div class="section" id="unreported-build-status">
+<h2>Unreported build&nbsp;status</h2>
+<p>However, when I checked on the Dependabot Pull Request, GitHub was still
+waiting for the status of its Travis build to be&nbsp;reported.</p>
+<img alt="GitHub's merge dialogue box showing that expected tests have not completed." src="https://jamescooke.info/images/200401_some_checks_havent_completed_yet.png" />
+<p>You can see that the &#8220;Merge pull request&#8221; box is greyed out because the
+required Travis build has not completed yet according to&nbsp;GitHub.</p>
+<p><strong>But</strong> here&#8217;s the build at <a class="reference external" href="https://travis-ci.org/github/jamescooke/flake8-aaa/builds/669024353">Travis</a> - both
+green <em>and</em> done within 3 minutes of Dependabot opening the <span class="caps">PR</span> at GitHub, so
+the call from Travis to GitHub to report the build status on the commit failed
+for some&nbsp;reason.</p>
+<img alt="Travis build of the Dependabot PR is green." src="https://jamescooke.info/images/200402_green_build.png" />
+</div>
+<div class="section" id="debugging">
+<h2>Debugging</h2>
+<p>Sometimes webhook and <span class="caps">API</span> calls to GitHub fail - I&#8217;ve seen this with both
+personal and work projects. Often the simplest solution is to retrigger the
+build in some way. At first I tried to get a follow up build to work&nbsp;by:</p>
+<ul class="simple">
+<li>Creating a new commit on the branch with updated requirements and pushing
+that to the&nbsp;branch.</li>
+<li>Amending the existing commit and pushing with <tt class="docutils literal"><span class="pre">--force</span></tt>.</li>
+<li>Creating and pushing a new branch with an update to all&nbsp;requirements.</li>
+</ul>
+<p>All of these strategies had the same effect - a new build was triggered on
+Travis and that build was green, but it was not reported to GitHub. So it
+looked like all <span class="caps">API</span> calls were failing from Travis to&nbsp;GitHub.</p>
+<p>Next, while checking the <a class="reference external" href="https://www.githubstatus.com/">GitHub status page</a>
+and <a class="reference external" href="https://www.traviscistatus.com/">Travis status page</a>, I found this
+status update on the Travis&nbsp;site:</p>
+<a class="reference external image-reference" href="https://www.traviscistatus.com/incidents/rx6fhs3wqcln"><img alt="Travis status page shows GitHub commit status issue: GitHub status may not be posted on commits occasionally from builds using the legacy Services integration." src="https://jamescooke.info/images/200402_travis_status.png" /></a>
+<p>In light of that status message, I tried installing the Travis app integration,
+but had no success getting it to link to Flake8-<span class="caps">AAA</span>.</p>
+<p>The message&nbsp;says:</p>
+<blockquote>
+Please write to <a class="reference external" href="mailto:support&#64;travis-ci.com">support&#64;travis-ci.com</a> if you encounter any similar
+problems.</blockquote>
+<p>So I&nbsp;emailed.</p>
+</div>
+<div class="section" id="reply-from-travis-support">
+<h2>Reply from Travis&nbsp;Support</h2>
+<p>Here&#8217;s the full text of the reply from Travis&nbsp;support:</p>
+<blockquote>
+<p><span class="caps">MK</span> (Travis <span class="caps">CI</span>)</p>
+<p>Mar 31, 15:38 <span class="caps">EDT</span></p>
+<p>Hello&nbsp;,</p>
+<p>Thanks for your patience on this&nbsp;issue.</p>
+<p>We want to provide some visibility into the issues we are facing, the
+effects on our infrastructure and efforts made so far to restore&nbsp;normalcy.</p>
+<ol class="arabic simple">
+<li>We recently started hitting <span class="caps">API</span> rate limits for Github calls and on
+March 25, 2020, we contacted Github to ask for increases and are
+awaiting their feedback in this&nbsp;regard.</li>
+<li>On the Travis <span class="caps">CI</span> end, we have made improvements on how our code accesses
+the Github <span class="caps">API</span>, which has led to improvements, albeit&nbsp;minimal.</li>
+<li>While we occasionally hit <span class="caps">API</span> limits, it&#8217;s important to note that we
+haven&#8217;t hit these kinds of limits before now. In the interim, the
+best course of action would be to retry the action you wanted to&nbsp;perform.</li>
+</ol>
+<p>For next&nbsp;steps,</p>
+<ol class="arabic simple">
+<li>We are following up with Github via various channels to get the
+requested <span class="caps">API</span> rate limit&nbsp;increased.</li>
+<li>In addition, we are looking for more avenues to remove
+invalid/unnecessary Github <span class="caps">API</span> calls in our codebase to ensure we stay
+under the limit and avoid disruptions like&nbsp;this.</li>
+<li>We are coordinating internally to ensure customers are up-to-date on
+progress made so&nbsp;far.</li>
+</ol>
+<p>We know how critical our platform is to your business and our goal is to
+provide the best experience for our customers. In line with this, we extend
+our sincere apologies for inconveniences this is&nbsp;causing.</p>
+<p>Thank you and we will provide periodic updates as we have&nbsp;more.</p>
+</blockquote>
+<p>Firstly, thanks to Travis support for this helpful message - it&#8217;s pretty
+unusual for a service that offers a free tier to be open and responsive to
+messages from freeloading users like&nbsp;myself.</p>
+<p>Secondly, I assumed that Travis would not be opposed to publishing the text of
+the email since it should help other developers in my&nbsp;situation.</p>
+<p>In response to the mail&nbsp;itself:</p>
+<ul>
+<li><p class="first">My understanding is that this issue mainly affects open source projects on
+Travis dot&nbsp;org.</p>
+</li>
+<li><p class="first">This message makes no mention of migrating to the Travis dot com GitHub Apps
+integration, so I assume that it wouldn&#8217;t work for Flake8-<span class="caps">AAA</span> or other open
+source&nbsp;projects.</p>
+</li>
+<li><p class="first">The mail&nbsp;states:</p>
+<blockquote>
+<p>In the interim, the best course of action would be to retry the action
+you wanted to&nbsp;perform.</p>
+</blockquote>
+<p>Unfortunately I&#8217;ve had no success with this yet, but will continue to&nbsp;try.</p>
+</li>
+</ul>
+<p>Although I&#8217;m happy with the Travis response so far, I&#8217;m worried about what this
+means about the future of&nbsp;GitHub.</p>
+</div>
+<div class="section" id="thoughts-on-the-github-ecosystem">
+<h2>Thoughts on the GitHub&nbsp;ecosystem</h2>
+<p>I was not part of the &#8220;mass exodus&#8221; from GitHub in 2018 after <a class="reference external" href="https://github.blog/2018-10-26-github-and-microsoft/">Microsoft
+completed its purchase</a> of the platform. At
+the time I thought that this could only be good for the site, however, now I&#8217;m
+reconsidering, especially in the light of the situation above. Let me explain&nbsp;why&#8230;</p>
+<div class="section" id="github-wants-actions-to-replace-travis">
+<h3>GitHub wants Actions to replace&nbsp;Travis</h3>
+<p><a class="reference external" href="https://github.com/features/actions">GitHub Actions</a> is what GitHub calls
+its &#8220;world-class <span class="caps">CI</span>/<span class="caps">CD</span>&#8221; system. <span class="caps">CI</span>/<span class="caps">CD</span> has been supported by Actions since
+August 2019 and is free for open source projects - GitHub has &#8220;embraced&#8221; <span class="caps">CI</span>/<span class="caps">CD</span>.</p>
+<p>Travis dot org is now a <strong>competitor</strong> to GitHub rather than the helpful
+addition to the ecosystem it was&nbsp;before.</p>
+<p>Also the existence of <span class="caps">CI</span>/<span class="caps">CD</span> in Actions means that GitHub can allow the
+degradation of other <span class="caps">CI</span>/<span class="caps">CD</span> integrations because it&#8217;s able to offer a &#8220;better&#8221;
+replacement - use Actions instead. My guess would be that GitHub intends
+Actions to replace all <span class="caps">CI</span>/<span class="caps">CD</span> building on GitHub for open source&nbsp;projects.</p>
+</div>
+<div class="section" id="github-wants-developers-to-stay-on-github">
+<h3>GitHub wants developers to stay on&nbsp;GitHub</h3>
+<p>In the final paragraph of the <a class="reference external" href="https://github.blog/2018-10-26-github-and-microsoft/">GitHub blog post above</a>, Nat Friedman&nbsp;states:</p>
+<blockquote>
+Our vision is to serve every developer on the planet, by being the best
+place to build software.</blockquote>
+<p>Building software includes <span class="caps">CI</span>/<span class="caps">CD</span> and GitHub&#8217;s vision means that every developer
+that needs a <span class="caps">CI</span>/<span class="caps">CD</span> function would stay on GitHub while &#8220;building software&#8221;, not
+traverse external systems like Travis, Circle <span class="caps">CI</span> or&nbsp;Codeship.</p>
+</div>
+<div class="section" id="github-can-make-it-harder-for-ci-cd-integrations-to-keep-up">
+<h3>GitHub can make it harder for <span class="caps">CI</span>/<span class="caps">CD</span> integrations to keep&nbsp;up</h3>
+<p>Since GitHub (and therefore Microsoft) <a class="reference external" href="https://dependabot.com/blog/hello-github/">acquired Dependabot in 2019</a>, GitHub now has a tool which it
+can use generate a larger number of builds on <span class="caps">CI</span>/<span class="caps">CD</span> services integrated with
+its platform like Travis. This will have the knock on effect of making it
+harder for those <span class="caps">CI</span>/<span class="caps">CD</span> services to keep within their <span class="caps">API</span> rate limits and more
+expensive to run because they will need to buy more computing power from <span class="caps">AWS</span>
+and or Google to run&nbsp;builds.</p>
+<p>Best of all for GitHub, they can put this pressure on others while maintaining
+the guise of <a class="reference external" href="https://github.blog/2019-05-23-introducing-new-ways-to-keep-your-code-secure/#automated-security-fixes-with-dependabot">making &#8220;dependency upgrades easy&#8221;</a>.
+Now GitHub automatically creates a pull request for any project owned by an
+account with security alerts enabled when it finds a relevant security
+vulnerability&nbsp;alert.</p>
+<p>In the case of the pull request above that started this post, that was a
+vulnerability in bleach. As I mentioned this is a project used by over 60k
+projects on GitHub. So when a security advisory on bleach occurs, Dependabot
+creates a pull request on GitHub, each pull request will then be built by a
+<span class="caps">CI</span>/<span class="caps">CD</span> system for those repositories that have one wired in. For an external
+<span class="caps">CI</span>/<span class="caps">CD</span> system like Travis, that flood of builds requires a large volume of
+computing resources <strong>and</strong> GitHub <span class="caps">API</span>&nbsp;calls.</p>
+<p>The <a class="reference external" href="https://developer.github.com/v3/#rate-limiting">GitHub rate limit documentation</a> currently states a quota of
+5,000 requests per hour. If each <span class="caps">CI</span>/<span class="caps">CD</span> build requires 2 <span class="caps">API</span> calls (one to say
+&#8220;in progress&#8221; and one to post the result), then once 2,500 builds are completed
+in an hour the quota will be exhausted. If  4% of all the repositories that
+depend on bleach are using Travis for builds, then a single bump to the bleach
+release would exhaust a 5,000 request quota immediately - and that&#8217;s before any
+&#8220;normal&#8221; human-driven regular build activity is taken into&nbsp;consideration.</p>
+<p>Now I&#8217;m pretty sure that Travis has an hourly quota that&#8217;s greater than 5,000
+requests per hour, probably granted to them when GitHub saw them as augmenting
+the GitHub ecosystem, but when the Travis email above&nbsp;stated:</p>
+<blockquote>
+We are following up with Github via various channels to get the requested
+<span class="caps">API</span> rate limit increased.</blockquote>
+<p>&#8230; why would GitHub bump this&nbsp;now?</p>
+<p>Instead, GitHub can leave Travis in an awkward situation: choose to throttle
+builds and get reliable status calls back to the GitHub <span class="caps">API</span>, or make open
+source projects have a less reliable and smooth experience when status update
+<span class="caps">API</span> calls are dropped. Either option makes GitHub Actions look &#8220;better&#8221; as a
+<span class="caps">CI</span>/<span class="caps">CD</span> solution - a win for&nbsp;GitHub.</p>
+</div>
+</div>
+<div class="section" id="finally-hope">
+<h2>Finally,&nbsp;hope</h2>
+<p>I hope that my thoughts on the GitHub ecosystem above are overly negative and
+that these issues with Travis are not the start of an &#8220;extinguish&#8221; strategy by
+GitHub towards external <span class="caps">CI</span>/<span class="caps">CD</span> systems (see <a class="reference external" href="https://en.wikipedia.org/wiki/Embrace,_extend,_and_extinguish">Embrace, extend, extinguish</a>).</p>
+<p>I hope I&#8217;m completely wrong and that GitHub open up their <span class="caps">API</span> limits to Travis
+so that open source projects like Flake8-<span class="caps">AAA</span> can still use it for reliable
+<span class="caps">CI</span>/<span class="caps">CD</span>. But if things don&#8217;t go well then I&#8217;m certainly more ready to join the
+GitHub exodus, just 18 months behind the&nbsp;curve.</p>
+<p>Thanks Travis <span class="caps">CI</span> for all the builds, I hope we have many more to&nbsp;come!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/2004-github-travis.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
+                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
+                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
+using it can help us all make our tests cleaner, easier to read
+and as Pythonic as&nbsp;possible.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

@@ -61,10 +61,10 @@ code&nbsp;highlighted:</p>
 <blockquote>
 <p>Test that <em>expr</em> is true (or&nbsp;false).</p>
 <p>Note that this is equivalent&nbsp;to</p>
-<div class="highlight"><pre><span></span><span class="nb">bool</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span>
+<div class="highlight"><pre><span></span><span class="nb">bool</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
 </pre></div>
 <p>and not&nbsp;to</p>
-<div class="highlight"><pre><span></span><span class="n">expr</span> <span class="ow">is</span> <span class="bp">True</span>
+<div class="highlight"><pre><span></span><span class="n">expr</span> <span class="ow">is</span> <span class="kc">True</span>
 </pre></div>
 <p>(use <tt class="docutils literal">assertIs(expr, True)</tt> for the&nbsp;latter).</p>
 </blockquote>
@@ -73,7 +73,7 @@ code&nbsp;highlighted:</p>
 <blockquote>
 A value that translates to true when evaluated in a Boolean context.</blockquote>
 <p>In Python this is equivalent&nbsp;to:</p>
-<div class="highlight"><pre><span></span><span class="nb">bool</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span>
+<div class="highlight"><pre><span></span><span class="nb">bool</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
 </pre></div>
 <p>Which exactly matches what <tt class="docutils literal">assertTrue</tt> is testing&nbsp;for.</p>
 <p>Therefore the documentation already indicates <tt class="docutils literal">assertTrue</tt> is truthy and
@@ -110,7 +110,7 @@ code and see how the tests&nbsp;perform.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">always_true</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 <p>Here&#8217;s the code for our simple function in <tt class="docutils literal">func.py</tt>:</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">always_true</span><span class="p">():</span>
@@ -120,7 +120,7 @@ code and see how the tests&nbsp;perform.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="kc">True</span>
 </pre></div>
 <p>When run, everything&nbsp;passes:</p>
 <pre class="literal-block">
@@ -179,10 +179,10 @@ the <tt class="docutils literal">assertIsTrue</tt> and <tt class="docutils liter
 <p>This doesn&#8217;t save a particularly large amount of code, but it does improve
 readability in my&nbsp;opinion.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">assertIsTrue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">assertIsFalse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="summary">
@@ -222,21 +222,20 @@ tags                    <a href="https://jamescooke.info/tag/languagepython.html
                 &ndash; Further reading:
                 <ul>
                     <li>
-                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
-                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
-shows how it can be used in a Python context with&nbsp;Pytest.</p>
-</li>
-                    <li>
                         <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
                         <p class="first last">This post explores how to extract arrangement code when working with
 the Arrange Act Assert pattern so that it can be used with certainty
 across the test&nbsp;suite.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
-                        <p class="first last">Exploring the various model instance factories available for Django.
-Each factory is tested based on the quality of the instances it
-creates. Bonus: talk version and slides also&nbsp;available.</p>
+                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
+                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
+                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
+using it can help us all make our tests cleaner, easier to read
+and as Pythonic as&nbsp;possible.</p>
 </li>
                 </ul>
         </p>

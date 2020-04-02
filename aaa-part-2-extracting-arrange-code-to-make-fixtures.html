@@ -130,7 +130,7 @@ they break the <span class="caps">AAA</span> pattern because there should be no 
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">leela</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">invite</span><span class="p">(</span><span class="n">bender</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">True</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">True</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 </pre></div>
 <p>Tests on the arrangement of the <span class="caps">SUT</span> will often be informed by the tests that are about
@@ -146,7 +146,7 @@ called with some arrangement functions like <tt class="docutils literal">arrange
 <p>Now applying this process to the Futurama account test above I get the
 following fixture with its own dedicated test and a much simpler test for the
 invite&nbsp;behaviour.</p>
-<div class="highlight"><pre><span></span><span class="nd">@pytest.fixture</span>
+<div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">account_members</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns:</span>
@@ -208,7 +208,7 @@ invite&nbsp;behaviour.</p>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">leela</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">invite</span><span class="p">(</span><span class="n">bender</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">True</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">True</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 </pre></div>
 <p>Even though this example is long winded, I hope you can see that the
@@ -317,19 +317,19 @@ tags                    <a href="https://jamescooke.info/tag/languagepython.html
                 &ndash; Further reading:
                 <ul>
                     <li>
-                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
-                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
-shows how it can be used in a Python context with&nbsp;Pytest.</p>
+                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
+                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
-                        <p class="first last">Exploring the various model instance factories available for Django.
-Each factory is tested based on the quality of the instances it
-creates. Bonus: talk version and slides also&nbsp;available.</p>
+                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
+                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
+using it can help us all make our tests cleaner, easier to read
+and as Pythonic as&nbsp;possible.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/pyramid-london-talk-a-testing-strategy-for-pyramid-applications.html">Pyramid London talk - A testing strategy for Pyramid&nbsp;Applications</a>
-                        <p class="first last">Talk at Pyramid London meetup about testing strategies for Pyramid&nbsp;applications.</p>
+                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
+                        <p class="first last">An updated simple assertion helper for comparing instances of
+Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
 </li>
                 </ul>
         </p>

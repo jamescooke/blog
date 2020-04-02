@@ -78,7 +78,7 @@ is an example of a silly decorator that prints &#8220;Hello World&#8221; when th
 file is loaded - there is nothing else in the&nbsp;file.</p>
 <p><cite>hello.py</cite></p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="k">print</span> <span class="s1">&#39;Hello World&#39;</span>
+    <span class="nb">print</span> <span class="s1">&#39;Hello World&#39;</span>
     <span class="k">return</span> <span class="n">func</span>
 
 <span class="nd">@say_hello</span>
@@ -214,21 +214,20 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                 &ndash; Further reading:
                 <ul>
                     <li>
-                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
-                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
-shows how it can be used in a Python context with&nbsp;Pytest.</p>
+                        <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
+                        <p class="first last">Thoughts on the benefits of extracting library code from Python
+projects into their own&nbsp;packages.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-generators-and-yield.html">Python generators and <cite>yield</cite></a>
+                        <p class="first last">Notes to myself on generators and how to create them with generator
+expressions and the yield&nbsp;statement.</p>
 </li>
                     <li>
                         <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
                         <p class="first last">This post explores how to extract arrangement code when working with
 the Arrange Act Assert pattern so that it can be used with certainty
 across the test&nbsp;suite.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
-                        <p class="first last">Exploring the various model instance factories available for Django.
-Each factory is tested based on the quality of the instances it
-creates. Bonus: talk version and slides also&nbsp;available.</p>
 </li>
                 </ul>
         </p>
