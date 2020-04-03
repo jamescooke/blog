@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2020-04-02T23:00:00+01:00</updated><entry><title>Travis hitting GitHub’s API limits for Open Source projects</title><link href="https://jamescooke.info/travis-hitting-githubs-api-limits-for-open-source-projects.html" rel="alternate"></link><published>2020-04-02T23:00:00+01:00</published><updated>2020-04-02T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-02:/travis-hitting-githubs-api-limits-for-open-source-projects.html</id><summary type="html">&lt;p class="first last"&gt;GitHub&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt; rate limits are hurting Travis &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;#8217;s service quality.
 What does this mean for the future of the GitHub&amp;nbsp;ecosystem?&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Last week, GitHub&amp;#8217;s Dependabot created &lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138"&gt;a pull request&lt;/a&gt; with a fix to a
-vulnerability found the development dependencies of one of my &lt;span class="caps"&gt;FOSS&lt;/span&gt; projects.
+vulnerability found in the development dependencies of one of my &lt;span class="caps"&gt;FOSS&lt;/span&gt; projects.
 This was a bump to Mozilla&amp;#8217;s &lt;a class="reference external" href="https://github.com/mozilla/bleach"&gt;bleach&lt;/a&gt;, a
 project that GitHub states is used by more than 61,000 other&amp;nbsp;projects.&lt;/p&gt;
 &lt;a class="reference external image-reference" href="https://github.com/jamescooke/flake8-aaa/pull/138"&gt;&lt;img alt="GitHub's Dependabot opened a PR to bump bleach in Flake8-AAA." src="https://jamescooke.info/images/200402_pr.png" /&gt;&lt;/a&gt;
@@ -143,11 +143,11 @@ traverse external systems like Travis, Circle &lt;span class="caps"&gt;CI&lt;/sp
 &lt;div class="section" id="github-can-make-it-harder-for-ci-cd-integrations-to-keep-up"&gt;
 &lt;h3&gt;GitHub can make it harder for &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; integrations to keep&amp;nbsp;up&lt;/h3&gt;
 &lt;p&gt;Since GitHub (and therefore Microsoft) &lt;a class="reference external" href="https://dependabot.com/blog/hello-github/"&gt;acquired Dependabot in 2019&lt;/a&gt;, GitHub now has a tool which it
-can use generate a larger number of builds on &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; services integrated with
-its platform like Travis. This will have the knock on effect of making it
+can use to generate a larger number of builds on &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; services integrated with
+its platform like Travis. This will have the knock-on effect of making it
 harder for those &lt;span class="caps"&gt;CI&lt;/span&gt;/&lt;span class="caps"&gt;CD&lt;/span&gt; services to keep within their &lt;span class="caps"&gt;API&lt;/span&gt; rate limits and more
 expensive to run because they will need to buy more computing power from &lt;span class="caps"&gt;AWS&lt;/span&gt;
-and or Google to run&amp;nbsp;builds.&lt;/p&gt;
+and/or Google to run&amp;nbsp;builds.&lt;/p&gt;
 &lt;p&gt;Best of all for GitHub, they can put this pressure on others while maintaining
 the guise of &lt;a class="reference external" href="https://github.blog/2019-05-23-introducing-new-ways-to-keep-your-code-secure/#automated-security-fixes-with-dependabot"&gt;making &amp;#8220;dependency upgrades easy&amp;#8221;&lt;/a&gt;.
 Now GitHub automatically creates a pull request for any project owned by an

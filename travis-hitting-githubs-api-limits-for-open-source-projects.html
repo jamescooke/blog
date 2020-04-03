@@ -49,7 +49,7 @@
             </header>
             <div class='article-content'>
                 <p>Last week, GitHub&#8217;s Dependabot created <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138">a pull request</a> with a fix to a
-vulnerability found the development dependencies of one of my <span class="caps">FOSS</span> projects.
+vulnerability found in the development dependencies of one of my <span class="caps">FOSS</span> projects.
 This was a bump to Mozilla&#8217;s <a class="reference external" href="https://github.com/mozilla/bleach">bleach</a>, a
 project that GitHub states is used by more than 61,000 other&nbsp;projects.</p>
 <a class="reference external image-reference" href="https://github.com/jamescooke/flake8-aaa/pull/138"><img alt="GitHub's Dependabot opened a PR to bump bleach in Flake8-AAA." src="https://jamescooke.info/images/200402_pr.png" /></a>
@@ -190,11 +190,11 @@ traverse external systems like Travis, Circle <span class="caps">CI</span> or&nb
 <div class="section" id="github-can-make-it-harder-for-ci-cd-integrations-to-keep-up">
 <h3>GitHub can make it harder for <span class="caps">CI</span>/<span class="caps">CD</span> integrations to keep&nbsp;up</h3>
 <p>Since GitHub (and therefore Microsoft) <a class="reference external" href="https://dependabot.com/blog/hello-github/">acquired Dependabot in 2019</a>, GitHub now has a tool which it
-can use generate a larger number of builds on <span class="caps">CI</span>/<span class="caps">CD</span> services integrated with
-its platform like Travis. This will have the knock on effect of making it
+can use to generate a larger number of builds on <span class="caps">CI</span>/<span class="caps">CD</span> services integrated with
+its platform like Travis. This will have the knock-on effect of making it
 harder for those <span class="caps">CI</span>/<span class="caps">CD</span> services to keep within their <span class="caps">API</span> rate limits and more
 expensive to run because they will need to buy more computing power from <span class="caps">AWS</span>
-and or Google to run&nbsp;builds.</p>
+and/or Google to run&nbsp;builds.</p>
 <p>Best of all for GitHub, they can put this pressure on others while maintaining
 the guise of <a class="reference external" href="https://github.blog/2019-05-23-introducing-new-ways-to-keep-your-code-secure/#automated-security-fixes-with-dependabot">making &#8220;dependency upgrades easy&#8221;</a>.
 Now GitHub automatically creates a pull request for any project owned by an
@@ -256,19 +256,20 @@ tag                    <a href="https://jamescooke.info/tag/topictesting.html">t
                 &ndash; Further reading:
                 <ul>
                     <li>
-                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
-                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
-shows how it can be used in a Python context with&nbsp;Pytest.</p>
+                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
+                        <p class="first last">This post explores how to extract arrangement code when working with
+the Arrange Act Assert pattern so that it can be used with certainty
+across the test&nbsp;suite.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
-                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html">Cleaner unit testing with the Arrange Act Assert&nbsp;pattern</a>
-                        <p class="first last">My PyConUK 2016 talk about the <span class="caps">AAA</span> pattern for unit tests and how
-using it can help us all make our tests cleaner, easier to read
-and as Pythonic as&nbsp;possible.</p>
+                        <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
+                        <p class="first last">An updated simple assertion helper for comparing instances of
+Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
 </li>
                 </ul>
         </p>
