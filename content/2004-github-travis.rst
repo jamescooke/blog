@@ -10,7 +10,7 @@ Travis hitting GitHub's API limits for Open Source projects
 
 Last week, GitHub's Dependabot created `a pull request
 <https://github.com/jamescooke/flake8-aaa/pull/138>`_ with a fix to a
-vulnerability found the development dependencies of one of my FOSS projects.
+vulnerability found in the development dependencies of one of my FOSS projects.
 This was a bump to Mozilla's `bleach <https://github.com/mozilla/bleach>`_, a
 project that GitHub states is used by more than 61,000 other projects.
 
@@ -203,11 +203,11 @@ GitHub can make it harder for CI/CD integrations to keep up
 
 Since GitHub (and therefore Microsoft) `acquired Dependabot in 2019
 <https://dependabot.com/blog/hello-github/>`_, GitHub now has a tool which it
-can use generate a larger number of builds on CI/CD services integrated with
-its platform like Travis. This will have the knock on effect of making it
+can use to generate a larger number of builds on CI/CD services integrated with
+its platform like Travis. This will have the knock-on effect of making it
 harder for those CI/CD services to keep within their API rate limits and more
 expensive to run because they will need to buy more computing power from AWS
-and or Google to run builds.
+and/or Google to run builds.
 
 Best of all for GitHub, they can put this pressure on others while maintaining
 the guise of `making "dependency upgrades easy"
