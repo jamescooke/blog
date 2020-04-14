@@ -23,7 +23,7 @@ What is Arrange Act Assert?
 ---------------------------
 
 The "Arrange-Act-Assert" (also AAA and 3A) pattern of testing was `observed and
-named by Bill Wake in 2011
+named by Bill Wake in 2001
 <https://xp123.com/articles/3a-arrange-act-assert/>`_. I first came across it in
 `Kent Beck's book "Test Driven Development: By Example"
 <https://www.goodreads.com/book/show/387190.Test_Driven_Development>`_ and I
