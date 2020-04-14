@@ -549,7 +549,7 @@ constituent&amp;nbsp;parts.&lt;/p&gt;
 &lt;div class="section" id="what-is-arrange-act-assert"&gt;
 &lt;h2&gt;What is Arrange Act&amp;nbsp;Assert?&lt;/h2&gt;
 &lt;p&gt;The &amp;#8220;Arrange-Act-Assert&amp;#8221; (also &lt;span class="caps"&gt;AAA&lt;/span&gt; and 3A) pattern of testing was &lt;a class="reference external" href="https://xp123.com/articles/3a-arrange-act-assert/"&gt;observed and
-named by Bill Wake in 2001&lt;/a&gt;. I first came across it in
+named by Bill Wake in 2011&lt;/a&gt;. I first came across it in
 &lt;a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development"&gt;Kent Beck&amp;#8217;s book &amp;#8220;Test Driven Development: By Example&amp;#8221;&lt;/a&gt; and I
 spoke about it at &lt;a class="reference external" href="https://jamescooke.info/cleaner-unit-testing-with-the-arrange-act-assert-pattern.html"&gt;PyConUK 2016&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The pattern focuses each test on a single action. The advantage of this focus
