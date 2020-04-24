@@ -48,7 +48,12 @@
                 <p class="postdate" title="2020-04-02T23:00:00+01:00">- Posted Apr 02, 2020</p>
             </header>
             <div class='article-content'>
-                <p>Last week, GitHub&#8217;s Dependabot created <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138">a pull request</a> with a fix to a
+                <!--  -->
+<blockquote>
+<strong>Note:</strong> A newer post <a class="reference external" href="/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html">Migrating Open Source projects on Travis <span class="caps">CI</span> to fix
+GitHub <span class="caps">API</span> limit problems</a>
+has information on how to fix the problems described below.</blockquote>
+<p>Last week, GitHub&#8217;s Dependabot created <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138">a pull request</a> with a fix to a
 vulnerability found in the development dependencies of one of my <span class="caps">FOSS</span> projects.
 This was a bump to Mozilla&#8217;s <a class="reference external" href="https://github.com/mozilla/bleach">bleach</a>, a
 project that GitHub states is used by more than 61,000 other&nbsp;projects.</p>
@@ -156,6 +161,11 @@ you wanted to&nbsp;perform.</p>
 <p>Unfortunately I&#8217;ve had no success with this yet, but will continue to&nbsp;try.</p>
 </li>
 </ul>
+<!--  -->
+<blockquote>
+<strong>Update:</strong> Since writing this post I have successfully migrated projects
+to Travis dot com. My <a class="reference external" href="/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html">next post</a>
+has a list of items to remember when migrating.</blockquote>
 <p>Although I&#8217;m happy with the Travis response so far, I&#8217;m worried about what this
 means about the future of&nbsp;GitHub.</p>
 </div>
@@ -267,10 +277,10 @@ Each factory is tested based on the quality of the instances it
 creates. Bonus: talk version and slides also&nbsp;available.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
-                        <p class="first last">This post explores how to extract arrangement code when working with
-the Arrange Act Assert pattern so that it can be used with certainty
-across the test&nbsp;suite.</p>
+                        <a href="https://jamescooke.info/current-state-of-codeship.html">Current state of&nbsp;Codeship</a>
+                        <p class="first last">For the last month I&#8217;ve been using Codeship for Continuous
+Integration on my current client project. These are my current
+thoughts on this hosted service that works with Github and BitBucket&nbsp;repositories.</p>
 </li>
                 </ul>
         </p>

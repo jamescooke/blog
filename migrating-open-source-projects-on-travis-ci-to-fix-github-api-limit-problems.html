@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Open source maintainers can move their projects from travis-ci.org to travis-ci.com to get more reliable GitHub integration.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Migrating Open Source projects on Travis CI to fix GitHub API limit problems // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Migrating Open Source projects on Travis <span class="caps">CI</span> to fix GitHub <span class="caps">API</span> limit&nbsp;problems</h1>
+                <p class="postdate" title="2020-04-23T23:00:00+01:00">- Posted Apr 23, 2020</p>
+            </header>
+            <div class='article-content'>
+                <p>Previously I wrote that <a class="reference external" href="/travis-hitting-githubs-api-limits-for-open-source-projects.html">Travis dot org has been exhausting its GitHub <span class="caps">API</span> rate
+limit</a>.
+Test results for projects built on Travis dot org (travis-ci.org) have not
+been reliably reported back to GitHub. This leaves commits on GitHub in a
+pending yellow status and pull requests&nbsp;blocked.</p>
+<p>The solution is for open source maintainers to migrate their projects from
+Travis dot org to Travis dot com (travis-ci.com). This solves the <span class="caps">API</span> rate
+limit problem because Travis dot com uses GitHub Apps, whereas Travis dot org
+uses a GitHub&nbsp;integration.</p>
+<p>With GitHub Apps <a class="reference external" href="https://developer.github.com/apps/differences-between-apps/#token-based-identification">each install of the app gets its own <span class="caps">API</span> quota</a>.
+So with the Travis dot com GitHub app installed in your GitHub user or
+organisation, the 5,000 requests per hour <span class="caps">API</span> limit applies to just your
+install of the app, not globally for all Travis dot com calls to GitHub. As a
+small-time open source developer, there are no realistic future scenarios where
+my install of the app will reach 5k requests per&nbsp;hour.</p>
+<div class="section" id="key-migration-points">
+<h2>Key migration&nbsp;points</h2>
+<p>The <a class="reference external" href="https://docs.travis-ci.com/user/migrate/open-source-repository-migration/#migrating-a-repository">migration documentation on Travis</a>
+is pretty comprehensive, but watch out for these&nbsp;gotchas:</p>
+<ul>
+<li><p class="first">Make sure you &#8220;Sign up for the beta&#8221; of migration in <a class="reference external" href="https://travis-ci.org/account/repositories">your Travis dot org
+account</a>.</p>
+<img alt="Travis &quot;Sign up for beta&quot; call to action" src="https://jamescooke.info/images/200424_travis_sign_up.png" />
+<p>Without this your existing repositories will not appear in your new Travis
+dot com&nbsp;account.</p>
+</li>
+<li><p class="first">If you have required checks in the branch protection rules of your GitHub
+project repository, these need to be switched&nbsp;over.</p>
+<img alt="GitHub branch status checks required" src="https://jamescooke.info/images/200424_branch_status_checks.png" />
+<p>You will need to trigger a build on Travis dot com for these new checks to
+appear as&nbsp;options.</p>
+</li>
+<li><p class="first">Remember to change any build badges on your <span class="caps">README</span> from dot org to dot&nbsp;com.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="a-trade-off">
+<h2>A trade&nbsp;off</h2>
+<p>With GitHub apps, results of checks are kept in the Checks Framework. This
+means that when you click &#8220;details&#8221; of a Travis dot com check, you will be
+shown GitHub&#8217;s page for this check (<a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/140/checks?check_run_id=582544560">here&#8217;s an example</a>).
+Whereas with Travis dot org, clicking on the &#8220;details&#8221; link for a check took
+you straight to Travis dot&nbsp;org.</p>
+<p>Here&#8217;s how GitHub advertises this&nbsp;benefit:</p>
+<img alt="Integrations built with Checks API - Travis CI - Get a complete picture of a project’s health directly from GitHub by viewing your build's stages, jobs, and results, including the config associated with them. You can also re-run builds from within the GitHub interface." src="https://jamescooke.info/images/200424_travis_checks_integration.png" />
+<p>Once you migrate your project, Travis will be one click further away. Therefore
+you are more likely to stay on GitHub while nursing a pull request or checking
+on a&nbsp;build.</p>
+<p>While I&#8217;m sure many people consider this an improvement, I&#8217;m not a fan of the
+GitHub checks system. I prefer the old system&nbsp;because:</p>
+<ul class="simple">
+<li>It was easier and more reliable to visit the external build system&#8217;s site. As
+we&#8217;ve seen with this whole issue, communication across GitHub&#8217;s boundary can
+be&nbsp;unreliable.</li>
+<li>I prefer Travis&#8217;s interface for showing build information, not GitHub&#8217;s
+static checks&nbsp;page.</li>
+</ul>
+</div>
+<div class="section" id="finally">
+<h2>Finally</h2>
+<p>Thanks to <span class="caps">MK</span> at Travis for the help with&nbsp;migration.</p>
+<p>I&#8217;m glad that it was possible to find a way to continue to use Travis on my
+open source&nbsp;projects.</p>
+<p>Happy&nbsp;building!</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/topictesting.html">topic:testing</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/2004-travis-migration.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/travis-hitting-githubs-api-limits-for-open-source-projects.html">Travis hitting GitHub&#8217;s <span class="caps">API</span> limits for Open Source&nbsp;projects</a>
+                        <p class="first last">GitHub&#8217;s <span class="caps">API</span> rate limits are hurting Travis <span class="caps">CI</span>&#8217;s service quality.
+What does this mean for the future of the GitHub&nbsp;ecosystem?</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
+                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
+they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/django-factory-audit.html">Django Factory&nbsp;Audit</a>
+                        <p class="first last">Exploring the various model instance factories available for Django.
+Each factory is tested based on the quality of the instances it
+creates. Bonus: talk version and slides also&nbsp;available.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>

@@ -1,7 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2020-04-02T23:00:00+01:00</updated><entry><title>Travis hitting GitHub’s API limits for Open Source projects</title><link href="https://jamescooke.info/travis-hitting-githubs-api-limits-for-open-source-projects.html" rel="alternate"></link><published>2020-04-02T23:00:00+01:00</published><updated>2020-04-02T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-02:/travis-hitting-githubs-api-limits-for-open-source-projects.html</id><summary type="html">&lt;p class="first last"&gt;GitHub&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt; rate limits are hurting Travis &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;#8217;s service quality.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2020-04-23T23:00:00+01:00</updated><entry><title>Migrating Open Source projects on Travis CI to fix GitHub API limit problems</title><link href="https://jamescooke.info/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html" rel="alternate"></link><published>2020-04-23T23:00:00+01:00</published><updated>2020-04-23T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-23:/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html</id><summary type="html">&lt;p class="first last"&gt;Open source maintainers can move their projects from travis-ci.org to
+travis-ci.com to get more reliable GitHub&amp;nbsp;integration.&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Previously I wrote that &lt;a class="reference external" href="/travis-hitting-githubs-api-limits-for-open-source-projects.html"&gt;Travis dot org has been exhausting its GitHub &lt;span class="caps"&gt;API&lt;/span&gt; rate
+limit&lt;/a&gt;.
+Test results for projects built on Travis dot org (travis-ci.org) have not
+been reliably reported back to GitHub. This leaves commits on GitHub in a
+pending yellow status and pull requests&amp;nbsp;blocked.&lt;/p&gt;
+&lt;p&gt;The solution is for open source maintainers to migrate their projects from
+Travis dot org to Travis dot com (travis-ci.com). This solves the &lt;span class="caps"&gt;API&lt;/span&gt; rate
+limit problem because Travis dot com uses GitHub Apps, whereas Travis dot org
+uses a GitHub&amp;nbsp;integration.&lt;/p&gt;
+&lt;p&gt;With GitHub Apps &lt;a class="reference external" href="https://developer.github.com/apps/differences-between-apps/#token-based-identification"&gt;each install of the app gets its own &lt;span class="caps"&gt;API&lt;/span&gt; quota&lt;/a&gt;.
+So with the Travis dot com GitHub app installed in your GitHub user or
+organisation, the 5,000 requests per hour &lt;span class="caps"&gt;API&lt;/span&gt; limit applies to just your
+install of the app, not globally for all Travis dot com calls to GitHub. As a
+small-time open source developer, there are no realistic future scenarios where
+my install of the app will reach 5k requests per&amp;nbsp;hour.&lt;/p&gt;
+&lt;div class="section" id="key-migration-points"&gt;
+&lt;h2&gt;Key migration&amp;nbsp;points&lt;/h2&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://docs.travis-ci.com/user/migrate/open-source-repository-migration/#migrating-a-repository"&gt;migration documentation on Travis&lt;/a&gt;
+is pretty comprehensive, but watch out for these&amp;nbsp;gotchas:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p class="first"&gt;Make sure you &amp;#8220;Sign up for the beta&amp;#8221; of migration in &lt;a class="reference external" href="https://travis-ci.org/account/repositories"&gt;your Travis dot org
+account&lt;/a&gt;.&lt;/p&gt;
+&lt;img alt="Travis &amp;quot;Sign up for beta&amp;quot; call to action" src="https://jamescooke.info/images/200424_travis_sign_up.png" /&gt;
+&lt;p&gt;Without this your existing repositories will not appear in your new Travis
+dot com&amp;nbsp;account.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;If you have required checks in the branch protection rules of your GitHub
+project repository, these need to be switched&amp;nbsp;over.&lt;/p&gt;
+&lt;img alt="GitHub branch status checks required" src="https://jamescooke.info/images/200424_branch_status_checks.png" /&gt;
+&lt;p&gt;You will need to trigger a build on Travis dot com for these new checks to
+appear as&amp;nbsp;options.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Remember to change any build badges on your &lt;span class="caps"&gt;README&lt;/span&gt; from dot org to dot&amp;nbsp;com.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="a-trade-off"&gt;
+&lt;h2&gt;A trade&amp;nbsp;off&lt;/h2&gt;
+&lt;p&gt;With GitHub apps, results of checks are kept in the Checks Framework. This
+means that when you click &amp;#8220;details&amp;#8221; of a Travis dot com check, you will be
+shown GitHub&amp;#8217;s page for this check (&lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/140/checks?check_run_id=582544560"&gt;here&amp;#8217;s an example&lt;/a&gt;).
+Whereas with Travis dot org, clicking on the &amp;#8220;details&amp;#8221; link for a check took
+you straight to Travis dot&amp;nbsp;org.&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s how GitHub advertises this&amp;nbsp;benefit:&lt;/p&gt;
+&lt;img alt="Integrations built with Checks API - Travis CI - Get a complete picture of a project’s health directly from GitHub by viewing your build's stages, jobs, and results, including the config associated with them. You can also re-run builds from within the GitHub interface." src="https://jamescooke.info/images/200424_travis_checks_integration.png" /&gt;
+&lt;p&gt;Once you migrate your project, Travis will be one click further away. Therefore
+you are more likely to stay on GitHub while nursing a pull request or checking
+on a&amp;nbsp;build.&lt;/p&gt;
+&lt;p&gt;While I&amp;#8217;m sure many people consider this an improvement, I&amp;#8217;m not a fan of the
+GitHub checks system. I prefer the old system&amp;nbsp;because:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;It was easier and more reliable to visit the external build system&amp;#8217;s site. As
+we&amp;#8217;ve seen with this whole issue, communication across GitHub&amp;#8217;s boundary can
+be&amp;nbsp;unreliable.&lt;/li&gt;
+&lt;li&gt;I prefer Travis&amp;#8217;s interface for showing build information, not GitHub&amp;#8217;s
+static checks&amp;nbsp;page.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="finally"&gt;
+&lt;h2&gt;Finally&lt;/h2&gt;
+&lt;p&gt;Thanks to &lt;span class="caps"&gt;MK&lt;/span&gt; at Travis for the help with&amp;nbsp;migration.&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;m glad that it was possible to find a way to continue to use Travis on my
+open source&amp;nbsp;projects.&lt;/p&gt;
+&lt;p&gt;Happy&amp;nbsp;building!&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Code"></category><category term="topic:testing"></category></entry><entry><title>Travis hitting GitHub’s API limits for Open Source projects</title><link href="https://jamescooke.info/travis-hitting-githubs-api-limits-for-open-source-projects.html" rel="alternate"></link><published>2020-04-02T23:00:00+01:00</published><updated>2020-04-02T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-02:/travis-hitting-githubs-api-limits-for-open-source-projects.html</id><summary type="html">&lt;p class="first last"&gt;GitHub&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt; rate limits are hurting Travis &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;#8217;s service quality.
 What does this mean for the future of the GitHub&amp;nbsp;ecosystem?&lt;/p&gt;
-</summary><content type="html">&lt;p&gt;Last week, GitHub&amp;#8217;s Dependabot created &lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138"&gt;a pull request&lt;/a&gt; with a fix to a
+</summary><content type="html">&lt;!--  --&gt;
+&lt;blockquote&gt;
+&lt;strong&gt;Note:&lt;/strong&gt; A newer post &lt;a class="reference external" href="/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html"&gt;Migrating Open Source projects on Travis &lt;span class="caps"&gt;CI&lt;/span&gt; to fix
+GitHub &lt;span class="caps"&gt;API&lt;/span&gt; limit problems&lt;/a&gt;
+has information on how to fix the problems described below.&lt;/blockquote&gt;
+&lt;p&gt;Last week, GitHub&amp;#8217;s Dependabot created &lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa/pull/138"&gt;a pull request&lt;/a&gt; with a fix to a
 vulnerability found in the development dependencies of one of my &lt;span class="caps"&gt;FOSS&lt;/span&gt; projects.
 This was a bump to Mozilla&amp;#8217;s &lt;a class="reference external" href="https://github.com/mozilla/bleach"&gt;bleach&lt;/a&gt;, a
 project that GitHub states is used by more than 61,000 other&amp;nbsp;projects.&lt;/p&gt;
@@ -109,6 +181,11 @@ you wanted to&amp;nbsp;perform.&lt;/p&gt;
 &lt;p&gt;Unfortunately I&amp;#8217;ve had no success with this yet, but will continue to&amp;nbsp;try.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;!--  --&gt;
+&lt;blockquote&gt;
+&lt;strong&gt;Update:&lt;/strong&gt; Since writing this post I have successfully migrated projects
+to Travis dot com. My &lt;a class="reference external" href="/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html"&gt;next post&lt;/a&gt;
+has a list of items to remember when migrating.&lt;/blockquote&gt;
 &lt;p&gt;Although I&amp;#8217;m happy with the Travis response so far, I&amp;#8217;m worried about what this
 means about the future of&amp;nbsp;GitHub.&lt;/p&gt;
 &lt;/div&gt;
