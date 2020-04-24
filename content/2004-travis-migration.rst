@@ -58,9 +58,11 @@ A trade off
 -----------
 
 With GitHub apps, results of checks are kept in the Checks Framework. This
-means that when you click "details" of Travis dot com check, you will be shown
-GitHub's page for this check. Whereas with Travis dot org, clicking on the
-"details" link for a check took you straight to Travis dot org.
+means that when you click "details" of a Travis dot com check, you will be
+shown GitHub's page for this check (`here's an example
+<https://github.com/jamescooke/flake8-aaa/pull/140/checks?check_run_id=582544560>`_).
+Whereas with Travis dot org, clicking on the "details" link for a check took
+you straight to Travis dot org.
 
 Here's how GitHub advertises this benefit:
 
@@ -70,12 +72,12 @@ Here's how GitHub advertises this benefit:
         build's stages, jobs, and results, including the config associated with
         them. You can also re-run builds from within the GitHub interface.  
 
-Effectively this means that Travis will be one click further away once you
-migrate your project. Therefore you are more likely to stay on GitHub while
-nursing a pull request or checking on a build.
+Once you migrate your project, Travis will be one click further away. Therefore
+you are more likely to stay on GitHub while nursing a pull request or checking
+on a build.
 
-While I'm sure many people consider this an improvement, personally I'm not a
-fan of the GitHub checks system. I prefer the old system because:
+While I'm sure many people consider this an improvement, I'm not a fan of the
+GitHub checks system. I prefer the old system because:
 
 * It was easier and more reliable to visit the external build system's site. As
   we've seen with this whole issue, communication across GitHub's boundary can
