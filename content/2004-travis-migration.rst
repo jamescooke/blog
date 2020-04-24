@@ -10,9 +10,9 @@ Migrating Open Source projects on Travis CI to fix GitHub API limit problems
 
 Previously I wrote that `Travis dot org has been exhausting its GitHub API rate
 limit </travis-hitting-githubs-api-limits-for-open-source-projects.html>`_.
-Test results for projects tested on Travis dot org (travis-ci.org) have not
-been reliably reported back to GitHub. This leaves builds in a pending yellow
-status and pull requests blocked.
+Test results for projects built on Travis dot org (travis-ci.org) have not
+been reliably reported back to GitHub. This leaves commits on GitHub in a
+pending yellow status and pull requests blocked.
 
 The solution is for open source maintainers to migrate their projects from
 Travis dot org to Travis dot com (travis-ci.com). This solves the API rate
@@ -24,7 +24,7 @@ With GitHub Apps `each install of the app gets its own API quota
 So with the Travis dot com GitHub app installed in your GitHub user or
 organisation, the 5,000 requests per hour API limit applies to just your
 install of the app, not globally for all Travis dot com calls to GitHub. As a
-small-time open source developer, this are no realistic future scenarios where
+small-time open source developer, there are no realistic future scenarios where
 my install of the app will reach 5k requests per hour.
 
 Key migration points
@@ -49,8 +49,8 @@ is pretty comprehensive, but watch out for these gotchas:
   .. image:: |filename| images/200424_branch_status_checks.png
       :alt: GitHub branch status checks required
 
-  You will need to trigger a build on Travis dot com for these to appear as
-  options in the list of possible checks.
+  You will need to trigger a build on Travis dot com for these new checks to
+  appear as options.
 
 * Remember to change any build badges on your README from dot org to dot com.
 
@@ -77,9 +77,9 @@ nursing a pull request or checking on a build.
 While I'm sure many people consider this an improvement, personally I'm not a
 fan of the GitHub checks system. I prefer the old system because:
 
-* It was easier to visit the external build system's site and this gives more
-  reliable results. As we've seen with this whole issue, communication across
-  GitHub's boundary can be unreliable.
+* It was easier and more reliable to visit the external build system's site. As
+  we've seen with this whole issue, communication across GitHub's boundary can
+  be unreliable.
 
 * I prefer Travis's interface for showing build information, not GitHub's
   static checks page.
