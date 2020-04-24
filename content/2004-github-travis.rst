@@ -8,6 +8,13 @@ Travis hitting GitHub's API limits for Open Source projects
     What does this mean for the future of the GitHub ecosystem?
 :scm_path: content/2004-github-travis.rst
 
+..
+
+    **Note:** A newer post `Migrating Open Source projects on Travis CI to fix
+    GitHub API limit problems
+    </migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html>`_
+    has information on how to fix the problems described below.
+
 Last week, GitHub's Dependabot created `a pull request
 <https://github.com/jamescooke/flake8-aaa/pull/138>`_ with a fix to a
 vulnerability found in the development dependencies of one of my FOSS projects.
@@ -156,6 +163,13 @@ In response to the mail itself:
       you wanted to perform.
 
   Unfortunately I've had no success with this yet, but will continue to try.
+
+..
+
+    **Update:** Since writing this post I have successfully migrated projects
+    to Travis dot com. My `next post
+    </migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html>`_
+    has a list of items to remember when migrating.
 
 Although I'm happy with the Travis response so far, I'm worried about what this
 means about the future of GitHub.
