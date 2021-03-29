@@ -4,19 +4,41 @@
 #
 #    pip-compile
 #
-blinker==1.4              # via pelican
-click==7.1.1              # via pip-tools
-docutils==0.16            # via pelican
-feedgenerator==1.9.1      # via pelican
-ghp-import==0.5.5         # via -r requirements.in
-jinja2==2.11.1            # via pelican
-markupsafe==1.1.1         # via jinja2
-pelican==4.2.0            # via -r requirements.in
-pip-tools==4.5.1          # via -r requirements.in
-pygments==2.6.1           # via pelican
-python-dateutil==2.8.1    # via pelican
-pytz==2019.3              # via feedgenerator, pelican
-six==1.14.0               # via feedgenerator, pelican, pip-tools, python-dateutil
-smartypants==2.0.1        # via typogrify
-typogrify==2.0.7          # via -r requirements.in
-unidecode==1.1.1          # via pelican
+blinker==1.4
+    # via pelican
+click==7.1.1
+    # via pip-tools
+docutils==0.16
+    # via pelican
+feedgenerator==1.9.1
+    # via pelican
+ghp-import==0.5.5
+    # via -r requirements.in
+jinja2==2.11.1
+    # via pelican
+markupsafe==1.1.1
+    # via jinja2
+pelican==4.2.0
+    # via -r requirements.in
+pip-tools==4.5.1
+    # via -r requirements.in
+pygments==2.7.4
+    # via pelican
+python-dateutil==2.8.1
+    # via pelican
+pytz==2019.3
+    # via
+    #   feedgenerator
+    #   pelican
+six==1.14.0
+    # via
+    #   feedgenerator
+    #   pelican
+    #   pip-tools
+    #   python-dateutil
+smartypants==2.0.1
+    # via typogrify
+typogrify==2.0.7
+    # via -r requirements.in
+unidecode==1.1.1
+    # via pelican
