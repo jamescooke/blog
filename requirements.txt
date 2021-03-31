@@ -14,7 +14,7 @@ feedgenerator==1.9.1
     # via pelican
 ghp-import==0.5.5
     # via -r requirements.in
-jinja2==2.11.1
+jinja2==2.11.3
     # via pelican
 markupsafe==1.1.1
     # via jinja2
