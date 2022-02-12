@@ -1,7 +1,7 @@
 Fublo Ltd
 =========
 
-.. image:: |filename|/images/fublo.gif
+.. image:: |static|/images/fublo.gif
     :alt: Fublo Ltd (Dissolved) logo - "Goal Driven Digital"
 
 
@@ -27,6 +27,6 @@ Current work
 ------------
 
 Currently I'm working as a `Python contractor
-<{filename}/pages/coding-cooke.rst>`_, mainly on web projects.
+<{static}/pages/coding-cooke.rst>`_, mainly on web projects.
 
 Thanks for stopping by.
