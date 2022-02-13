@@ -29,7 +29,7 @@ wanted to update their templates to the new syntax.
 Here's the warning from the `URL tag documentation
 <https://docs.djangoproject.com/en/1.5/ref/templates/builtins/#std:templatetag-url>`_.
 
-.. image:: |filename|/images/url-warning.png
+.. image:: |static|/images/url-warning.png
     :alt: Screenshot of warning from Django documentation. Warning reads:
           "Don't forget to put quotes around the function path or pattern name!
 

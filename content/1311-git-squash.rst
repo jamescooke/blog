@@ -29,7 +29,7 @@ And I jumped straight in with...
 
 Then, as part of our following conversation, I drew a picture:
 
-.. image:: |filename|/images/git.jpg
+.. image:: |static|/images/git.jpg
     :alt: Git squashing, feature versus history
 
 ..

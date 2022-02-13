@@ -37,7 +37,7 @@ is pretty comprehensive, but watch out for these gotchas:
 * Make sure you "Sign up for the beta" of migration in `your Travis dot org
   account <https://travis-ci.org/account/repositories>`_.
 
-  .. image:: |filename| images/200424_travis_sign_up.png
+  .. image:: |static| images/200424_travis_sign_up.png
       :alt: Travis "Sign up for beta" call to action
 
   Without this your existing repositories will not appear in your new Travis
@@ -46,7 +46,7 @@ is pretty comprehensive, but watch out for these gotchas:
 * If you have required checks in the branch protection rules of your GitHub
   project repository, these need to be switched over.
 
-  .. image:: |filename| images/200424_branch_status_checks.png
+  .. image:: |static| images/200424_branch_status_checks.png
       :alt: GitHub branch status checks required
 
   You will need to trigger a build on Travis dot com for these new checks to
@@ -66,7 +66,7 @@ you straight to Travis dot org.
 
 Here's how GitHub advertises this benefit:
 
-.. image:: |filename| images/200424_travis_checks_integration.png
+.. image:: |static| images/200424_travis_checks_integration.png
     :alt: Integrations built with Checks API - Travis CI - Get a complete
         picture of a project’s health directly from GitHub by viewing your
         build's stages, jobs, and results, including the config associated with
