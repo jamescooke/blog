@@ -15,8 +15,6 @@ welcome. There are three main channels:
   comment"](https://github.com/jamescooke/blog/issues?q=is%3Aissue+label%3A%22blog+comment%22)
   label for easy access.
 
-***
-
 The rest of this README is mainly notes to myself to install the required
 packages, build and deploy the generated HTML pages to GitHub's static sites.
 
@@ -31,6 +29,10 @@ git clone git@github.com:jamescooke/blog
 git clone git@github.com:jamescooke/droidstrap
 git clone --recursive https://github.com/getpelican/pelican-plugins
 ```
+
+> Note: cloning submodules with `--recursive` triggers calling ctags, which
+> errors because paths aren't correct. This causes git to think that the
+> submodules are not cloned, but they seem to work fine.
 
 Make an output folder and then set up the virtualenv.
 

@@ -3,7 +3,7 @@ Hello, my name is James
 
 Thanks for visiting my site - the content here is primarily technical.
 
-.. image:: |filename|/images/whiteboard.jpg
+.. image:: |static|/images/whiteboard.jpg
     :alt: James Cooke at a whiteboard
 
 
@@ -24,7 +24,7 @@ predominantly developing code that creates, validates and manages data, usually
 serving it to a web or mobile app.
 
 For more information you can download a `PDF version of my CV
-<{filename}/docs/james_cooke_cv.pdf>`_.
+<{static}/docs/james_cooke_cv.pdf>`_.
 
 Contact
 -------

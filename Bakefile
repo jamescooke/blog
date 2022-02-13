@@ -6,7 +6,7 @@ ifneq "$(wildcard $(venv_folder) )" ""
 	bin_prefix=$(venv_folder)/bin/
 endif
 
-# Make a python 2.7 virtual environment at venv
+# Make a python 3 virtual environment at venv
 .PHONY: venv
 venv:
 	virtualenv $(venv_folder) --python=python3
