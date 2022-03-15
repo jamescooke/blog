@@ -26,7 +26,7 @@ did great work for clients like Fallon London, Time Out and We Are Social.
 Current work
 ------------
 
-Currently I'm working as a `Python contractor
-<{static}/pages/coding-cooke.rst>`_, mainly on web projects.
+Currently I work at Mixcloud. For more info `see the small Work section on my
+about page <{filename}about.rst#work>`_.
 
 Thanks for stopping by.
