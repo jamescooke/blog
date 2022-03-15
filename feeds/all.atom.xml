@@ -370,15 +370,15 @@ over-complicated, break the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern an
 developers. See &lt;a class="reference external" href="/arrange-act-assert-pattern-for-python-developers.html"&gt;Part 1&lt;/a&gt; for an
 introduction to the pattern and outline of its constituent&amp;nbsp;parts.&lt;/li&gt;
 &lt;li&gt;When I mention &amp;#8220;code extraction&amp;#8221; I&amp;#8217;m primarily referring to the Extract
-Method &lt;a class="footnote-reference" href="#em" id="id1"&gt;[1]&lt;/a&gt; of refactoring. &lt;a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development"&gt;Kent Beck&amp;#8217;s book &amp;#8220;Test Driven Development: By
+Method &lt;a class="footnote-reference" href="#em" id="footnote-reference-1"&gt;[1]&lt;/a&gt; of refactoring. &lt;a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development"&gt;Kent Beck&amp;#8217;s book &amp;#8220;Test Driven Development: By
 Example&amp;#8221;&lt;/a&gt; really
 turned me on to the value in eliminating duplicated code between tests and
-between tests and the &lt;span class="caps"&gt;SUT&lt;/span&gt; &lt;a class="footnote-reference" href="#sut" id="id2"&gt;[2]&lt;/a&gt;.&lt;/li&gt;
+between tests and the &lt;span class="caps"&gt;SUT&lt;/span&gt; &lt;a class="footnote-reference" href="#sut" id="footnote-reference-2"&gt;[2]&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;I&amp;#8217;m using &lt;a class="reference external" href="https://docs.pytest.org/en/latest/"&gt;pytest&lt;/a&gt; in this example
 which means that fixtures are marked with the &lt;tt class="docutils literal"&gt;&amp;#64;pytest.fixture&lt;/tt&gt; decorator.
 If you&amp;#8217;re using &lt;tt class="docutils literal"&gt;unittest&lt;/tt&gt; then you could extract the set up code into the
 &lt;tt class="docutils literal"&gt;TestCase.setUp&lt;/tt&gt; method.&lt;/li&gt;
-&lt;li&gt;If you can, perform Extract Method while your test suite is &lt;span class="caps"&gt;GREEN&lt;/span&gt; &lt;a class="footnote-reference" href="#green" id="id3"&gt;[3]&lt;/a&gt;.
+&lt;li&gt;If you can, perform Extract Method while your test suite is &lt;span class="caps"&gt;GREEN&lt;/span&gt; &lt;a class="footnote-reference" href="#green" id="footnote-reference-3"&gt;[3]&lt;/a&gt;.
 This means that you can be more assured that your refactoring has worked
 without&amp;nbsp;errors.&lt;/li&gt;
 &lt;li&gt;During my work I often build permission systems that manage access to
@@ -394,7 +394,7 @@ are used that other programmers may be familiar with&amp;nbsp;already.&lt;/li&gt
 &lt;p&gt;I&amp;#8217;ve found that this problem, which I call &amp;#8220;Complicated Setup&amp;#8221;, occurs as a test suite grows and
 the complexity of the tests on the outside of the code&amp;nbsp;increases.&lt;/p&gt;
 &lt;p&gt;Tests will often need to combine a number of objects in increasingly complex
-states to build the &lt;span class="caps"&gt;SUT&lt;/span&gt; &lt;a class="footnote-reference" href="#sut" id="id4"&gt;[2]&lt;/a&gt;. As a result, additional assertions are
+states to build the &lt;span class="caps"&gt;SUT&lt;/span&gt; &lt;a class="footnote-reference" href="#sut" id="footnote-reference-4"&gt;[2]&lt;/a&gt;. As a result, additional assertions are
 required before the Act block to ensure that the test conditions are correctly
 established. The problem with these additional assertions is that
 they break the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern because there should be no assertions in the Arrange&amp;nbsp;block.&lt;/p&gt;
@@ -534,7 +534,7 @@ brought the code back into conformity with the &lt;span class="caps"&gt;AAA&lt;/
 fit the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern that I advocated in Part 1 of this series and the resulting
 code&amp;#8217;s structure has a number of advantages for the future of the test&amp;nbsp;suite:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p class="first"&gt;Continued development on the fixture can happen using &lt;span class="caps"&gt;TDD&lt;/span&gt; &lt;a class="footnote-reference" href="#tdd" id="id5"&gt;[4]&lt;/a&gt; by adding
+&lt;li&gt;&lt;p class="first"&gt;Continued development on the fixture can happen using &lt;span class="caps"&gt;TDD&lt;/span&gt; &lt;a class="footnote-reference" href="#tdd" id="footnote-reference-5"&gt;[4]&lt;/a&gt; by adding
 new requirements to &lt;tt class="docutils literal"&gt;test_fixture()&lt;/tt&gt; and then expanding the fixture to get
 back to &lt;span class="caps"&gt;GREEN&lt;/span&gt;.&lt;/p&gt;
 &lt;/li&gt;
@@ -561,7 +561,7 @@ software it&amp;#8217;s&amp;nbsp;testing.&lt;/p&gt;
 &lt;p&gt;When the fixture was arrived at via &amp;#8220;Complicated setup&amp;#8221; then my answer is
 &amp;#8220;yes&amp;#8221;. As we&amp;#8217;ve seen, the &lt;tt class="docutils literal"&gt;test_fixture()&lt;/tt&gt; test remains to pin the fixture&amp;#8217;s
 behaviour and assert that the &lt;span class="caps"&gt;SUT&lt;/span&gt; is in the expected&amp;nbsp;state.&lt;/p&gt;
-&lt;p&gt;When the fixture has been extracted because of &amp;#8220;Setup duplication&amp;#8221; &lt;a class="footnote-reference" href="#sd" id="id6"&gt;[5]&lt;/a&gt; there will
+&lt;p&gt;When the fixture has been extracted because of &amp;#8220;Setup duplication&amp;#8221; &lt;a class="footnote-reference" href="#sd" id="footnote-reference-6"&gt;[5]&lt;/a&gt; there will
 be a fixture created that does not have its own explicit test. Instead, the
 fixture is tested implicitly by the two tests but does not have a dedicated
 test of its&amp;nbsp;own.&lt;/p&gt;
@@ -581,13 +581,13 @@ Assert&amp;nbsp;pattern.&lt;/p&gt;
 &lt;table class="docutils footnote" frame="void" id="em" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Extract Method is a refactoring step &lt;a class="reference external" href="https://refactoring.com/catalog/extractMethod.html"&gt;defined here&lt;/a&gt;.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#footnote-reference-1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Extract Method is a refactoring step &lt;a class="reference external" href="https://refactoring.com/catalog/extractMethod.html"&gt;defined here&lt;/a&gt;.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="sut" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;[2]&lt;/td&gt;&lt;td&gt;&lt;em&gt;(&lt;a class="fn-backref" href="#id2"&gt;1&lt;/a&gt;, &lt;a class="fn-backref" href="#id4"&gt;2&lt;/a&gt;)&lt;/em&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/System_under_test"&gt;System Under Test&lt;/a&gt; I&amp;#8217;ve used this to mean the
+&lt;tr&gt;&lt;td class="label"&gt;[2]&lt;/td&gt;&lt;td&gt;&lt;em&gt;(&lt;a class="fn-backref" href="#footnote-reference-2"&gt;1&lt;/a&gt;, &lt;a class="fn-backref" href="#footnote-reference-4"&gt;2&lt;/a&gt;)&lt;/em&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/System_under_test"&gt;System Under Test&lt;/a&gt; I&amp;#8217;ve used this to mean the
 Unit under test, there is no implication around the size of the &amp;#8220;system&amp;#8221; or
 &amp;#8220;unit&amp;#8221;.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
@@ -595,19 +595,19 @@ Unit under test, there is no implication around the size of the &amp;#8220;syste
 &lt;table class="docutils footnote" frame="void" id="green" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;span class="caps"&gt;GREEN&lt;/span&gt; is the name for the state when all tests in your suite pass.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#footnote-reference-3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;span class="caps"&gt;GREEN&lt;/span&gt; is the name for the state when all tests in your suite pass.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="tdd" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id5"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Test Driven Development.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#footnote-reference-5"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Test Driven Development.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="sd" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id6"&gt;[5]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Setup duplication: My name for the situation where there are large
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#footnote-reference-6"&gt;[5]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Setup duplication: My name for the situation where there are large
 chunks of Arrange code duplicated between tests. This topic warrants a
 follow-up post.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
@@ -703,14 +703,14 @@ Adam!&lt;/a&gt;).&lt;/li&gt;
 &lt;div class="section" id="docstring"&gt;
 &lt;h2&gt;Docstring&lt;/h2&gt;
 &lt;p&gt;An optional short single line statement about the behaviour under&amp;nbsp;test.&lt;/p&gt;
-&lt;div class="section" id="id1"&gt;
+&lt;div class="section" id="example-1"&gt;
 &lt;h3&gt;Example&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;list.reverse inverts the order of items in a list, in place&lt;/span&gt;
 &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id2"&gt;
+&lt;div class="section" id="guidelines-1"&gt;
 &lt;h3&gt;Guidelines&lt;/h3&gt;
 &lt;p&gt;Docstrings are not part of the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern. Consider if your test needs one or
 if you are best to omit it for&amp;nbsp;simplicity.&lt;/p&gt;
@@ -749,14 +749,14 @@ the moment? Is this a &lt;tt class="docutils literal"&gt;&lt;span class="caps"&g
 &lt;div class="section" id="arrange"&gt;
 &lt;h2&gt;Arrange&lt;/h2&gt;
 &lt;p&gt;The block of code that sets up the conditions for the test&amp;nbsp;action.&lt;/p&gt;
-&lt;div class="section" id="id3"&gt;
+&lt;div class="section" id="example-2"&gt;
 &lt;h3&gt;Example&lt;/h3&gt;
 &lt;p&gt;There&amp;#8217;s not much work to do in this example to build a list, so the arrangement
 block is just one&amp;nbsp;line.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;greek&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;beta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gamma&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;delta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id4"&gt;
+&lt;div class="section" id="guidelines-2"&gt;
 &lt;h3&gt;Guidelines&lt;/h3&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Use a single block of code with no empty&amp;nbsp;lines.&lt;/li&gt;
@@ -779,12 +779,12 @@ is establishing the expected conditions as previously&amp;nbsp;mentioned.&lt;/li
 &lt;div class="section" id="act"&gt;
 &lt;h2&gt;Act&lt;/h2&gt;
 &lt;p&gt;The line of code where the Action is taken on the &lt;span class="caps"&gt;SUT&lt;/span&gt;.&lt;/p&gt;
-&lt;div class="section" id="id5"&gt;
+&lt;div class="section" id="example-3"&gt;
 &lt;h3&gt;Example&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;greek&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id6"&gt;
+&lt;div class="section" id="guidelines-3"&gt;
 &lt;h3&gt;Guidelines&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;Start every Action line with &lt;tt class="docutils literal"&gt;result =&lt;/tt&gt;.&lt;/p&gt;
@@ -810,13 +810,13 @@ this case your action will be two lines surrounded by empty&amp;nbsp;lines.&lt;/
 &lt;h2&gt;Assert&lt;/h2&gt;
 &lt;p&gt;The block of code that performs the assertions on the state of the &lt;span class="caps"&gt;SUT&lt;/span&gt; after
 the&amp;nbsp;action.&lt;/p&gt;
-&lt;div class="section" id="id7"&gt;
+&lt;div class="section" id="example-4"&gt;
 &lt;h3&gt;Example&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;
 &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;greek&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;delta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gamma&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;beta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id8"&gt;
+&lt;div class="section" id="guidelines-4"&gt;
 &lt;h3&gt;Guidelines&lt;/h3&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Use a single block of code with no empty&amp;nbsp;lines.&lt;/li&gt;
@@ -1588,7 +1588,7 @@ install, need to adjust your workflow, packages,&amp;nbsp;etc.&lt;/li&gt;
 &lt;h2&gt;Notes about each&amp;nbsp;library&lt;/h2&gt;
 &lt;p&gt;Grading each library was often harder than I thought it would be because many
 don&amp;#8217;t fall into one grading or another. Where that has happened I&amp;#8217;ve noted it&amp;nbsp;below.&lt;/p&gt;
-&lt;div class="section" id="id1"&gt;
+&lt;div class="section" id="django-fakery-1"&gt;
 &lt;h3&gt;Django&amp;nbsp;Fakery&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ItemFactory&lt;/strong&gt; &lt;img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /&gt; &lt;span class="caps"&gt;RED&lt;/span&gt;&lt;/p&gt;
@@ -1604,7 +1604,7 @@ when collisions occur, but any Users created are&amp;nbsp;valid.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id2"&gt;
+&lt;div class="section" id="factory-boy-1"&gt;
 &lt;h3&gt;Factory&amp;nbsp;Boy&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ItemFactory&lt;/strong&gt; &lt;img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /&gt; &lt;span class="caps"&gt;RED&lt;/span&gt;&lt;/p&gt;
@@ -1619,7 +1619,7 @@ saves&amp;nbsp;it.&lt;/p&gt;
 fails this test hard. If the library was extended to call &lt;tt class="docutils literal"&gt;full_clean&lt;/tt&gt; for
 generated instances before saving then it could be upgraded to &lt;span class="caps"&gt;YELLOW&lt;/span&gt;.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id3"&gt;
+&lt;div class="section" id="factory-djoy-1"&gt;
 &lt;h3&gt;Factory&amp;nbsp;Djoy&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ItemFactory&lt;/strong&gt; &lt;img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /&gt; &lt;span class="caps"&gt;YELLOW&lt;/span&gt;&lt;/p&gt;
@@ -1637,7 +1637,7 @@ is generated and&amp;nbsp;retried.&lt;/p&gt;
 &lt;p&gt;Factory Djoy contains only one simple strategy for creating &lt;tt class="docutils literal"&gt;Users&lt;/tt&gt;. It has
 no inspection ability to create strategies of its own based on&amp;nbsp;Models.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id4"&gt;
+&lt;div class="section" id="hypothesis-django-1"&gt;
 &lt;h3&gt;Hypothesis[django]&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ItemFactory&lt;/strong&gt; &lt;img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /&gt; &lt;span class="caps"&gt;RED&lt;/span&gt;&lt;/p&gt;
@@ -1656,7 +1656,7 @@ it doesn&amp;#8217;t call &lt;tt class="docutils literal"&gt;full_clean&lt;/tt&g
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id5"&gt;
+&lt;div class="section" id="mixer-1"&gt;
 &lt;h3&gt;Mixer&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ItemFactory&lt;/strong&gt; &lt;img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /&gt; &lt;span class="caps"&gt;GREEN&lt;/span&gt;&lt;/p&gt;
@@ -1677,7 +1677,7 @@ place. I found this the hardest factory library to work&amp;nbsp;with.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;div class="section" id="id6"&gt;
+&lt;div class="section" id="model-mommy-1"&gt;
 &lt;h3&gt;Model&amp;nbsp;Mommy&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ItemFactory&lt;/strong&gt; &lt;img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /&gt; &lt;span class="caps"&gt;YELLOW&lt;/span&gt;&lt;/p&gt;
@@ -1712,7 +1712,7 @@ on top of the Factory Boy &lt;span class="caps"&gt;API&lt;/span&gt;.&lt;/li&gt;
 call to &lt;tt class="docutils literal"&gt;full_clean&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;Yes, there is a performance overhead to calling &lt;tt class="docutils literal"&gt;full_clean&lt;/tt&gt; but my opinion
 is that eliminating the &lt;tt class="docutils literal"&gt;D/V&lt;/tt&gt; set of invalid instances is worth the effort
-and makes the test suite &amp;#8220;fundamentally simpler&amp;#8221; &lt;a class="footnote-reference" href="#id9" id="id7"&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+and makes the test suite &amp;#8220;fundamentally simpler&amp;#8221; &lt;a class="footnote-reference" href="#footnote-1" id="footnote-reference-1"&gt;[1]&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;My future thinking is that if Hypothesis can improve its interface to Django it
 could be the&amp;nbsp;winner.&lt;/p&gt;
 &lt;/div&gt;
@@ -1733,10 +1733,10 @@ still be a problem. &lt;a class="reference external" href="https://adamj.eu/tech
 Request on the blog&amp;#8217;s repository&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Happy&amp;nbsp;fabricating!&lt;/p&gt;
-&lt;table class="docutils footnote" frame="void" id="id9" rules="none"&gt;
+&lt;table class="docutils footnote" frame="void" id="footnote-1" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id7"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;!--  --&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#footnote-reference-1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;!--  --&gt;
 &lt;blockquote&gt;
 Taking a few percent hit, going a little slower, in order to do
 something that&amp;#8217;s just fundamentally simpler&amp;#8221;&lt;/blockquote&gt;
@@ -2706,7 +2706,7 @@ be completely empty), then both tests&amp;nbsp;pass.&lt;/p&gt;
 Creating &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
 ..
 ----------------------------------------------------------------------
-Ran &lt;span class="m"&gt;2&lt;/span&gt; tests in &lt;span class="m"&gt;0&lt;/span&gt;.027s
+Ran &lt;span class="m"&gt;2&lt;/span&gt; tests &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;.027s
 
 OK
 Destroying &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
@@ -2728,12 +2728,12 @@ E.
 ERROR: test_get &lt;span class="o"&gt;(&lt;/span&gt;mini.tests.Tests&lt;span class="o"&gt;)&lt;/span&gt;
 ----------------------------------------------------------------------
 Traceback &lt;span class="o"&gt;(&lt;/span&gt;most recent call last&lt;span class="o"&gt;)&lt;/span&gt;:
-  File &lt;span class="s2"&gt;&amp;quot;/home/james/active/mini/mmm/mini/tests.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;9&lt;/span&gt;, in test_get
+  File &lt;span class="s2"&gt;&amp;quot;/home/james/active/mini/mmm/mini/tests.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;9&lt;/span&gt;, &lt;span class="k"&gt;in&lt;/span&gt; test_get
       self.assertEqual&lt;span class="o"&gt;(&lt;/span&gt;response.context.get&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;, &lt;span class="s1"&gt;&amp;#39;Homer&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 AttributeError: &lt;span class="s1"&gt;&amp;#39;ContextList&amp;#39;&lt;/span&gt; object has no attribute &lt;span class="s1"&gt;&amp;#39;get&amp;#39;&lt;/span&gt;
 
 ----------------------------------------------------------------------
-Ran &lt;span class="m"&gt;2&lt;/span&gt; tests in &lt;span class="m"&gt;0&lt;/span&gt;.029s
+Ran &lt;span class="m"&gt;2&lt;/span&gt; tests &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;.029s
 
 FAILED &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;errors&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 Destroying &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...

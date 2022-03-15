@@ -57,15 +57,15 @@ over-complicated, break the <span class="caps">AAA</span> pattern and benefit fr
 developers. See <a class="reference external" href="/arrange-act-assert-pattern-for-python-developers.html">Part 1</a> for an
 introduction to the pattern and outline of its constituent&nbsp;parts.</li>
 <li>When I mention &#8220;code extraction&#8221; I&#8217;m primarily referring to the Extract
-Method <a class="footnote-reference" href="#em" id="id1">[1]</a> of refactoring. <a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development">Kent Beck&#8217;s book &#8220;Test Driven Development: By
+Method <a class="footnote-reference" href="#em" id="footnote-reference-1">[1]</a> of refactoring. <a class="reference external" href="https://www.goodreads.com/book/show/387190.Test_Driven_Development">Kent Beck&#8217;s book &#8220;Test Driven Development: By
 Example&#8221;</a> really
 turned me on to the value in eliminating duplicated code between tests and
-between tests and the <span class="caps">SUT</span> <a class="footnote-reference" href="#sut" id="id2">[2]</a>.</li>
+between tests and the <span class="caps">SUT</span> <a class="footnote-reference" href="#sut" id="footnote-reference-2">[2]</a>.</li>
 <li>I&#8217;m using <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a> in this example
 which means that fixtures are marked with the <tt class="docutils literal">&#64;pytest.fixture</tt> decorator.
 If you&#8217;re using <tt class="docutils literal">unittest</tt> then you could extract the set up code into the
 <tt class="docutils literal">TestCase.setUp</tt> method.</li>
-<li>If you can, perform Extract Method while your test suite is <span class="caps">GREEN</span> <a class="footnote-reference" href="#green" id="id3">[3]</a>.
+<li>If you can, perform Extract Method while your test suite is <span class="caps">GREEN</span> <a class="footnote-reference" href="#green" id="footnote-reference-3">[3]</a>.
 This means that you can be more assured that your refactoring has worked
 without&nbsp;errors.</li>
 <li>During my work I often build permission systems that manage access to
@@ -81,7 +81,7 @@ are used that other programmers may be familiar with&nbsp;already.</li>
 <p>I&#8217;ve found that this problem, which I call &#8220;Complicated Setup&#8221;, occurs as a test suite grows and
 the complexity of the tests on the outside of the code&nbsp;increases.</p>
 <p>Tests will often need to combine a number of objects in increasingly complex
-states to build the <span class="caps">SUT</span> <a class="footnote-reference" href="#sut" id="id4">[2]</a>. As a result, additional assertions are
+states to build the <span class="caps">SUT</span> <a class="footnote-reference" href="#sut" id="footnote-reference-4">[2]</a>. As a result, additional assertions are
 required before the Act block to ensure that the test conditions are correctly
 established. The problem with these additional assertions is that
 they break the <span class="caps">AAA</span> pattern because there should be no assertions in the Arrange&nbsp;block.</p>
@@ -221,7 +221,7 @@ brought the code back into conformity with the <span class="caps">AAA</span>&nbs
 fit the <span class="caps">AAA</span> pattern that I advocated in Part 1 of this series and the resulting
 code&#8217;s structure has a number of advantages for the future of the test&nbsp;suite:</p>
 <ul>
-<li><p class="first">Continued development on the fixture can happen using <span class="caps">TDD</span> <a class="footnote-reference" href="#tdd" id="id5">[4]</a> by adding
+<li><p class="first">Continued development on the fixture can happen using <span class="caps">TDD</span> <a class="footnote-reference" href="#tdd" id="footnote-reference-5">[4]</a> by adding
 new requirements to <tt class="docutils literal">test_fixture()</tt> and then expanding the fixture to get
 back to <span class="caps">GREEN</span>.</p>
 </li>
@@ -248,7 +248,7 @@ software it&#8217;s&nbsp;testing.</p>
 <p>When the fixture was arrived at via &#8220;Complicated setup&#8221; then my answer is
 &#8220;yes&#8221;. As we&#8217;ve seen, the <tt class="docutils literal">test_fixture()</tt> test remains to pin the fixture&#8217;s
 behaviour and assert that the <span class="caps">SUT</span> is in the expected&nbsp;state.</p>
-<p>When the fixture has been extracted because of &#8220;Setup duplication&#8221; <a class="footnote-reference" href="#sd" id="id6">[5]</a> there will
+<p>When the fixture has been extracted because of &#8220;Setup duplication&#8221; <a class="footnote-reference" href="#sd" id="footnote-reference-6">[5]</a> there will
 be a fixture created that does not have its own explicit test. Instead, the
 fixture is tested implicitly by the two tests but does not have a dedicated
 test of its&nbsp;own.</p>
@@ -268,13 +268,13 @@ Assert&nbsp;pattern.</p>
 <table class="docutils footnote" frame="void" id="em" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Extract Method is a refactoring step <a class="reference external" href="https://refactoring.com/catalog/extractMethod.html">defined here</a>.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#footnote-reference-1">[1]</a></td><td>Extract Method is a refactoring step <a class="reference external" href="https://refactoring.com/catalog/extractMethod.html">defined here</a>.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="sut" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://en.wikipedia.org/wiki/System_under_test">System Under Test</a> I&#8217;ve used this to mean the
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#footnote-reference-2">1</a>, <a class="fn-backref" href="#footnote-reference-4">2</a>)</em> <a class="reference external" href="https://en.wikipedia.org/wiki/System_under_test">System Under Test</a> I&#8217;ve used this to mean the
 Unit under test, there is no implication around the size of the &#8220;system&#8221; or
 &#8220;unit&#8221;.</td></tr>
 </tbody>
@@ -282,19 +282,19 @@ Unit under test, there is no implication around the size of the &#8220;system&#8
 <table class="docutils footnote" frame="void" id="green" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><span class="caps">GREEN</span> is the name for the state when all tests in your suite pass.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#footnote-reference-3">[3]</a></td><td><span class="caps">GREEN</span> is the name for the state when all tests in your suite pass.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="tdd" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>Test Driven Development.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#footnote-reference-5">[4]</a></td><td>Test Driven Development.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="sd" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Setup duplication: My name for the situation where there are large
+<tr><td class="label"><a class="fn-backref" href="#footnote-reference-6">[5]</a></td><td>Setup duplication: My name for the situation where there are large
 chunks of Arrange code duplicated between tests. This topic warrants a
 follow-up post.</td></tr>
 </tbody>
@@ -317,6 +317,11 @@ tags                    <a href="https://jamescooke.info/tag/languagepython.html
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                    <li>
                         <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
                         <p class="first last">An updated simple assertion helper for comparing instances of
 Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
@@ -326,10 +331,6 @@ Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
                         <p class="first last">Exploring the various model instance factories available for Django.
 Each factory is tested based on the quality of the instances it
 creates. Bonus: talk version and slides also&nbsp;available.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
-                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
 </li>
                 </ul>
         </p>

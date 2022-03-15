@@ -326,7 +326,7 @@ install, need to adjust your workflow, packages,&nbsp;etc.</li>
 <h2>Notes about each&nbsp;library</h2>
 <p>Grading each library was often harder than I thought it would be because many
 don&#8217;t fall into one grading or another. Where that has happened I&#8217;ve noted it&nbsp;below.</p>
-<div class="section" id="id1">
+<div class="section" id="django-fakery-1">
 <h3>Django&nbsp;Fakery</h3>
 <ul>
 <li><p class="first"><strong>ItemFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
@@ -342,7 +342,7 @@ when collisions occur, but any Users created are&nbsp;valid.</p>
 </li>
 </ul>
 </div>
-<div class="section" id="id2">
+<div class="section" id="factory-boy-1">
 <h3>Factory&nbsp;Boy</h3>
 <ul>
 <li><p class="first"><strong>ItemFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
@@ -357,7 +357,7 @@ saves&nbsp;it.</p>
 fails this test hard. If the library was extended to call <tt class="docutils literal">full_clean</tt> for
 generated instances before saving then it could be upgraded to <span class="caps">YELLOW</span>.</p>
 </div>
-<div class="section" id="id3">
+<div class="section" id="factory-djoy-1">
 <h3>Factory&nbsp;Djoy</h3>
 <ul>
 <li><p class="first"><strong>ItemFactory</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
@@ -375,7 +375,7 @@ is generated and&nbsp;retried.</p>
 <p>Factory Djoy contains only one simple strategy for creating <tt class="docutils literal">Users</tt>. It has
 no inspection ability to create strategies of its own based on&nbsp;Models.</p>
 </div>
-<div class="section" id="id4">
+<div class="section" id="hypothesis-django-1">
 <h3>Hypothesis[django]</h3>
 <ul>
 <li><p class="first"><strong>ItemFactory</strong> <img alt="red_circle" src="https://jamescooke.info/images/red_circle.png" style="width: 25px;" /> <span class="caps">RED</span></p>
@@ -394,7 +394,7 @@ it doesn&#8217;t call <tt class="docutils literal">full_clean</tt> on generated 
 </li>
 </ul>
 </div>
-<div class="section" id="id5">
+<div class="section" id="mixer-1">
 <h3>Mixer</h3>
 <ul>
 <li><p class="first"><strong>ItemFactory</strong> <img alt="green_heart" src="https://jamescooke.info/images/green_heart.png" style="width: 25px;" /> <span class="caps">GREEN</span></p>
@@ -415,7 +415,7 @@ place. I found this the hardest factory library to work&nbsp;with.</p>
 </li>
 </ul>
 </div>
-<div class="section" id="id6">
+<div class="section" id="model-mommy-1">
 <h3>Model&nbsp;Mommy</h3>
 <ul>
 <li><p class="first"><strong>ItemFactory</strong> <img alt="yellow_heart" src="https://jamescooke.info/images/yellow_heart.png" style="width: 25px;" /> <span class="caps">YELLOW</span></p>
@@ -450,7 +450,7 @@ on top of the Factory Boy <span class="caps">API</span>.</li>
 call to <tt class="docutils literal">full_clean</tt>.</p>
 <p>Yes, there is a performance overhead to calling <tt class="docutils literal">full_clean</tt> but my opinion
 is that eliminating the <tt class="docutils literal">D/V</tt> set of invalid instances is worth the effort
-and makes the test suite &#8220;fundamentally simpler&#8221; <a class="footnote-reference" href="#id9" id="id7">[1]</a>.</p>
+and makes the test suite &#8220;fundamentally simpler&#8221; <a class="footnote-reference" href="#footnote-1" id="footnote-reference-1">[1]</a>.</p>
 <p>My future thinking is that if Hypothesis can improve its interface to Django it
 could be the&nbsp;winner.</p>
 </div>
@@ -471,10 +471,10 @@ still be a problem. <a class="reference external" href="https://adamj.eu/tech/20
 Request on the blog&#8217;s repository</a>.</li>
 </ul>
 <p>Happy&nbsp;fabricating!</p>
-<table class="docutils footnote" frame="void" id="id9" rules="none">
+<table class="docutils footnote" frame="void" id="footnote-1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id7">[1]</a></td><td><!--  -->
+<tr><td class="label"><a class="fn-backref" href="#footnote-reference-1">[1]</a></td><td><!--  -->
 <blockquote>
 Taking a few percent hit, going a little slower, in order to do
 something that&#8217;s just fundamentally simpler&#8221;</blockquote>
@@ -510,9 +510,10 @@ Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
                         <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
 </li>
                     <li>
-                        <a href="https://jamescooke.info/python-unittest-asserttrue-is-truthy-assertfalse-is-falsy.html">Python unittest: <cite>assertTrue</cite> is truthy, <cite>assertFalse</cite> is&nbsp;falsy</a>
-                        <p class="first last">Exploring Python&#8217;s <tt class="docutils literal">unittest</tt> module boolean assert methods and how
-they can be misleading in certain situations, but not if you <span class="caps">RTFM</span> of&nbsp;course.</p>
+                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
+                        <p class="first last">This post explores how to extract arrangement code when working with
+the Arrange Act Assert pattern so that it can be used with certainty
+across the test&nbsp;suite.</p>
 </li>
                 </ul>
         </p>

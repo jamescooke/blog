@@ -136,14 +136,14 @@ Adam!</a>).</li>
 <div class="section" id="docstring">
 <h2>Docstring</h2>
 <p>An optional short single line statement about the behaviour under&nbsp;test.</p>
-<div class="section" id="id1">
+<div class="section" id="example-1">
 <h3>Example</h3>
 <div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">list.reverse inverts the order of items in a list, in place</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<div class="section" id="id2">
+<div class="section" id="guidelines-1">
 <h3>Guidelines</h3>
 <p>Docstrings are not part of the <span class="caps">AAA</span> pattern. Consider if your test needs one or
 if you are best to omit it for&nbsp;simplicity.</p>
@@ -182,14 +182,14 @@ the moment? Is this a <tt class="docutils literal"><span class="caps">TODO</span
 <div class="section" id="arrange">
 <h2>Arrange</h2>
 <p>The block of code that sets up the conditions for the test&nbsp;action.</p>
-<div class="section" id="id3">
+<div class="section" id="example-2">
 <h3>Example</h3>
 <p>There&#8217;s not much work to do in this example to build a list, so the arrangement
 block is just one&nbsp;line.</p>
 <div class="highlight"><pre><span></span><span class="n">greek</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="id4">
+<div class="section" id="guidelines-2">
 <h3>Guidelines</h3>
 <ul class="simple">
 <li>Use a single block of code with no empty&nbsp;lines.</li>
@@ -212,12 +212,12 @@ is establishing the expected conditions as previously&nbsp;mentioned.</li>
 <div class="section" id="act">
 <h2>Act</h2>
 <p>The line of code where the Action is taken on the <span class="caps">SUT</span>.</p>
-<div class="section" id="id5">
+<div class="section" id="example-3">
 <h3>Example</h3>
 <div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">greek</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="section" id="id6">
+<div class="section" id="guidelines-3">
 <h3>Guidelines</h3>
 <ul>
 <li><p class="first">Start every Action line with <tt class="docutils literal">result =</tt>.</p>
@@ -243,13 +243,13 @@ this case your action will be two lines surrounded by empty&nbsp;lines.</p>
 <h2>Assert</h2>
 <p>The block of code that performs the assertions on the state of the <span class="caps">SUT</span> after
 the&nbsp;action.</p>
-<div class="section" id="id7">
+<div class="section" id="example-4">
 <h3>Example</h3>
 <div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span>
 <span class="k">assert</span> <span class="n">greek</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="id8">
+<div class="section" id="guidelines-4">
 <h3>Guidelines</h3>
 <ul class="simple">
 <li>Use a single block of code with no empty&nbsp;lines.</li>
@@ -307,6 +307,12 @@ tags                    <a href="https://jamescooke.info/tag/languagepython.html
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
+                        <p class="first last">This post explores how to extract arrangement code when working with
+the Arrange Act Assert pattern so that it can be used with certainty
+across the test&nbsp;suite.</p>
+</li>
+                    <li>
                         <a href="https://jamescooke.info/comparing-django-q-objects-in-python-3-with-pytest.html">Comparing Django Q Objects in Python 3 with&nbsp;pytest</a>
                         <p class="first last">An updated simple assertion helper for comparing instances of
 Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
@@ -316,10 +322,6 @@ Django&#8217;s Q objects using pytest in Python&nbsp;3.</p>
                         <p class="first last">Exploring the various model instance factories available for Django.
 Each factory is tested based on the quality of the instances it
 creates. Bonus: talk version and slides also&nbsp;available.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/comparing-django-q-objects.html">Comparing Django Q&nbsp;Objects</a>
-                        <p class="first last">A super simple assertion helper for comparing instances of Django&#8217;s Q&nbsp;objects.</p>
 </li>
                 </ul>
         </p>
