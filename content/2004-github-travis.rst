@@ -21,7 +21,7 @@ vulnerability found in the development dependencies of one of my FOSS projects.
 This was a bump to Mozilla's `bleach <https://github.com/mozilla/bleach>`_, a
 project that GitHub states is used by more than 61,000 other projects.
 
-.. image:: |filename| images/200402_pr.png
+.. image:: |static| images/200402_pr.png
     :alt: GitHub's Dependabot opened a PR to bump bleach in Flake8-AAA.
     :target: https://github.com/jamescooke/flake8-aaa/pull/138
 
@@ -39,7 +39,7 @@ Unreported build status
 However, when I checked on the Dependabot Pull Request, GitHub was still
 waiting for the status of its Travis build to be reported.
 
-.. image:: |filename|/images/200401_some_checks_havent_completed_yet.png
+.. image:: |static|/images/200401_some_checks_havent_completed_yet.png
     :alt: GitHub's merge dialogue box showing that expected tests have not
         completed.
 
@@ -53,7 +53,7 @@ the call from Travis to GitHub to report the build status on the commit failed
 for some reason.
 
 
-.. image:: |filename|/images/200402_green_build.png
+.. image:: |static|/images/200402_green_build.png
     :alt: Travis build of the Dependabot PR is green.
 
 
@@ -79,7 +79,7 @@ Next, while checking the `GitHub status page <https://www.githubstatus.com/>`_
 and `Travis status page <https://www.traviscistatus.com/>`_, I found this
 status update on the Travis site:
 
-.. image:: |filename| images/200402_travis_status.png
+.. image:: |static| images/200402_travis_status.png
     :alt: Travis status page shows GitHub commit status issue: GitHub status
         may not be posted on commits occasionally from builds using the legacy
         Services integration.

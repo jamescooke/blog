@@ -18,7 +18,7 @@ bad smell? Is there something bad I don't know about this tech? Even worse is
 when you look around those quiet forums (or tags in Stack Overflow) you find
 comments like this about the library you're being asked to use:
 
-.. image:: |filename|/images/mako.png
+.. image:: |static|/images/mako.png
     :alt: Screenshot of comment on StackOverflow. Comment reads: "Suggestion:
           Don't use Mako. It's horrible. [...]"
 

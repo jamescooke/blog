@@ -11,17 +11,17 @@ Tech
 ----
 
 Python is my programming language of choice. I've worked with other programming
-languages, but Python has been my favourite for about the last eight years.
+languages, but Python has been my favourite for about the last 10 years.
 
-I love Linux. I've used other operating systems, but for the last 20 years I've
-been using one or another Linux distribution at home and work.
+I love Linux. I've used other operating systems, but for the last 20 years or
+so I've been using one or another Linux distribution at home and work.
 
 Work
 ----
 
-At work, I usually focus on server-side development, so day to day I'm
-predominantly developing code that creates, validates and manages data, usually
-serving it to a web or mobile app.
+For the majority of my career, I've worked as a software engineer. I've dabbled
+with various tech management roles, teaching and design, but programming is my
+calling.
 
 For more information you can download a `PDF version of my CV
 <{static}/docs/james_cooke_cv.pdf>`_.

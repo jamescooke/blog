@@ -26,7 +26,7 @@ reaches the database.
 This is the way that I've been looking at Django model instances - for a single
 model we can imagine sets of instances which might look like:
 
-.. image:: |filename|/images/venn.png
+.. image:: |static|/images/venn.png
     :alt: Venn diagram showing sets of Django model instances grouped by
         validity.
     :width: 500
@@ -442,11 +442,11 @@ Happy fabricating!
     
     Brandon Rhodes, Pycon UK 2016
 
-.. |red_circle| image:: |filename|/images/red_circle.png
+.. |red_circle| image:: |static|/images/red_circle.png
     :width: 25
 
-.. |yellow_heart| image:: |filename|/images/yellow_heart.png
+.. |yellow_heart| image:: |static|/images/yellow_heart.png
     :width: 25
 
-.. |green_heart| image:: |filename|/images/green_heart.png
+.. |green_heart| image:: |static|/images/green_heart.png
     :width: 25
