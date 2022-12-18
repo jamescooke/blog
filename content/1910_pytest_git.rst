@@ -1,16 +1,17 @@
 Pytest_cache and gitignore
 ==========================
 
-:date: 2019-10-24 23:00
-:tags: language:python
+:date: 2022-12-19 00:15
+:tags: language:python, git
 :category: Code
-:summary: Sanity checking Pytest's gitignore file.
-:scm_path: content/1804-pysyncgateway.rst
+:summary: Sanity checking Pytest's .gitignore file.
+:scm_path: content/1910_pytest_git.rst
 
-This post is about sanity checking.
+This post is about sanity checking. It was written at the end of 2019, but not
+published until the end of 2022.
 
-TL;DR
------
+TL;DR 🥱
+---------
 
 * Pytest prevents its ``.pytest_cache`` directory from getting into Git
   repositories by adding a ``.gitignore`` file inside it.
@@ -18,8 +19,8 @@ TL;DR
 * You can check any path, real or imaginary, with ``git check-ignore`` to see
   if it will be ignored.
 
-The story
----------
+The (long) story 📜
+-------------------
 
 This week I was working on a project using Pytest.
 
@@ -34,8 +35,12 @@ To ensure that I started from a clean place, I went to clean out the
 mild panic - I had completely forgotten to add it to project's ``.gitignore``
 file!
 
-Had I accidentally committed it?! Was this why ``pytest --lf`` was being
-strange?!
+**Had I accidentally committed the ``.pytest_cache`` dir?!**
+
+Was this why ``pytest --lf`` was being strange?!
+
+Not in Git
+..........
 
 Firstly I was able to reassure myself that I'd not accidentally committed it:
 ``git log`` can accept a path, so when ``git log -- .pytest_cache`` came back
@@ -48,8 +53,11 @@ that I want from the Github ``gitignore`` repo:
 https://github.com/github/gitignore/blob/master/Python.gitignore . I can see
 the line in there for ``.pytest_cache`` but I'd forgotten to add it.
 
-Why is the ``.pytest_cache`` directory being ignored by Git if I've not written
-a pattern for it into ``.gitignore``?
+**Why is the ``.pytest_cache`` directory being ignored by Git if I've not
+written a pattern for it into ``.gitignore``?**
+
+Checking ignored files
+......................
 
 At first I thought that one of the existing patterns might be matching the
 ``.pytest_cache`` path. To check this I went through deleting lines from the
@@ -57,23 +65,28 @@ At first I thought that one of the existing patterns might be matching the
 appear!
 
 Then I went and found that there is a super-helpful ``git check-ignore``
-command. (You can read some of the background of this command on Stack Overflow
-: https://stackoverflow.com/a/12168102/1286705)
+command. (You can read some of the background of this command on `Stack
+Overflow <https://stackoverflow.com/a/12168102/1286705>`_)
 
-So now I can run ::
+So now I can call::
 
-    $ git check-ignore -v .pytest_cache/
+    git check-ignore -v .pytest_cache/
 
 And get back::
 
     .pytest_cache/.gitignore:2:*    .pytest_cache/
 
-What does this mean? This took me a few minutes and more prodding to grok, but,
-it is saying that there is a file ``.pytest_cache/.gitignore`` and line 2 of
-that file is ``*``. This is the rule that is being applied.
+What does this mean?
+
+This took me a few minutes and more prodding to grok, but, it is saying that
+there is a file ``.pytest_cache/.gitignore`` and line 2 of that file is ``*``.
+This is the rule that is being applied.
 
 So - Pytest creates its own ``.gitignore`` file in the cache to prevent it
 being included! Phew, what a journey!
+
+A bit more digging
+..................
 
 So now we have an opportunity to learn a little bit about Pytest. From some
 searching, I found that this feature was introduced in #3982
