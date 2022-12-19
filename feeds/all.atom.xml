@@ -1,5 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2020-04-23T23:00:00+01:00</updated><entry><title>Migrating Open Source projects on Travis CI to fix GitHub API limit problems</title><link href="https://jamescooke.info/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html" rel="alternate"></link><published>2020-04-23T23:00:00+01:00</published><updated>2020-04-23T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-23:/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html</id><summary type="html">&lt;p class="first last"&gt;Open source maintainers can move their projects from travis-ci.org to
+<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2022-12-19T15:00:00+00:00</updated><entry><title>Pytest’s cache and gitignore</title><link href="https://jamescooke.info/pytests-cache-and-gitignore.html" rel="alternate"></link><published>2022-12-19T15:00:00+00:00</published><updated>2022-12-19T15:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2022-12-19:/pytests-cache-and-gitignore.html</id><summary type="html">&lt;p class="first last"&gt;Sanity checking Pytest&amp;#8217;s &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; files.&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;This post is about sanity checking. It was written at the end of 2019, but not
+published until the end of 2022. The underlying change to Pytest&amp;#8217;s cache
+directories was made in &lt;tt class="docutils literal"&gt;3.8.1&lt;/tt&gt;, released at the end of&amp;nbsp;2018.&lt;/p&gt;
+&lt;div class="section" id="tl-dr"&gt;
+&lt;h2&gt;&lt;span class="caps"&gt;TL&lt;/span&gt;;&lt;span class="caps"&gt;DR&lt;/span&gt;&amp;nbsp;🥱&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;You can check any path, real or imaginary, with &lt;tt class="docutils literal"&gt;git &lt;span class="pre"&gt;check-ignore&lt;/span&gt;&lt;/tt&gt; to see
+if Git will ignore it or&amp;nbsp;not.&lt;/li&gt;
+&lt;li&gt;Pytest prevents its cache directory &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; from getting into Git
+repositories by adding a &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; file inside&amp;nbsp;them.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-long-story"&gt;
+&lt;h2&gt;The (long) story&amp;nbsp;📜&lt;/h2&gt;
+&lt;p&gt;While working on a project using Pytest, &lt;tt class="docutils literal"&gt;pytest &lt;span class="pre"&gt;--lf&lt;/span&gt;&lt;/tt&gt; was not selecting all
+possible&amp;nbsp;tests.&lt;/p&gt;
+&lt;p&gt;The &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;--lf&lt;/span&gt;&lt;/tt&gt; flag tells Pytest to run &lt;a class="reference external" href="https://docs.pytest.org/en/latest/cache.html#rerunning-only-failures-or-failures-first"&gt;the tests that failed in the last run&lt;/a&gt;
+and those test IDs are stored in Pytest&amp;#8217;s&amp;nbsp;cache.&lt;/p&gt;
+&lt;p&gt;To ensure that I started from a clean place, I went to clean out the
+&lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; directory. But while I was looking at that directory, I had a
+mild panic - I had completely forgotten to add it to project&amp;#8217;s &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt;
+file!&lt;/p&gt;
+&lt;p&gt;Had I accidentally committed the &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; dir?!&lt;/p&gt;
+&lt;p&gt;Was this why &lt;tt class="docutils literal"&gt;pytest &lt;span class="pre"&gt;--lf&lt;/span&gt;&lt;/tt&gt; was being&amp;nbsp;strange?!&lt;/p&gt;
+&lt;div class="section" id="not-in-git"&gt;
+&lt;h3&gt;Not in&amp;nbsp;Git&lt;/h3&gt;
+&lt;p&gt;Firstly, I was able to reassure myself that I&amp;#8217;d &lt;em&gt;not&lt;/em&gt; accidentally committed
+the cache directory: &lt;tt class="docutils literal"&gt;git log&lt;/tt&gt; can accept a path, so when &lt;tt class="docutils literal"&gt;git log &lt;span class="pre"&gt;--&lt;/span&gt;
+.pytest_cache&lt;/tt&gt; came back empty, this was reassuring. It was not committed to
+the&amp;nbsp;repo!&lt;/p&gt;
+&lt;p&gt;However, there was no entry for &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; in &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;I usually populate the &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; for Python projects by lifting the lines
+that I want from the &lt;a class="reference external" href="https://github.com/github/gitignore/blob/master/Python.gitignore"&gt;Github gitignore repo&lt;/a&gt;, but I&amp;#8217;d
+forgotten to copy over the line for &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;Why is the &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; directory being ignored by Git if I&amp;#8217;ve not written
+a pattern for it into &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt;?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="checking-ignored-files"&gt;
+&lt;h3&gt;Checking ignored&amp;nbsp;files&lt;/h3&gt;
+&lt;p&gt;My guess was one of the existing patterns in &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; might be matching
+the &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; path. To check this I went through deleting lines from
+the file until it was empty. But even with an empty ignore file,
+&lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; still did not get picked up by&amp;nbsp;Git!&lt;/p&gt;
+&lt;p&gt;Then I went and found that there is a super-helpful &lt;tt class="docutils literal"&gt;git &lt;span class="pre"&gt;check-ignore&lt;/span&gt;&lt;/tt&gt;
+command. You can read some of the background of this command on &lt;a class="reference external" href="https://stackoverflow.com/a/12168102/1286705"&gt;Stack Overflow&lt;/a&gt;. This can be used to check
+what Git ignore thinks of a&amp;nbsp;path.&lt;/p&gt;
+&lt;p&gt;So now I can&amp;nbsp;call:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+git check-ignore -v .pytest_cache/
+&lt;/pre&gt;
+&lt;p&gt;And get&amp;nbsp;back:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+.pytest_cache/.gitignore:2:*    .pytest_cache/
+&lt;/pre&gt;
+&lt;p&gt;This&amp;nbsp;means:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;There is a file &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;.pytest_cache/.gitignore&lt;/span&gt;&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;Line 2 of that file is &lt;tt class="docutils literal"&gt;*&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;This rule is being applied to &lt;tt class="docutils literal"&gt;.pytest_cache/&lt;/tt&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So - Pytest creates its own &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; file in the cache to prevent it
+being included! Phew, what a journey!&amp;nbsp;😪&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="a-bit-more-investigation"&gt;
+&lt;h3&gt;A bit more&amp;nbsp;investigation&lt;/h3&gt;
+&lt;p&gt;So now we have an opportunity to learn a little bit about&amp;nbsp;Pytest&amp;#8230;&lt;/p&gt;
+&lt;p&gt;From some searching, I found that the inclusion of a &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; file in
+Pytest&amp;#8217;s cache directories was a&amp;nbsp;feature:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Introduced in &lt;a class="reference external" href="https://github.com/pytest-dev/pytest/pull/3982"&gt;Pull #3982: Ignore pytest cache&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;To solve &lt;a class="reference external" href="https://github.com/pytest-dev/pytest/issues/3286"&gt;Issue #3286: .pytest_cache is showing up in projects git repos&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Previously, Pytest had renamed its cache directory from &lt;tt class="docutils literal"&gt;.cache&lt;/tt&gt; to
+&lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt;. As a result, on projects where maintainers hadn&amp;#8217;t updated
+their ignore files, the new cache directories had been committed by&amp;nbsp;accident.&lt;/p&gt;
+&lt;p&gt;In looking at the Pytest team&amp;#8217;s response, what&amp;#8217;s interesting to me is the
+trade-off&amp;nbsp;between:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Pytest developers do nothing. Let Pytest users update their &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt;
+files or other &lt;span class="caps"&gt;SCM&lt;/span&gt; ignore methods,&amp;nbsp;or&amp;#8230;&lt;/li&gt;
+&lt;li&gt;Pytest developers take some action. Prevent the folder being added to &lt;span class="caps"&gt;SCM&lt;/span&gt;
+systems or some other&amp;nbsp;fix.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In the discussion on the Issue, &lt;a class="reference external" href="https://github.com/pytest-dev/pytest/issues/3286#issuecomment-393142058"&gt;this comment&lt;/a&gt;
+shows the idea of a &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;.pytest_cache/.gitignore&lt;/span&gt;&lt;/tt&gt; file coming into&amp;nbsp;being:&lt;/p&gt;
+&lt;blockquote&gt;
+another devious idea - if we add a &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; with the content &lt;tt class="docutils literal"&gt;*&lt;/tt&gt;
+then the folder is protected as well and people dont need to track manually&lt;/blockquote&gt;
+&lt;p&gt;But all decisions have&amp;nbsp;consequences.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="less-might-be-more"&gt;
+&lt;h3&gt;Less might be&amp;nbsp;more&lt;/h3&gt;
+&lt;p&gt;For me I would prefer to follow &lt;a class="reference external" href="https://www.python.org/dev/peps/pep-0020/#id3"&gt;the Zen of Python&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+Explicit is better than implicit.&lt;/blockquote&gt;
+&lt;p&gt;I would vote for: Let Pytest users update their ignore&amp;nbsp;mechanisms.&lt;/p&gt;
+&lt;p&gt;This would&amp;nbsp;mean:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Pytest &lt;span class="caps"&gt;SCM&lt;/span&gt; users learn that &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; exists and add it to their
+&lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; or&amp;nbsp;similar.&lt;/li&gt;
+&lt;li&gt;Confusion is avoided because no directories are unexpectedly ignored by Git.
+(Confusion as you can see in my case above and also in &lt;a class="reference external" href="https://github.com/pytest-dev/pytest/issues/4886"&gt;this issue&lt;/a&gt;.)&lt;/li&gt;
+&lt;li&gt;Other side effects do not occur, like this ones mentioned in the issue above
+regarding Debian packaging or&amp;nbsp;search.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To the wider open source issue, I think that projects that do less will last
+better than projects that do too much. I would generally take trade-offs where
+less is done rather than&amp;nbsp;more.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reflection-2022"&gt;
+&lt;h2&gt;Reflection&amp;nbsp;2022&lt;/h2&gt;
+&lt;p&gt;Much of this post was written in 2019, much has happened, my confusion has&amp;nbsp;lessened.&lt;/p&gt;
+&lt;p&gt;If you ask &amp;#8220;did the Pytest team do the right thing by adding &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; to
+the newly named &lt;tt class="docutils literal"&gt;.pytest_cache&lt;/tt&gt; directories?&amp;#8221;, then my answer is &lt;strong&gt;yes&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;It seems to have been a successful strategy and is even &lt;a class="reference external" href="https://github.com/python/mypy/pull/8193"&gt;used by mypy&lt;/a&gt; with a hat-tip to Ronny
+Pfannschmidt&amp;#8217;s original comment suggesting the&amp;nbsp;idea.&lt;/p&gt;
+&lt;p&gt;While editing this post, I found &lt;a class="reference external" href="https://github.com/pytest-dev/pytest/issues/4886#issuecomment-470498105"&gt;two&lt;/a&gt;
+&lt;a class="reference external" href="https://github.com/pytest-dev/pytest/issues/4886#issuecomment-469877128"&gt;quotes&lt;/a&gt;
+from Ronny that I&amp;#8217;ll end&amp;nbsp;with:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;we would be more than happy to have a better way (like&amp;nbsp;xdg)&lt;/p&gt;
+&lt;p&gt;but lets be realistic here - the added .gitignore protects beginner uses
+from a very common mistake, that&amp;#8217;s why its&amp;nbsp;there&lt;/p&gt;
+&lt;p&gt;its a practical solution to a practical problem and has a interference&amp;nbsp;component&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&amp;#8230;&lt;/p&gt;
+&lt;blockquote&gt;
+from my pov its an absolutely acceptable tradeoff to prevent a lot of
+developer pain by inflicting a extra step on package maintainers&lt;/blockquote&gt;
+&lt;p&gt;Nice one Pytest team for looking after new developers!&amp;nbsp;🙌&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Code"></category><category term="language:python"></category><category term="git"></category></entry><entry><title>Migrating Open Source projects on Travis CI to fix GitHub API limit problems</title><link href="https://jamescooke.info/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html" rel="alternate"></link><published>2020-04-23T23:00:00+01:00</published><updated>2020-04-23T23:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2020-04-23:/migrating-open-source-projects-on-travis-ci-to-fix-github-api-limit-problems.html</id><summary type="html">&lt;p class="first last"&gt;Open source maintainers can move their projects from travis-ci.org to
 travis-ci.com to get more reliable GitHub&amp;nbsp;integration.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Previously I wrote that &lt;a class="reference external" href="/travis-hitting-githubs-api-limits-for-open-source-projects.html"&gt;Travis dot org has been exhausting its GitHub &lt;span class="caps"&gt;API&lt;/span&gt; rate
 limit&lt;/a&gt;.

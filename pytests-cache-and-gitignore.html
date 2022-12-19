@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="Sanity checking Pytest’s .gitignore files.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Pytest’s cache and gitignore // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                                                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Pytest&#8217;s cache and&nbsp;gitignore</h1>
+                <p class="postdate" title="2022-12-19T15:00:00+00:00">- Posted Dec 19, 2022</p>
+            </header>
+            <div class='article-content'>
+                <p>This post is about sanity checking. It was written at the end of 2019, but not
+published until the end of 2022. The underlying change to Pytest&#8217;s cache
+directories was made in <tt class="docutils literal">3.8.1</tt>, released at the end of&nbsp;2018.</p>
+<div class="section" id="tl-dr">
+<h2><span class="caps">TL</span>;<span class="caps">DR</span>&nbsp;🥱</h2>
+<ul class="simple">
+<li>You can check any path, real or imaginary, with <tt class="docutils literal">git <span class="pre">check-ignore</span></tt> to see
+if Git will ignore it or&nbsp;not.</li>
+<li>Pytest prevents its cache directory <tt class="docutils literal">.pytest_cache</tt> from getting into Git
+repositories by adding a <tt class="docutils literal">.gitignore</tt> file inside&nbsp;them.</li>
+</ul>
+</div>
+<div class="section" id="the-long-story">
+<h2>The (long) story&nbsp;📜</h2>
+<p>While working on a project using Pytest, <tt class="docutils literal">pytest <span class="pre">--lf</span></tt> was not selecting all
+possible&nbsp;tests.</p>
+<p>The <tt class="docutils literal"><span class="pre">--lf</span></tt> flag tells Pytest to run <a class="reference external" href="https://docs.pytest.org/en/latest/cache.html#rerunning-only-failures-or-failures-first">the tests that failed in the last run</a>
+and those test IDs are stored in Pytest&#8217;s&nbsp;cache.</p>
+<p>To ensure that I started from a clean place, I went to clean out the
+<tt class="docutils literal">.pytest_cache</tt> directory. But while I was looking at that directory, I had a
+mild panic - I had completely forgotten to add it to project&#8217;s <tt class="docutils literal">.gitignore</tt>
+file!</p>
+<p>Had I accidentally committed the <tt class="docutils literal">.pytest_cache</tt> dir?!</p>
+<p>Was this why <tt class="docutils literal">pytest <span class="pre">--lf</span></tt> was being&nbsp;strange?!</p>
+<div class="section" id="not-in-git">
+<h3>Not in&nbsp;Git</h3>
+<p>Firstly, I was able to reassure myself that I&#8217;d <em>not</em> accidentally committed
+the cache directory: <tt class="docutils literal">git log</tt> can accept a path, so when <tt class="docutils literal">git log <span class="pre">--</span>
+.pytest_cache</tt> came back empty, this was reassuring. It was not committed to
+the&nbsp;repo!</p>
+<p>However, there was no entry for <tt class="docutils literal">.pytest_cache</tt> in <tt class="docutils literal">.gitignore</tt>.</p>
+<p>I usually populate the <tt class="docutils literal">.gitignore</tt> for Python projects by lifting the lines
+that I want from the <a class="reference external" href="https://github.com/github/gitignore/blob/master/Python.gitignore">Github gitignore repo</a>, but I&#8217;d
+forgotten to copy over the line for <tt class="docutils literal">.pytest_cache</tt>.</p>
+<p>Why is the <tt class="docutils literal">.pytest_cache</tt> directory being ignored by Git if I&#8217;ve not written
+a pattern for it into <tt class="docutils literal">.gitignore</tt>?</p>
+</div>
+<div class="section" id="checking-ignored-files">
+<h3>Checking ignored&nbsp;files</h3>
+<p>My guess was one of the existing patterns in <tt class="docutils literal">.gitignore</tt> might be matching
+the <tt class="docutils literal">.pytest_cache</tt> path. To check this I went through deleting lines from
+the file until it was empty. But even with an empty ignore file,
+<tt class="docutils literal">.pytest_cache</tt> still did not get picked up by&nbsp;Git!</p>
+<p>Then I went and found that there is a super-helpful <tt class="docutils literal">git <span class="pre">check-ignore</span></tt>
+command. You can read some of the background of this command on <a class="reference external" href="https://stackoverflow.com/a/12168102/1286705">Stack Overflow</a>. This can be used to check
+what Git ignore thinks of a&nbsp;path.</p>
+<p>So now I can&nbsp;call:</p>
+<pre class="literal-block">
+git check-ignore -v .pytest_cache/
+</pre>
+<p>And get&nbsp;back:</p>
+<pre class="literal-block">
+.pytest_cache/.gitignore:2:*    .pytest_cache/
+</pre>
+<p>This&nbsp;means:</p>
+<ul class="simple">
+<li>There is a file <tt class="docutils literal"><span class="pre">.pytest_cache/.gitignore</span></tt>.</li>
+<li>Line 2 of that file is <tt class="docutils literal">*</tt>.</li>
+<li>This rule is being applied to <tt class="docutils literal">.pytest_cache/</tt>.</li>
+</ul>
+<p>So - Pytest creates its own <tt class="docutils literal">.gitignore</tt> file in the cache to prevent it
+being included! Phew, what a journey!&nbsp;😪</p>
+</div>
+<div class="section" id="a-bit-more-investigation">
+<h3>A bit more&nbsp;investigation</h3>
+<p>So now we have an opportunity to learn a little bit about&nbsp;Pytest&#8230;</p>
+<p>From some searching, I found that the inclusion of a <tt class="docutils literal">.gitignore</tt> file in
+Pytest&#8217;s cache directories was a&nbsp;feature:</p>
+<ul class="simple">
+<li>Introduced in <a class="reference external" href="https://github.com/pytest-dev/pytest/pull/3982">Pull #3982: Ignore pytest cache</a>.</li>
+<li>To solve <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/3286">Issue #3286: .pytest_cache is showing up in projects git repos</a>.</li>
+</ul>
+<p>Previously, Pytest had renamed its cache directory from <tt class="docutils literal">.cache</tt> to
+<tt class="docutils literal">.pytest_cache</tt>. As a result, on projects where maintainers hadn&#8217;t updated
+their ignore files, the new cache directories had been committed by&nbsp;accident.</p>
+<p>In looking at the Pytest team&#8217;s response, what&#8217;s interesting to me is the
+trade-off&nbsp;between:</p>
+<ul class="simple">
+<li>Pytest developers do nothing. Let Pytest users update their <tt class="docutils literal">.gitignore</tt>
+files or other <span class="caps">SCM</span> ignore methods,&nbsp;or&#8230;</li>
+<li>Pytest developers take some action. Prevent the folder being added to <span class="caps">SCM</span>
+systems or some other&nbsp;fix.</li>
+</ul>
+<p>In the discussion on the Issue, <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/3286#issuecomment-393142058">this comment</a>
+shows the idea of a <tt class="docutils literal"><span class="pre">.pytest_cache/.gitignore</span></tt> file coming into&nbsp;being:</p>
+<blockquote>
+another devious idea - if we add a <tt class="docutils literal">.gitignore</tt> with the content <tt class="docutils literal">*</tt>
+then the folder is protected as well and people dont need to track manually</blockquote>
+<p>But all decisions have&nbsp;consequences.</p>
+</div>
+<div class="section" id="less-might-be-more">
+<h3>Less might be&nbsp;more</h3>
+<p>For me I would prefer to follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0020/#id3">the Zen of Python</a>:</p>
+<blockquote>
+Explicit is better than implicit.</blockquote>
+<p>I would vote for: Let Pytest users update their ignore&nbsp;mechanisms.</p>
+<p>This would&nbsp;mean:</p>
+<ul class="simple">
+<li>Pytest <span class="caps">SCM</span> users learn that <tt class="docutils literal">.pytest_cache</tt> exists and add it to their
+<tt class="docutils literal">.gitignore</tt> or&nbsp;similar.</li>
+<li>Confusion is avoided because no directories are unexpectedly ignored by Git.
+(Confusion as you can see in my case above and also in <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/4886">this issue</a>.)</li>
+<li>Other side effects do not occur, like this ones mentioned in the issue above
+regarding Debian packaging or&nbsp;search.</li>
+</ul>
+<p>To the wider open source issue, I think that projects that do less will last
+better than projects that do too much. I would generally take trade-offs where
+less is done rather than&nbsp;more.</p>
+</div>
+</div>
+<div class="section" id="reflection-2022">
+<h2>Reflection&nbsp;2022</h2>
+<p>Much of this post was written in 2019, much has happened, my confusion has&nbsp;lessened.</p>
+<p>If you ask &#8220;did the Pytest team do the right thing by adding <tt class="docutils literal">.gitignore</tt> to
+the newly named <tt class="docutils literal">.pytest_cache</tt> directories?&#8221;, then my answer is <strong>yes</strong>.</p>
+<p>It seems to have been a successful strategy and is even <a class="reference external" href="https://github.com/python/mypy/pull/8193">used by mypy</a> with a hat-tip to Ronny
+Pfannschmidt&#8217;s original comment suggesting the&nbsp;idea.</p>
+<p>While editing this post, I found <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/4886#issuecomment-470498105">two</a>
+<a class="reference external" href="https://github.com/pytest-dev/pytest/issues/4886#issuecomment-469877128">quotes</a>
+from Ronny that I&#8217;ll end&nbsp;with:</p>
+<blockquote>
+<p>we would be more than happy to have a better way (like&nbsp;xdg)</p>
+<p>but lets be realistic here - the added .gitignore protects beginner uses
+from a very common mistake, that&#8217;s why its&nbsp;there</p>
+<p>its a practical solution to a practical problem and has a interference&nbsp;component</p>
+</blockquote>
+<p>&#8230;</p>
+<blockquote>
+from my pov its an absolutely acceptable tradeoff to prevent a lot of
+developer pain by inflicting a extra step on package maintainers</blockquote>
+<p>Nice one Pytest team for looking after new developers!&nbsp;🙌</p>
+</div>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+                with
+tags                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>,                     <a href="https://jamescooke.info/tag/git.html">git</a>
+                <br>
+                &ndash; <a href='https://github.com/jamescooke/blog/blob/master/content/1910_pytest_git.rst'>View, comment, edit source on GitHub</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
+                        <p class="first last">Thoughts on the benefits of extracting library code from Python
+projects into their own&nbsp;packages.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
+                        <p class="first last">This post explores how to extract arrangement code when working with
+the Arrange Act Assert pattern so that it can be used with certainty
+across the test&nbsp;suite.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/arrange-act-assert-pattern-for-python-developers.html">Arrange Act Assert pattern for Python&nbsp;developers</a>
+                        <p class="first last">This post introduces the Arrange Act Assert pattern of testing and
+shows how it can be used in a Python context with&nbsp;Pytest.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>
