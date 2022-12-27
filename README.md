@@ -20,6 +20,8 @@ packages, build and deploy the generated HTML pages to GitHub's static sites.
 
 ## Getting up and running
 
+Needs Python 3.9 or above.
+
 In addition to this repository,
 [Droidstrap](https://github.com/jamescooke/droidstrap) theme and [Pelican
 plugins](https://github.com/getpelican/pelican-plugins) are required.
@@ -39,8 +41,9 @@ Make an output folder and then set up the virtualenv.
 ```sh
 cd blog
 mkdir output
-make -f Bakefile venv
-make -f Bakefile install
+bv 3.9
+vvv
+pip install -r requirements.txt
 ```
 
 ## Writing and testing
@@ -48,7 +51,6 @@ make -f Bakefile install
 While in virtualenv, run dev server.
 
 ```sh
-. venv/bin/activate
 make devserver
 ```
 
