@@ -19,8 +19,9 @@ in a script to make them available on my `PATH`.
 
 As an example, to make IPython runnable on the command line I would:
 
-* Create a directory for `ipython` in `~/opt`.
-* Build a virtual environment inside it and install `ipython` there.
+* Create an IPython directory in my user's `opt` dir: `~/opt/ipython`.
+* Build a virtual environment inside it.
+* Activate the virtual environment and install IPython there with `pip`.
 * Add a wrapper executable script called `ipython` which was then callable on
   my shell's `PATH`.
 
@@ -34,15 +35,14 @@ set -eo pipefail
 ~/opt/ipython/venv/bin/ipython
 ```
 
-> Side note about Python environments:
+> A side note about Python environments:
 > The main reason for using virtual environments for these projects and tools is
 > to keep my Ubuntu global Python environment clean: Not all Python installed
 > packages can or should just be thrown in there. Separation is important, and
 > sometimes required, not least because each package may have conflicting package
 > requirements and may not be able to be installed together.
 
-
-### Disadvantages
+### Disadvantages of these hacks
 
 There were a growing number of issues with the hacky approach above - not least
 the problems with managing the resulting stack of venv and wrappers as the
@@ -63,7 +63,8 @@ could run a version on shell `PATH` separate from the development directory.
 No, instead, the wrapper script would call the development directory directly.
 Often when I was trying to do small fixes or improvements, I would accidentally
 break my tool, or make it unusable in some way. Annoying when you're trying to
-update some accounts and the bank account parsing tool is crashing.
+update some accounts and the bank account parsing tool is crashing because
+you're half way through updating it.
 
 ## Switching to pipx
 
@@ -86,8 +87,8 @@ script).
 
 ### A better dev life
 
-Now I use `pipx` to install, manage the virtual environment and expose
-packages' endpoints on my shell's `PATH`.
+Now I use pipx to install, manage the virtual environment and expose packages'
+endpoints on my shell's `PATH`.
 
 * 🙅 Gone are the wrapper scripts and manually built virtual environments.
 * 🙅 Gone are the multiple directories of Python apps, some in `~/opt` some in
@@ -99,8 +100,8 @@ packages' endpoints on my shell's `PATH`.
 
 ## ✅ Public packages
 
-I now install all my favourite, regularly used, public packages with pipx, so
-they're available on the command line.
+I now install all my favourite, regularly used, public packages with pipx so
+they're available all the time on the command line.
 
 My favourite public packages currently installed are:
 
@@ -126,34 +127,47 @@ These personal private packages are a little harder for me to get into pipx,
 but only because I'm lazy - if you've done your proper packaging, then you're
 probably already set.
 
-I've got a follow-up post about making your private packages installable with
-pipx which I'll publish soon.
+> I've got a follow-up post about making your private packages installable with
+> pipx which I'll publish soon.
 
 ## Next steps
 
 Some things I'm not sure about yet.
 
-### Installing from private GitLab
+### Private packages from private repositories
 
-So next step is to remove the copy of the project in my `~/active` directory
-entirely and just use the `pipx` installed version. This means that I get more
-cleanliness in my development environment - no need to keep directories around
-in order to provide runnable Python code any more.
+My current pipx install workflow for private packages depends on having them
+cloned to a local directory, and then calling `pipx install [path]` to install
+from there.
 
-> TODO install from private gitlab.
+I would like it if I could install my private packages directly from their
+private GitLab repository without manually cloning first - I'm pretty sure pipx
+_can_ do this, I've just not hacked around enough with the invocation.
+
+This improvement would mean that I would just use a pipx install of my private
+packages, and that means more cleanliness in my development environment - no
+need to keep directories around in order to provide runnable Python code any
+more.
 
 ### Managing all this with Ansible
 
-[Ansible `pipx`
+As I mentioned I usually build and manage my machines with Ansible. I need to
+invest some time in catching my Ansible playbooks with my current machine
+states and the [Ansible `pipx`
 module](https://docs.ansible.com/ansible/latest/collections/community/general/pipx_module.html)
-in Ansible galaxy.
+in Ansible galaxy looks particularly helpful.
 
-## Thanks
+## 🙏 Thanks
 
 Thanks for reading.
 
-Thanks to Brian and Michael for "nagging" bloggers that it doesn't have to be
-perfect - just write the thing and put it out there.
+Thanks to [Brian and Michael's
+coverage](https://pythonbytes.fm/episodes/show/342/dont-believe-those-old-blogging-myths)
+of [Julia Evans's "Some blogging
+myths](https://jvns.ca/blog/2023/06/05/some-blogging-myths/) post... For
+"nagging" bloggers that it doesn't have to be perfect - just write the thing
+and put it out there.
 
-Thanks to Fosstodon folks for tooting new and interesting things that inspired
-me to try out these things and get them working for myself.
+Thanks to [Fosstodon folks](https://fosstodon.org/) for tooting the new and
+interesting things, that, in turn, inspire me to try out these things and get
+them working for myself.
