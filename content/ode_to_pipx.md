@@ -1,5 +1,5 @@
 Title: An Ode to pipx
-Date: 2023-07-25 19:00
+Date: 2023-07-26 21:00
 Category: Python
 Tags: language:python
 Summary: Using `pipx` has improved my daily development experience considerably.
@@ -7,8 +7,8 @@ Summary: Using `pipx` has improved my daily development experience considerably.
 Oh pipx, how I love thee... 🎵
 
 Using pipx means I can have Python packages installed and executable on my path
-much more easily than in the past. That's changed my general development
-experience for the better. Here's how...
+much more easily than in the past. That's changed my personal _and_ work
+development experience for the better. Here's how...
 
 ## Before pipx
 
@@ -16,12 +16,6 @@ When I wanted to make a Python package (like IPython) available on the command
 line in my Linux environment, I would get hacky... Using `virtualenv` and
 boilerplate `bash` scripts I would manage package installs, and then wrap them
 in a script to make them available on my `PATH`.
-
-The main reason for using virtual environments for these projects and tools is
-to keep my Ubuntu global Python environment clean: Not all Python tools should
-just be thrown in there. Separation is important, not least because each
-package may have conflicting package requirements and may not be able to be
-installed together.
 
 As an example, to make IPython runnable on the command line I would:
 
@@ -40,29 +34,36 @@ set -eo pipefail
 ~/opt/ipython/venv/bin/ipython
 ```
 
+> Side note about Python environments:
+> The main reason for using virtual environments for these projects and tools is
+> to keep my Ubuntu global Python environment clean: Not all Python installed
+> packages can or should just be thrown in there. Separation is important, and
+> sometimes required, not least because each package may have conflicting package
+> requirements and may not be able to be installed together.
+
+
 ### Disadvantages
 
-There were many issues with this - not least the problems with managing the
-resulting stack of venv and wrappers as the number of Python tools I wanted on
-my path grew.
+There were a growing number of issues with the hacky approach above - not least
+the problems with managing the resulting stack of venv and wrappers as the
+number of Python tools I wanted on my path grew.
 
 Yes - these could be handled with Ansible (I like to build and manage my
 machines with Ansible), but there always seems to be a lag between the time I
 "need" a new thing on my command line, and when I manage to get it wired into
 Ansible correctly.
 
-Upgrades also become hard - where were all those manually managed tools? Which
+Upgrades also became hard - where were all those manually managed tools? Which
 ones should I update?
 
 A small, but niggling, disadvantage for using the wrapper script to run local
 private tools: I found is that it was hard to keep "development" and
 "production" separate. I'd rarely re-create the private code repository so I
 could run a version on shell `PATH` separate from the development directory.
-No, instead, the wrapper script I'd throw in would be calling the development
-directory. This would often mean that when I was trying to do small fixes or
-improvements, I would often accidentally break my tool, or make it unusable in
-some way. Annoying when you're trying to update some accounts and you've broken
-your bank account parsing tool.
+No, instead, the wrapper script would call the development directory directly.
+Often when I was trying to do small fixes or improvements, I would accidentally
+break my tool, or make it unusable in some way. Annoying when you're trying to
+update some accounts and the bank account parsing tool is crashing.
 
 ## Switching to pipx
 
@@ -83,7 +84,7 @@ Everything just worked and IPython was installed successfully. Pipx even warned
 me that there was a previous executable on my path (my previous crappy wrapper
 script).
 
-### Better dev life
+### A better dev life
 
 Now I use `pipx` to install, manage the virtual environment and expose
 packages' endpoints on my shell's `PATH`.
@@ -125,39 +126,8 @@ These personal private packages are a little harder for me to get into pipx,
 but only because I'm lazy - if you've done your proper packaging, then you're
 probably already set.
 
-Given I've usually cut corners to get things working, my private tools are
-often runnable with the Python installed in the tool's virtual environment:
-
-```py
-python some_tool.py [args]
-```
-
-And if I'm _really_ lucky, then past-me has done a Python main with `-m`.
-
-```py
-python -m some_tool [args]
-```
-
-Either way, getting them working with pipx I found pretty easy.
-
-### Try installing from `.`
-
-### Add pyproject.toml with entrypoints
-
-```sh
-flit init
-```
-
-Add entry points
-
-Add packages that are required to run the package
-
-> TODO think about "Tox for smoke testing your package"
-
-Best of all, the pipx install is a **clone** of the package. That means I can
-continue to work on it in my `~/active` directory, making breaking changes as
-required, while the installed version continues to operate, isolated in its
-pipx-managed install directory.
+I've got a follow-up post about making your private packages installable with
+pipx which I'll publish soon.
 
 ## Next steps
 
