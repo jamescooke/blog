@@ -2,7 +2,7 @@ Title: An Ode to pipx
 Date: 2023-07-26 21:00
 Category: Python
 Tags: language:python
-Summary: Using `pipx` has improved my daily development experience considerably.
+Summary: Using pipx has improved my daily development experience considerably.
 
 Oh pipx, how I love thee... 🎵
 
@@ -164,7 +164,7 @@ Thanks for reading.
 Thanks to [Brian and Michael's
 coverage](https://pythonbytes.fm/episodes/show/342/dont-believe-those-old-blogging-myths)
 of [Julia Evans's "Some blogging
-myths](https://jvns.ca/blog/2023/06/05/some-blogging-myths/) post... For
+myths"](https://jvns.ca/blog/2023/06/05/some-blogging-myths/) post... For
 "nagging" bloggers that it doesn't have to be perfect - just write the thing
 and put it out there.
 
