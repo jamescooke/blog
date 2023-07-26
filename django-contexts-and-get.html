@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -113,14 +113,14 @@ be completely empty), then both tests&nbsp;pass.</p>
 <div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Hello World<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 </pre></div>
 <p>Test&nbsp;run:</p>
-<div class="highlight"><pre><span></span>./manage.py <span class="nb">test</span>
-Creating <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+<div class="highlight"><pre><span></span>./manage.py<span class="w"> </span><span class="nb">test</span>
+Creating<span class="w"> </span><span class="nb">test</span><span class="w"> </span>database<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="s1">&#39;default&#39;</span>...
 ..
 ----------------------------------------------------------------------
-Ran <span class="m">2</span> tests <span class="k">in</span> <span class="m">0</span>.027s
+Ran<span class="w"> </span><span class="m">2</span><span class="w"> </span>tests<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.027s
 
 OK
-Destroying <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+Destroying<span class="w"> </span><span class="nb">test</span><span class="w"> </span>database<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="s1">&#39;default&#39;</span>...
 </pre></div>
 </div>
 <div class="section" id="template-inheritance-fails-with-get">
@@ -132,22 +132,22 @@ arbitrary&nbsp;contents.</p>
 <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Hello World<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 </pre></div>
 <p>Test&nbsp;run:</p>
-<div class="highlight"><pre><span></span>./manage.py <span class="nb">test</span>
-Creating <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+<div class="highlight"><pre><span></span>./manage.py<span class="w"> </span><span class="nb">test</span>
+Creating<span class="w"> </span><span class="nb">test</span><span class="w"> </span>database<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="s1">&#39;default&#39;</span>...
 E.
 <span class="o">======================================================================</span>
-ERROR: test_get <span class="o">(</span>mini.tests.Tests<span class="o">)</span>
+ERROR:<span class="w"> </span>test_get<span class="w"> </span><span class="o">(</span>mini.tests.Tests<span class="o">)</span>
 ----------------------------------------------------------------------
-Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
-  File <span class="s2">&quot;/home/james/active/mini/mmm/mini/tests.py&quot;</span>, line <span class="m">9</span>, <span class="k">in</span> test_get
-      self.assertEqual<span class="o">(</span>response.context.get<span class="o">(</span><span class="s1">&#39;name&#39;</span><span class="o">)</span>, <span class="s1">&#39;Homer&#39;</span><span class="o">)</span>
-AttributeError: <span class="s1">&#39;ContextList&#39;</span> object has no attribute <span class="s1">&#39;get&#39;</span>
+Traceback<span class="w"> </span><span class="o">(</span>most<span class="w"> </span>recent<span class="w"> </span>call<span class="w"> </span>last<span class="o">)</span>:
+<span class="w">  </span>File<span class="w"> </span><span class="s2">&quot;/home/james/active/mini/mmm/mini/tests.py&quot;</span>,<span class="w"> </span>line<span class="w"> </span><span class="m">9</span>,<span class="w"> </span><span class="k">in</span><span class="w"> </span>test_get
+<span class="w">      </span>self.assertEqual<span class="o">(</span>response.context.get<span class="o">(</span><span class="s1">&#39;name&#39;</span><span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;Homer&#39;</span><span class="o">)</span>
+AttributeError:<span class="w"> </span><span class="s1">&#39;ContextList&#39;</span><span class="w"> </span>object<span class="w"> </span>has<span class="w"> </span>no<span class="w"> </span>attribute<span class="w"> </span><span class="s1">&#39;get&#39;</span>
 
 ----------------------------------------------------------------------
-Ran <span class="m">2</span> tests <span class="k">in</span> <span class="m">0</span>.029s
+Ran<span class="w"> </span><span class="m">2</span><span class="w"> </span>tests<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.029s
 
-FAILED <span class="o">(</span><span class="nv">errors</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>
-Destroying <span class="nb">test</span> database <span class="k">for</span> <span class="nb">alias</span> <span class="s1">&#39;default&#39;</span>...
+FAILED<span class="w"> </span><span class="o">(</span><span class="nv">errors</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>
+Destroying<span class="w"> </span><span class="nb">test</span><span class="w"> </span>database<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="s1">&#39;default&#39;</span>...
 </pre></div>
 <p>So the <tt class="docutils literal">test_get</tt> case, which was using <tt class="docutils literal">get</tt> failed.</p>
 </div>

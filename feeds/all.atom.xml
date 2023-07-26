@@ -1,5 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2022-12-19T15:00:00+00:00</updated><entry><title>Pytest’s cache and gitignore</title><link href="https://jamescooke.info/pytests-cache-and-gitignore.html" rel="alternate"></link><published>2022-12-19T15:00:00+00:00</published><updated>2022-12-19T15:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2022-12-19:/pytests-cache-and-gitignore.html</id><summary type="html">&lt;p class="first last"&gt;Sanity checking Pytest&amp;#8217;s &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; files.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2023-07-26T21:00:00+01:00</updated><entry><title>An Ode to pipx</title><link href="https://jamescooke.info/an-ode-to-pipx.html" rel="alternate"></link><published>2023-07-26T21:00:00+01:00</published><updated>2023-07-26T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2023-07-26:/an-ode-to-pipx.html</id><summary type="html">&lt;p&gt;Using &lt;code&gt;pipx&lt;/code&gt; has improved my daily development experience&amp;nbsp;considerably.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Oh pipx, how I love thee&amp;#8230;&amp;nbsp;🎵&lt;/p&gt;
+&lt;p&gt;Using pipx means I can have Python packages installed and executable on my path
+much more easily than in the past. That&amp;#8217;s changed my personal &lt;em&gt;and&lt;/em&gt; work
+development experience for the better. Here&amp;#8217;s&amp;nbsp;how&amp;#8230;&lt;/p&gt;
+&lt;h2&gt;Before&amp;nbsp;pipx&lt;/h2&gt;
+&lt;p&gt;When I wanted to make a Python package (like IPython) available on the command
+line in my Linux environment, I would get hacky&amp;#8230; Using &lt;code&gt;virtualenv&lt;/code&gt; and
+boilerplate &lt;code&gt;bash&lt;/code&gt; scripts I would manage package installs, and then wrap them
+in a script to make them available on my &lt;code&gt;PATH&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;As an example, to make IPython runnable on the command line I&amp;nbsp;would:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create an IPython directory in my user&amp;#8217;s &lt;code&gt;opt&lt;/code&gt; dir: &lt;code&gt;~/opt/ipython&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Build a virtual environment inside&amp;nbsp;it.&lt;/li&gt;
+&lt;li&gt;Activate the virtual environment and install IPython there with &lt;code&gt;pip&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Add a wrapper executable script called &lt;code&gt;ipython&lt;/code&gt; which was then callable on
+  my shell&amp;#8217;s &lt;code&gt;PATH&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;That script looked&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-eo&lt;span class="w"&gt; &lt;/span&gt;pipefail
+
+~/opt/ipython/venv/bin/ipython
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;A side note about Python environments:
+The main reason for using virtual environments for these projects and tools is
+to keep my Ubuntu global Python environment clean: Not all Python installed
+packages can or should just be thrown in there. Separation is important, and
+sometimes required, not least because each package may have conflicting package
+requirements and may not be able to be installed&amp;nbsp;together.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;Disadvantages of these&amp;nbsp;hacks&lt;/h3&gt;
+&lt;p&gt;There were a growing number of issues with the hacky approach above - not least
+the problems with managing the resulting stack of venv and wrappers as the
+number of Python tools I wanted on my path&amp;nbsp;grew.&lt;/p&gt;
+&lt;p&gt;Yes - these could be handled with Ansible (I like to build and manage my
+machines with Ansible), but there always seems to be a lag between the time I
+&amp;#8220;need&amp;#8221; a new thing on my command line, and when I manage to get it wired into
+Ansible&amp;nbsp;correctly.&lt;/p&gt;
+&lt;p&gt;Upgrades also became hard - where were all those manually managed tools? Which
+ones should I&amp;nbsp;update?&lt;/p&gt;
+&lt;p&gt;A small, but niggling, disadvantage for using the wrapper script to run local
+private tools: I found is that it was hard to keep &amp;#8220;development&amp;#8221; and
+&amp;#8220;production&amp;#8221; separate. I&amp;#8217;d rarely re-create the private code repository so I
+could run a version on shell &lt;code&gt;PATH&lt;/code&gt; separate from the development directory.
+No, instead, the wrapper script would call the development directory directly.
+Often when I was trying to do small fixes or improvements, I would accidentally
+break my tool, or make it unusable in some way. Annoying when you&amp;#8217;re trying to
+update some accounts and the bank account parsing tool is crashing because
+you&amp;#8217;re half way through updating&amp;nbsp;it.&lt;/p&gt;
+&lt;h2&gt;Switching to&amp;nbsp;pipx&lt;/h2&gt;
+&lt;p&gt;I installed pipx into the user virtual environment on my Ubuntu machine as
+per &lt;a href="https://pypa.github.io/pipx/"&gt;the instructions&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python3&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;pip&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;pipx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, installing IPython was as simple&amp;nbsp;as:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;ipython
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Everything just worked and IPython was installed successfully. Pipx even warned
+me that there was a previous executable on my path (my previous crappy wrapper&amp;nbsp;script).&lt;/p&gt;
+&lt;h3&gt;A better dev&amp;nbsp;life&lt;/h3&gt;
+&lt;p&gt;Now I use pipx to install, manage the virtual environment and expose packages&amp;#8217;
+endpoints on my shell&amp;#8217;s &lt;code&gt;PATH&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;🙅 Gone are the wrapper scripts and manually built virtual&amp;nbsp;environments.&lt;/li&gt;
+&lt;li&gt;🙅 Gone are the multiple directories of Python apps, some in &lt;code&gt;~/opt&lt;/code&gt; some in
+  &lt;code&gt;~/active&lt;/code&gt; (my usual working path). Along with their Make recipes for
+  managing virtual environments and&amp;nbsp;upgrades.&lt;/li&gt;
+&lt;li&gt;🙅 Gone is the need for orchestration scripts and Make recipes to &amp;#8220;know&amp;#8221; the
+  particular directory and virtual environment a package is installed in. Pipx
+  can upgrade everything with &lt;code&gt;pipx upgrade-all&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;✅ Public&amp;nbsp;packages&lt;/h2&gt;
+&lt;p&gt;I now install all my favourite, regularly used, public packages with pipx so
+they&amp;#8217;re available all the time on the command&amp;nbsp;line.&lt;/p&gt;
+&lt;p&gt;My favourite public packages currently installed&amp;nbsp;are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devpi/devpi"&gt;devpi-server&lt;/a&gt; to save a tonne of downloads
+  when recreating Tox&amp;nbsp;environments.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://flit.pypa.io/en/stable/"&gt;flit&lt;/a&gt; for&amp;nbsp;packaging.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/Textualize/frogmouth/"&gt;frogmouth&lt;/a&gt; - my new favourite
+  Markdown&amp;nbsp;tool.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://pypi.org/project/hledger-utils/"&gt;hledger-utils&lt;/a&gt; for helping with our
+  family&amp;nbsp;accounts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;✅ Personal private&amp;nbsp;packages&lt;/h2&gt;
+&lt;p&gt;I&amp;#8217;ve got baggage - and it lives in private repositories: A suite of personal
+tools I&amp;#8217;ve built up over the years used for all sorts of tasks, from filing
+downloads into correct directories, to managing my work time, to bookkeeping
+our family&amp;nbsp;accounts.&lt;/p&gt;
+&lt;p&gt;With pipx these are now executable from anywhere in my shell, with none of the
+previous overhead and boilerplate mentioned&amp;nbsp;above.&lt;/p&gt;
+&lt;p&gt;These personal private packages are a little harder for me to get into pipx,
+but only because I&amp;#8217;m lazy - if you&amp;#8217;ve done your proper packaging, then you&amp;#8217;re
+probably already&amp;nbsp;set.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;#8217;ve got a follow-up post about making your private packages installable with
+pipx which I&amp;#8217;ll publish&amp;nbsp;soon.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Next&amp;nbsp;steps&lt;/h2&gt;
+&lt;p&gt;Some things I&amp;#8217;m not sure about&amp;nbsp;yet.&lt;/p&gt;
+&lt;h3&gt;Private packages from private&amp;nbsp;repositories&lt;/h3&gt;
+&lt;p&gt;My current pipx install workflow for private packages depends on having them
+cloned to a local directory, and then calling &lt;code&gt;pipx install [path]&lt;/code&gt; to install
+from&amp;nbsp;there.&lt;/p&gt;
+&lt;p&gt;I would like it if I could install my private packages directly from their
+private GitLab repository without manually cloning first - I&amp;#8217;m pretty sure pipx
+&lt;em&gt;can&lt;/em&gt; do this, I&amp;#8217;ve just not hacked around enough with the&amp;nbsp;invocation.&lt;/p&gt;
+&lt;p&gt;This improvement would mean that I would just use a pipx install of my private
+packages, and that means more cleanliness in my development environment - no
+need to keep directories around in order to provide runnable Python code any&amp;nbsp;more.&lt;/p&gt;
+&lt;h3&gt;Managing all this with&amp;nbsp;Ansible&lt;/h3&gt;
+&lt;p&gt;As I mentioned I usually build and manage my machines with Ansible. I need to
+invest some time in catching my Ansible playbooks with my current machine
+states and the &lt;a href="https://docs.ansible.com/ansible/latest/collections/community/general/pipx_module.html"&gt;Ansible &lt;code&gt;pipx&lt;/code&gt;
+module&lt;/a&gt;
+in Ansible galaxy looks particularly&amp;nbsp;helpful.&lt;/p&gt;
+&lt;h2&gt;🙏&amp;nbsp;Thanks&lt;/h2&gt;
+&lt;p&gt;Thanks for&amp;nbsp;reading.&lt;/p&gt;
+&lt;p&gt;Thanks to &lt;a href="https://pythonbytes.fm/episodes/show/342/dont-believe-those-old-blogging-myths"&gt;Brian and Michael&amp;#8217;s
+coverage&lt;/a&gt;
+of &lt;a href="https://jvns.ca/blog/2023/06/05/some-blogging-myths/"&gt;Julia Evans&amp;#8217;s &amp;#8220;Some blogging
+myths&lt;/a&gt; post&amp;#8230; For
+&amp;#8220;nagging&amp;#8221; bloggers that it doesn&amp;#8217;t have to be perfect - just write the thing
+and put it out&amp;nbsp;there.&lt;/p&gt;
+&lt;p&gt;Thanks to &lt;a href="https://fosstodon.org/"&gt;Fosstodon folks&lt;/a&gt; for tooting the new and
+interesting things, that, in turn, inspire me to try out these things and get
+them working for&amp;nbsp;myself.&lt;/p&gt;</content><category term="Python"></category><category term="language:python"></category></entry><entry><title>Pytest’s cache and gitignore</title><link href="https://jamescooke.info/pytests-cache-and-gitignore.html" rel="alternate"></link><published>2022-12-19T15:00:00+00:00</published><updated>2022-12-19T15:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2022-12-19:/pytests-cache-and-gitignore.html</id><summary type="html">&lt;p class="first last"&gt;Sanity checking Pytest&amp;#8217;s &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt; files.&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;This post is about sanity checking. It was written at the end of 2019, but not
 published until the end of 2022. The underlying change to Pytest&amp;#8217;s cache
 directories was made in &lt;tt class="docutils literal"&gt;3.8.1&lt;/tt&gt;, released at the end of&amp;nbsp;2018.&lt;/p&gt;
@@ -535,7 +666,7 @@ they break the &lt;span class="caps"&gt;AAA&lt;/span&gt; pattern because there s
 &lt;span class="c1"&gt;# assertions in the Arrange block.&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_owner_invite_admin&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Leela can invite Bender to an additional Project, Fry is notified&lt;/span&gt;
 
 &lt;span class="sd"&gt;    ----------------+---------------+-----------&lt;/span&gt;
@@ -594,7 +725,7 @@ following fixture with its own dedicated test and a much simpler test for the
 invite&amp;nbsp;behaviour.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fixture&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;account_members&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Returns:&lt;/span&gt;
 &lt;span class="sd"&gt;        tuple:&lt;/span&gt;
 &lt;span class="sd"&gt;            User: Leela - Account owner.&lt;/span&gt;
@@ -633,7 +764,7 @@ invite&amp;nbsp;behaviour.&lt;/p&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;leela&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fry&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bender&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_account_members&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;account_members&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Fry has no pending messages and Bender is a member of the Account&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;account_members&lt;/span&gt;
@@ -647,7 +778,7 @@ invite&amp;nbsp;behaviour.&lt;/p&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;messages&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_owner_invite_admin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;account_members&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Leela can invite Bender to an additional Project, Fry is notified&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;leela&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fry&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bender&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;account_members&lt;/span&gt;
@@ -966,7 +1097,7 @@ it, then consider extracting an assertion&amp;nbsp;helper.&lt;/li&gt;
 &lt;h2&gt;The final&amp;nbsp;test&lt;/h2&gt;
 &lt;p&gt;Here&amp;#8217;s the example test in&amp;nbsp;full:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_reverse&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    list.reverse inverts the order of items in a list, in place&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;greek&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;beta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gamma&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;delta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -1012,7 +1143,7 @@ the original strategy of comparing the string versions of the Q&amp;nbsp;objects
 
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;assert_q_equal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Test two Q objects for equality. Does is not match commutative.&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Args:&lt;/span&gt;
@@ -1191,9 +1322,9 @@ package&amp;nbsp;management.&lt;/p&gt;
 &lt;h2&gt;Keep requirements files in their own&amp;nbsp;folder&lt;/h2&gt;
 &lt;p&gt;In order to preserve sanity, I keep my project requirements in their own folder
 directly inside the&amp;nbsp;project.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; project
-$ ls requirements/
-base.in  base.txt  Makefile  test.in  test.txt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;project
+$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;requirements/
+base.in&lt;span class="w"&gt;  &lt;/span&gt;base.txt&lt;span class="w"&gt;  &lt;/span&gt;Makefile&lt;span class="w"&gt;  &lt;/span&gt;test.in&lt;span class="w"&gt;  &lt;/span&gt;test.txt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;During this post, I&amp;#8217;ll use this simple example with one set of &amp;#8220;base&amp;#8221;
 requirements and one set of &amp;#8220;test&amp;#8221;&amp;nbsp;requirements.&lt;/p&gt;
@@ -1232,23 +1363,23 @@ test-packages
 &lt;h2&gt;Use a Makefile for common&amp;nbsp;tasks&lt;/h2&gt;
 &lt;p&gt;On each project that has multiple requirements files, I use a Makefile and
 place it in the requirements&amp;nbsp;folder.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt; &lt;span class="n"&gt;clean&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt; &lt;span class="n"&gt;clean&lt;/span&gt;
 
-&lt;span class="nv"&gt;objects&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;wildcard *.in&lt;span class="k"&gt;)&lt;/span&gt;
-&lt;span class="nv"&gt;outputs&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;objects:.in&lt;span class="o"&gt;=&lt;/span&gt;.txt&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;objects&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;wildcard&lt;span class="w"&gt; &lt;/span&gt;*.in&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;outputs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;objects:.in&lt;span class="o"&gt;=&lt;/span&gt;.txt&lt;span class="k"&gt;)&lt;/span&gt;
 
-&lt;span class="nf"&gt;all&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nv"&gt;outputs&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nf"&gt;all&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nv"&gt;outputs&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
 
-&lt;span class="nf"&gt;%.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; %.&lt;span class="n"&gt;in&lt;/span&gt;
-    pip-compile -v --output-file &lt;span class="nv"&gt;$@&lt;/span&gt; $&amp;lt;
+&lt;span class="nf"&gt;%.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;%.&lt;span class="n"&gt;in&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;pip-compile&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;--output-file&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;$&amp;lt;
 
-&lt;span class="nf"&gt;test.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt;.&lt;span class="n"&gt;txt&lt;/span&gt;
+&lt;span class="nf"&gt;test.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt;.&lt;span class="n"&gt;txt&lt;/span&gt;
 
 &lt;span class="nf"&gt;check&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-    @which pip-compile &amp;gt; /dev/null
+&lt;span class="w"&gt;    &lt;/span&gt;@which&lt;span class="w"&gt; &lt;/span&gt;pip-compile&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;/dev/null
 
-&lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt;
-    - rm *.txt
+&lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;check&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;-&lt;span class="w"&gt; &lt;/span&gt;rm&lt;span class="w"&gt; &lt;/span&gt;*.txt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;!-- ** --&gt;
 &lt;p&gt;Here is [a similar] file &lt;a class="reference external" href="https://github.com/jamescooke/flake8-aaa/blob/master/requirements/Makefile"&gt;in a current project&lt;/a&gt;.&lt;/p&gt;
@@ -1263,18 +1394,18 @@ rather than copying and pasting from this page which does not show tab&amp;nbsp;
 &lt;p&gt;Let&amp;#8217;s go over the key functionality provided by this&amp;nbsp;Makefile:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;First two&amp;nbsp;definitions:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;objects&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;wildcard *.in&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;objects&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;wildcard&lt;span class="w"&gt; &lt;/span&gt;*.in&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;!-- ** --&gt;
 &lt;p&gt;&lt;tt class="docutils literal"&gt;objects&lt;/tt&gt; is a list containing every &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt; file in requirements&amp;nbsp;folder.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;outputs&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;objects:.in&lt;span class="o"&gt;=&lt;/span&gt;.txt&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;outputs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;objects:.in&lt;span class="o"&gt;=&lt;/span&gt;.txt&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;tt class="docutils literal"&gt;outputs&lt;/tt&gt; is also a list made of one &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; filename for each &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt; file
 in the &lt;tt class="docutils literal"&gt;outputs&lt;/tt&gt; list. The &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; files do not need to exist yet, this
 list tells &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; what they should be&amp;nbsp;called.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;A recipe called &lt;tt class="docutils literal"&gt;all&lt;/tt&gt; to build all &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; files:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;all&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nv"&gt;outputs&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;all&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nv"&gt;outputs&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;all&lt;/tt&gt; recipe has no commands of its own - it solely depends on all the
 &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; files in the &lt;tt class="docutils literal"&gt;outputs&lt;/tt&gt; list being built. In order to fulfil this
@@ -1283,8 +1414,8 @@ list.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Up until now, &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; does not know how to build a &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; file, so here we
 give it a&amp;nbsp;recipe:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; %.&lt;span class="n"&gt;in&lt;/span&gt;
-    pip-compile -v --output-file &lt;span class="nv"&gt;$@&lt;/span&gt; $&amp;lt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;%.&lt;span class="n"&gt;in&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;pip-compile&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;--output-file&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;$&amp;lt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The first line tells &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; that any &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt; file depends on the &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt;
 file with the same name. &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; will check the date stamp on the two files
@@ -1304,7 +1435,7 @@ from &lt;tt class="docutils literal"&gt;base.in&lt;/tt&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Now we tell &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; about the dependency between the requirements&amp;nbsp;files.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;test.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt;.&lt;span class="n"&gt;txt&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;test.txt&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt;.&lt;span class="n"&gt;txt&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This creates a dependency chain. This is an additional recipe for
 &lt;tt class="docutils literal"&gt;test.txt&lt;/tt&gt; which tells &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; that it depends on &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt;. That means
@@ -1312,10 +1443,10 @@ that if &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; is asked to build &lt
 &lt;tt class="docutils literal"&gt;test.in&lt;/tt&gt; &lt;em&gt;or&lt;/em&gt; &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt; have been&amp;nbsp;updated.&lt;/p&gt;
 &lt;p&gt;If &lt;tt class="docutils literal"&gt;base.in&lt;/tt&gt; is updated, then &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; knows that it will need to recompile
 &lt;tt class="docutils literal"&gt;base.txt&lt;/tt&gt; in order to make &lt;tt class="docutils literal"&gt;test.txt&lt;/tt&gt;. We can see that&amp;nbsp;here:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ touch base.in       &lt;span class="c1"&gt;# Update timestamp on base.in&lt;/span&gt;
-$ make -n test.txt    &lt;span class="c1"&gt;# What commands will be run to build test.txt&lt;/span&gt;
-pip-compile -v --output-file base.txt base.in
-pip-compile -v --output-file test.txt test.in
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;touch&lt;span class="w"&gt; &lt;/span&gt;base.in&lt;span class="w"&gt;       &lt;/span&gt;&lt;span class="c1"&gt;# Update timestamp on base.in&lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;-n&lt;span class="w"&gt; &lt;/span&gt;test.txt&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;# What commands will be run to build test.txt&lt;/span&gt;
+pip-compile&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;--output-file&lt;span class="w"&gt; &lt;/span&gt;base.txt&lt;span class="w"&gt; &lt;/span&gt;base.in
+pip-compile&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;--output-file&lt;span class="w"&gt; &lt;/span&gt;test.txt&lt;span class="w"&gt; &lt;/span&gt;test.in
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is exactly what we want for requirements constraining. If the
 requirements in our base have changed, then we want our test file to be
@@ -1327,10 +1458,10 @@ inheritance in requirements&amp;nbsp;files.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Finally, a recipe to help us update&amp;nbsp;requirements.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;check&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-    @which pip-compile &amp;gt; /dev/null
+&lt;span class="w"&gt;    &lt;/span&gt;@which&lt;span class="w"&gt; &lt;/span&gt;pip-compile&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;/dev/null
 
-&lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt;
-    - rm *.txt
+&lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;check&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;-&lt;span class="w"&gt; &lt;/span&gt;rm&lt;span class="w"&gt; &lt;/span&gt;*.txt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;!-- ** --&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;check&lt;/tt&gt; recipe will fail if &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pip-tools&lt;/span&gt;&lt;/tt&gt; is not&amp;nbsp;installed.&lt;/p&gt;
@@ -1346,18 +1477,18 @@ it. So let&amp;#8217;s continue with some common workflow&amp;nbsp;actions.&lt;/
 &lt;div class="section" id="build-one-or-more-requirements-files"&gt;
 &lt;h2&gt;Build one or more requirements&amp;nbsp;files&lt;/h2&gt;
 &lt;p&gt;To update all requirements use the default &lt;tt class="docutils literal"&gt;all&lt;/tt&gt; recipe.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;all
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;To update a particular file, ask for it by&amp;nbsp;name:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make test.txt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;test.txt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If &lt;tt class="docutils literal"&gt;make&lt;/tt&gt; tells you that a file is up-to-date but you want to force it to
 be rebuilt you should &lt;tt class="docutils literal"&gt;touch&lt;/tt&gt; the &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt; file.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make base.txt
-make: &lt;span class="s1"&gt;&amp;#39;base.txt&amp;#39;&lt;/span&gt; is up to date.
-$ touch base.in
-$ make base.txt
-pip-compile -v --output-file base.txt base.in
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;base.txt
+make:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;base.txt&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;is&lt;span class="w"&gt; &lt;/span&gt;up&lt;span class="w"&gt; &lt;/span&gt;to&lt;span class="w"&gt; &lt;/span&gt;date.
+$&lt;span class="w"&gt; &lt;/span&gt;touch&lt;span class="w"&gt; &lt;/span&gt;base.in
+$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;base.txt
+pip-compile&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;--output-file&lt;span class="w"&gt; &lt;/span&gt;base.txt&lt;span class="w"&gt; &lt;/span&gt;base.in
 ...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -1366,9 +1497,9 @@ pip-compile -v --output-file base.txt base.in
 &lt;p&gt;To add a dependency, locate the appropriate &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt; file and add the new
 package name there. The version number is only required if a particular version
 of the library is required. The latest version will be chosen by default when&amp;nbsp;compiling.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat &amp;gt;&amp;gt; base.in
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;base.in
 ipython
-$ make all
+$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;all
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="update-a-package"&gt;
@@ -1379,8 +1510,8 @@ this and remove every package that the top level package depended on using
 &lt;tt class="docutils literal"&gt;sed&lt;/tt&gt; with a pattern&amp;nbsp;match.&lt;/p&gt;
 &lt;p&gt;Given that I want to update &lt;tt class="docutils literal"&gt;ipython&lt;/tt&gt; and it is not pinned in my &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt;
 file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;/ipython/d&amp;#39;&lt;/span&gt; -i *.txt
-$ make all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/ipython/d&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;*.txt
+$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;all
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;There is no command for this removal built into the Makefile, but potentially
 it could be. Ideally, it could be provided as extra functionality by
@@ -1396,7 +1527,7 @@ as&amp;nbsp;required.&lt;/p&gt;
 &lt;p&gt;A full update of all requirements to the latest version (including updating all
 packages that are not pinned in the &lt;tt class="docutils literal"&gt;.in&lt;/tt&gt; file with a particular version
 number) can be achieved&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make clean all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;clean&lt;span class="w"&gt; &lt;/span&gt;all
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;clean&lt;/tt&gt; recipe will clean out all &lt;tt class="docutils literal"&gt;*.txt&lt;/tt&gt; files if you have
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pip-tools&lt;/span&gt;&lt;/tt&gt; installed. Then the &lt;tt class="docutils literal"&gt;all&lt;/tt&gt; recipe will rebuild them all in
@@ -1406,7 +1537,7 @@ dependency&amp;nbsp;order.&lt;/p&gt;
 &lt;h2&gt;Finally&lt;/h2&gt;
 &lt;p&gt;A tip for working with Makefiles. If you want to see what commands will be run
 by a recipe, you can use the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-n&lt;/span&gt;&lt;/tt&gt; flag and inspect the commands that were&amp;nbsp;planned:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make -n all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;-n&lt;span class="w"&gt; &lt;/span&gt;all
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Happy requirements&amp;nbsp;packing!&lt;/p&gt;
 &lt;/div&gt;
@@ -1523,7 +1654,7 @@ of the test&amp;nbsp;Models:&lt;/p&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;tt class="docutils literal"&gt;ItemFactory&lt;/tt&gt;: to create and save instances of &lt;tt class="docutils literal"&gt;plant.models.Item&lt;/tt&gt;, a
 test model defined &lt;a class="reference external" href="https://github.com/jamescooke/factory_audit/blob/master/factory_audit/plant/models.py"&gt;in the &amp;#8216;plant&amp;#8217; app&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Item&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Single Item with one required field &amp;#39;name&amp;#39;&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1995,7 +2126,7 @@ code and see how the tests&amp;nbsp;perform.&lt;/p&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;TestAlwaysTrue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;unittest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TestCase&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_assertTrue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;        always_true returns a truthy value&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;always_true&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -2003,7 +2134,7 @@ code and see how the tests&amp;nbsp;perform.&lt;/p&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertTrue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_assertIs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;        always_true returns True&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;always_true&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -2012,7 +2143,7 @@ code and see how the tests&amp;nbsp;perform.&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Here&amp;#8217;s the code for our simple function in &lt;tt class="docutils literal"&gt;func.py&lt;/tt&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;always_true&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    I&amp;#39;m always True.&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Returns:&lt;/span&gt;
@@ -2033,7 +2164,7 @@ OK
 &lt;p&gt;Happy&amp;nbsp;days!&lt;/p&gt;
 &lt;p&gt;Now, &amp;#8220;someone&amp;#8221; changes &lt;tt class="docutils literal"&gt;always_true&lt;/tt&gt; to the&amp;nbsp;following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;always_true&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    I&amp;#39;m always True.&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Returns:&lt;/span&gt;
@@ -2277,7 +2408,7 @@ that extends &lt;tt class="docutils literal"&gt;unittest.TestCase&lt;/tt&gt; (su
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;QTestMixin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;assertQEqual&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;        Assert `Q` objects are equal by ensuring that their&lt;/span&gt;
 &lt;span class="sd"&gt;        unicode outputs are equal (crappy but good enough)&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
@@ -2293,7 +2424,7 @@ provides rich diffs on&amp;nbsp;failure:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;TestFail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;TestCase&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;QTestMixin&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_unhappy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;        Two Q objects are not the same&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;place&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Residential&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -2301,11 +2432,11 @@ provides rich diffs on&amp;nbsp;failure:&lt;/p&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertQEqual&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Gives&amp;nbsp;output:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;AssertionError: u&lt;span class="s2"&gt;&amp;quot;(AND: (&amp;#39;place&amp;#39;, &amp;#39;Residential&amp;#39;))&amp;quot;&lt;/span&gt; !&lt;span class="o"&gt;=&lt;/span&gt; u&lt;span class="s2"&gt;&amp;quot;(AND: (&amp;#39;place&amp;#39;, &amp;#39;Palace&amp;#39;))&amp;quot;&lt;/span&gt;
-- &lt;span class="o"&gt;(&lt;/span&gt;AND: &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;place&amp;#39;&lt;/span&gt;, &lt;span class="s1"&gt;&amp;#39;Residential&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
-?                  ^^^^^^^^^
-+ &lt;span class="o"&gt;(&lt;/span&gt;AND: &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;place&amp;#39;&lt;/span&gt;, &lt;span class="s1"&gt;&amp;#39;Palace&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
-?                  ^  +++
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;AssertionError:&lt;span class="w"&gt; &lt;/span&gt;u&lt;span class="s2"&gt;&amp;quot;(AND: (&amp;#39;place&amp;#39;, &amp;#39;Residential&amp;#39;))&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;!&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;u&lt;span class="s2"&gt;&amp;quot;(AND: (&amp;#39;place&amp;#39;, &amp;#39;Palace&amp;#39;))&amp;quot;&lt;/span&gt;
+-&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;AND:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;place&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Residential&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+?&lt;span class="w"&gt;                  &lt;/span&gt;^^^^^^^^^
++&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;AND:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;place&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Palace&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+?&lt;span class="w"&gt;                  &lt;/span&gt;^&lt;span class="w"&gt;  &lt;/span&gt;+++
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Which can be very helpful when trying to track down&amp;nbsp;errors.&lt;/p&gt;
 &lt;blockquote&gt;
@@ -2835,14 +2966,14 @@ be completely empty), then both tests&amp;nbsp;pass.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Hello World&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Test&amp;nbsp;run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./manage.py &lt;span class="nb"&gt;test&lt;/span&gt;
-Creating &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;test&lt;/span&gt;
+Creating&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;database&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
 ..
 ----------------------------------------------------------------------
-Ran &lt;span class="m"&gt;2&lt;/span&gt; tests &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;.027s
+Ran&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;tests&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.027s
 
 OK
-Destroying &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
+Destroying&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;database&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="template-inheritance-fails-with-get"&gt;
@@ -2854,22 +2985,22 @@ arbitrary&amp;nbsp;contents.&lt;/p&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Hello World&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Test&amp;nbsp;run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./manage.py &lt;span class="nb"&gt;test&lt;/span&gt;
-Creating &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;test&lt;/span&gt;
+Creating&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;database&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
 E.
 &lt;span class="o"&gt;======================================================================&lt;/span&gt;
-ERROR: test_get &lt;span class="o"&gt;(&lt;/span&gt;mini.tests.Tests&lt;span class="o"&gt;)&lt;/span&gt;
+ERROR:&lt;span class="w"&gt; &lt;/span&gt;test_get&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;mini.tests.Tests&lt;span class="o"&gt;)&lt;/span&gt;
 ----------------------------------------------------------------------
-Traceback &lt;span class="o"&gt;(&lt;/span&gt;most recent call last&lt;span class="o"&gt;)&lt;/span&gt;:
-  File &lt;span class="s2"&gt;&amp;quot;/home/james/active/mini/mmm/mini/tests.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;9&lt;/span&gt;, &lt;span class="k"&gt;in&lt;/span&gt; test_get
-      self.assertEqual&lt;span class="o"&gt;(&lt;/span&gt;response.context.get&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;, &lt;span class="s1"&gt;&amp;#39;Homer&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-AttributeError: &lt;span class="s1"&gt;&amp;#39;ContextList&amp;#39;&lt;/span&gt; object has no attribute &lt;span class="s1"&gt;&amp;#39;get&amp;#39;&lt;/span&gt;
+Traceback&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;most&lt;span class="w"&gt; &lt;/span&gt;recent&lt;span class="w"&gt; &lt;/span&gt;call&lt;span class="w"&gt; &lt;/span&gt;last&lt;span class="o"&gt;)&lt;/span&gt;:
+&lt;span class="w"&gt;  &lt;/span&gt;File&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/home/james/active/mini/mmm/mini/tests.py&amp;quot;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;line&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;9&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;test_get
+&lt;span class="w"&gt;      &lt;/span&gt;self.assertEqual&lt;span class="o"&gt;(&lt;/span&gt;response.context.get&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Homer&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+AttributeError:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ContextList&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;object&lt;span class="w"&gt; &lt;/span&gt;has&lt;span class="w"&gt; &lt;/span&gt;no&lt;span class="w"&gt; &lt;/span&gt;attribute&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;get&amp;#39;&lt;/span&gt;
 
 ----------------------------------------------------------------------
-Ran &lt;span class="m"&gt;2&lt;/span&gt; tests &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;.029s
+Ran&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;tests&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.029s
 
-FAILED &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;errors&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-Destroying &lt;span class="nb"&gt;test&lt;/span&gt; database &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
+FAILED&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;errors&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+Destroying&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;database&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So the &lt;tt class="docutils literal"&gt;test_get&lt;/tt&gt; case, which was using &lt;tt class="docutils literal"&gt;get&lt;/tt&gt; failed.&lt;/p&gt;
 &lt;/div&gt;
@@ -3328,7 +3459,7 @@ create the definition of the function, then put the code at the&amp;nbsp;end.&lt
 &lt;p&gt;What I like about the doctests in this example is that in 3 &lt;tt class="docutils literal"&gt;fib&lt;/tt&gt; is tested
 with &lt;tt class="docutils literal"&gt;next&lt;/tt&gt;, but in 4 it&amp;#8217;s tested using a list&amp;nbsp;comprehension.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fib&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
 &lt;span class="sd"&gt;    1.  Creates a generator&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; type(fib(0))&lt;/span&gt;
@@ -3448,15 +3579,15 @@ practical experiment with a test&amp;nbsp;repository.&lt;/p&gt;
 &lt;div class="section" id="experiment-squashing-with-rebase-and-keeping-history"&gt;
 &lt;h2&gt;Experiment: Squashing with rebase and keeping&amp;nbsp;history&lt;/h2&gt;
 &lt;p&gt;Make a repository with an initial&amp;nbsp;commit.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git init
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;init
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Create a &lt;cite&gt;&lt;span class="caps"&gt;README&lt;/span&gt;.md&lt;/cite&gt; file and put a line of text into it and commit - this
 commit is called&amp;nbsp;A.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat &amp;gt; README.md
-First line of readme file
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;README.md
+First&lt;span class="w"&gt; &lt;/span&gt;line&lt;span class="w"&gt; &lt;/span&gt;of&lt;span class="w"&gt; &lt;/span&gt;readme&lt;span class="w"&gt; &lt;/span&gt;file
 ^C
-$ git add README.md
-$ git commit
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;README.md
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;commit
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Current &lt;cite&gt;git&lt;/cite&gt; tree&amp;nbsp;status:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3466,27 +3597,27 @@ A   &amp;lt;-master
 &lt;h3&gt;Work on&amp;nbsp;feature&lt;/h3&gt;
 &lt;p&gt;In a new branch, we create a &lt;em&gt;feature&lt;/em&gt; to update the &lt;span class="caps"&gt;README&lt;/span&gt; with two new lines
 and to delete the first&amp;nbsp;line.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout -b feature-a
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;-b&lt;span class="w"&gt; &lt;/span&gt;feature-a
 
 &lt;span class="c1"&gt;# First feature commit (B)&lt;/span&gt;
-$ cat &amp;gt;&amp;gt; README.md
-Add a second line
+$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;README.md
+Add&lt;span class="w"&gt; &lt;/span&gt;a&lt;span class="w"&gt; &lt;/span&gt;second&lt;span class="w"&gt; &lt;/span&gt;line
 ^C
-$ git add README.md
-$ git commit
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;README.md
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;commit
 
 &lt;span class="c1"&gt;# Second feature commit (C)&lt;/span&gt;
-$ cat &amp;gt;&amp;gt; README.md
-Add a third line
+$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;README.md
+Add&lt;span class="w"&gt; &lt;/span&gt;a&lt;span class="w"&gt; &lt;/span&gt;third&lt;span class="w"&gt; &lt;/span&gt;line
 ^C
-$ git add README.md
-$ git commit
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;README.md
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;commit
 
 &lt;span class="c1"&gt;# Third feature commit (D)&lt;/span&gt;
-$ vim README.md
+$&lt;span class="w"&gt; &lt;/span&gt;vim&lt;span class="w"&gt; &lt;/span&gt;README.md
 &lt;span class="c1"&gt;# Remove first line and save&lt;/span&gt;
-$ git add README.md
-$ git commit
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;README.md
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;commit
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Current &lt;cite&gt;git&lt;/cite&gt; tree&amp;nbsp;status:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3498,10 +3629,10 @@ A   &amp;lt;-master
 &lt;div class="section" id="check-progress-in-reflog"&gt;
 &lt;h3&gt;Check progress in&amp;nbsp;reflog&lt;/h3&gt;
 &lt;p&gt;Checkout &lt;cite&gt;master&lt;/cite&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let&amp;#8217;s check the&amp;nbsp;reflog.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git reflog
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;reflog
 &lt;/pre&gt;&lt;/div&gt;
 &lt;pre class="literal-block"&gt;
 8e48d1d HEAD&amp;#64;{0}: checkout: moving from feature-a to master
@@ -3524,8 +3655,8 @@ f2503d5 HEAD&amp;#64;{3}: commit: B: Add a second line
 &lt;p&gt;&lt;cite&gt;feature-a&lt;/cite&gt; is ready to bring into &lt;cite&gt;master&lt;/cite&gt;. Let&amp;#8217;s first cleanup our history by
 doing an interactive rebase. We use a candidate branch for this work because
 it&amp;#8217;s a nice safety net which can help with&amp;nbsp;testing.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout feature-a
-$ git checkout -b feature-a-candidate
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;feature-a
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;-b&lt;span class="w"&gt; &lt;/span&gt;feature-a-candidate
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Current &lt;cite&gt;git&lt;/cite&gt; tree&amp;nbsp;status:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3533,7 +3664,7 @@ A   &amp;lt;-master
  \
   B--C--D   &amp;lt;-feature-a &amp;lt;-feature-a-candidate
 &lt;/pre&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git rebase --interactive master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;rebase&lt;span class="w"&gt; &lt;/span&gt;--interactive&lt;span class="w"&gt; &lt;/span&gt;master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let&amp;#8217;s squash our three commits into&amp;nbsp;one.&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3552,7 +3683,7 @@ Updating README.md as per #ticket
 * Remove first line
 &lt;/pre&gt;
 &lt;p&gt;Check reflog&amp;nbsp;again:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git reflog
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;reflog
 &lt;/pre&gt;&lt;/div&gt;
 &lt;pre class="literal-block"&gt;
 d0445b2 HEAD&amp;#64;{0}: rebase -i (finish): returning to refs/heads/feature-a-candidat
@@ -3578,8 +3709,8 @@ what you expect them to be, ensure that no information has been&amp;nbsp;lost.&l
 &lt;h3&gt;Merge onto&amp;nbsp;master&lt;/h3&gt;
 &lt;p&gt;The new commit &lt;cite&gt;E&lt;/cite&gt; is the patch for our &lt;em&gt;feature&lt;/em&gt; which we now merge onto
 &lt;cite&gt;master&lt;/cite&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout master
-$ git merge feature-a-candidate master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;master
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;merge&lt;span class="w"&gt; &lt;/span&gt;feature-a-candidate&lt;span class="w"&gt; &lt;/span&gt;master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;pre class="literal-block"&gt;
 Updating 8e48d1d..d0445b2
@@ -3597,7 +3728,7 @@ A--E   &amp;lt;-master &amp;lt;-feature-a-candidate
 &lt;div class="section" id="push"&gt;
 &lt;h3&gt;Push&lt;/h3&gt;
 &lt;p&gt;At this stage the &lt;em&gt;feature&lt;/em&gt; would usually be pushed to a branch on &lt;cite&gt;origin&lt;/cite&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git push origin master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;push&lt;span class="w"&gt; &lt;/span&gt;origin&lt;span class="w"&gt; &lt;/span&gt;master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Note that we&amp;#8217;ve only shared the squashed &lt;cite&gt;E&lt;/cite&gt; commit, not &lt;cite&gt;B&lt;/cite&gt;, &lt;cite&gt;C&lt;/cite&gt; or &lt;cite&gt;D&lt;/cite&gt; in the
 &lt;cite&gt;feature-a&lt;/cite&gt; branch.&lt;/p&gt;
@@ -3605,7 +3736,7 @@ A--E   &amp;lt;-master &amp;lt;-feature-a-candidate
 &lt;div class="section" id="cleanup"&gt;
 &lt;h3&gt;Cleanup&lt;/h3&gt;
 &lt;p&gt;We can then cleanup our working branches. First the&amp;nbsp;candidate.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git branch -d feature-a-candidate
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;branch&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;feature-a-candidate
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This leaves us with a tree&amp;nbsp;like:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3627,7 +3758,7 @@ their local repository to preserve the full history - that is certainly an&amp;n
 &lt;p&gt;When deleting the &lt;cite&gt;feature-a&lt;/cite&gt; branch &lt;cite&gt;git&lt;/cite&gt; requires the &lt;cite&gt;-D&lt;/cite&gt; flag to force the
 deletion. &lt;cite&gt;git&lt;/cite&gt; does not &lt;em&gt;work out&lt;/em&gt; that &lt;cite&gt;E&lt;/cite&gt; is &lt;em&gt;equal&lt;/em&gt; to &lt;cite&gt;B&lt;/cite&gt;, &lt;cite&gt;C&lt;/cite&gt; and &lt;cite&gt;D&lt;/cite&gt;
 combined, so thinks that history could be&amp;nbsp;lost.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git branch -D feature-a
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;branch&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;feature-a
 &lt;/pre&gt;&lt;/div&gt;
 &lt;pre class="literal-block"&gt;
 Deleted branch feature-a (was 262057a)
@@ -3642,7 +3773,7 @@ A--E   &amp;lt;-master
 &lt;div class="section" id="b-c-and-d-are-now-hanging-commits"&gt;
 &lt;h3&gt;B, C and D are now hanging&amp;nbsp;commits&lt;/h3&gt;
 &lt;p&gt;Check&amp;nbsp;reflog.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git reflog
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;reflog
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is a part of&amp;nbsp;it:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3655,11 +3786,11 @@ f2503d5 HEAD&amp;#64;{14}: commit: B: Add a second line
 &lt;p&gt;The development commits from the &lt;em&gt;feature&lt;/em&gt; development are still available and
 could be checked out into &lt;em&gt;detached &lt;span class="caps"&gt;HEAD&lt;/span&gt;&lt;/em&gt; state and inspected, played with,
 rebranched. Let&amp;#8217;s try&amp;nbsp;that.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout 262057a
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;262057a
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now play and explore as much as you&amp;nbsp;want.&lt;/p&gt;
 &lt;p&gt;When you&amp;#8217;re ready, move back to &lt;cite&gt;master&lt;/cite&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;checkout&lt;span class="w"&gt; &lt;/span&gt;master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And &lt;cite&gt;git&lt;/cite&gt; warns us that we&amp;#8217;ve left behind our hanging&amp;nbsp;commits:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
@@ -3705,11 +3836,11 @@ global, system or&amp;nbsp;local.&lt;/p&gt;
 hanging commits. This was challenging because my default settings prevented
 reflog and &lt;cite&gt;gc&lt;/cite&gt; from performing the clean, however I found &lt;a class="reference external" href="https://stackoverflow.com/a/14995269/1286705"&gt;this &lt;span class="caps"&gt;SO&lt;/span&gt; answer
 helpful&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git reflog expire --all --expire-unreachable&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;
-$ git repack -A -d
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;reflog&lt;span class="w"&gt; &lt;/span&gt;expire&lt;span class="w"&gt; &lt;/span&gt;--all&lt;span class="w"&gt; &lt;/span&gt;--expire-unreachable&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;repack&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;-d
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Repacking occurred. Now check&amp;nbsp;reflog.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git reflog
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;reflog
 &lt;/pre&gt;&lt;/div&gt;
 &lt;pre class="literal-block"&gt;
 d0445b2 HEAD&amp;#64;{0}: merge feature-a-candidate: Fast-forward
@@ -3795,13 +3926,13 @@ returns a new function in its&amp;nbsp;place.&lt;/p&gt;
 decorate &lt;cite&gt;my_func&lt;/cite&gt; then&amp;#8230;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@my_decorator&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;my_func&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;some stuff&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;some stuff&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="o"&gt;...&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Is equivalent to&amp;nbsp;writing.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;my_func&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;some stuff&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;some stuff&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="o"&gt;...&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt;
 &lt;span class="n"&gt;my_func&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;my_decorator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;my_func&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -3822,8 +3953,8 @@ file is loaded - there is nothing else in the&amp;nbsp;file.&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Run it on the command line, and &amp;#8220;Hello World&amp;#8221; appears when the &lt;cite&gt;nothing&lt;/cite&gt;
 function is&amp;nbsp;decorated.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python hello.py
-Hello World
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;hello.py
+Hello&lt;span class="w"&gt; &lt;/span&gt;World
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;When writing a decorator, remember to patch over the docstring of the wrapped
@@ -3868,7 +3999,7 @@ decorator on a mocked object and inspect how it interacts with&amp;nbsp;it.&lt;/
 &lt;p&gt;Now use the cache function as a&amp;nbsp;decorator.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@cache&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fib&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Fibonacci series&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Fibonacci series&lt;/span&gt;
 
 &lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; fib(1)&lt;/span&gt;
 &lt;span class="sd"&gt;    1&lt;/span&gt;

@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -89,7 +89,7 @@ they break the <span class="caps">AAA</span> pattern because there should be no 
 <span class="c1"># assertions in the Arrange block.</span>
 
 <span class="k">def</span> <span class="nf">test_owner_invite_admin</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Leela can invite Bender to an additional Project, Fry is notified</span>
 
 <span class="sd">    ----------------+---------------+-----------</span>
@@ -148,7 +148,7 @@ following fixture with its own dedicated test and a much simpler test for the
 invite&nbsp;behaviour.</p>
 <div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">account_members</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple:</span>
 <span class="sd">            User: Leela - Account owner.</span>
@@ -187,7 +187,7 @@ invite&nbsp;behaviour.</p>
     <span class="k">return</span> <span class="n">leela</span><span class="p">,</span> <span class="n">fry</span><span class="p">,</span> <span class="n">bender</span>
 
 <span class="k">def</span> <span class="nf">test_account_members</span><span class="p">(</span><span class="n">account_members</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fry has no pending messages and Bender is a member of the Account</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">account_members</span>
@@ -201,7 +201,7 @@ invite&nbsp;behaviour.</p>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fry</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 
 <span class="k">def</span> <span class="nf">test_owner_invite_admin</span><span class="p">(</span><span class="n">account_members</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Leela can invite Bender to an additional Project, Fry is notified</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">leela</span><span class="p">,</span> <span class="n">fry</span><span class="p">,</span> <span class="n">bender</span> <span class="o">=</span> <span class="n">account_members</span>

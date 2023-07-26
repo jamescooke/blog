@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -128,7 +128,7 @@ of the test&nbsp;Models:</p>
 <li><p class="first"><tt class="docutils literal">ItemFactory</tt>: to create and save instances of <tt class="docutils literal">plant.models.Item</tt>, a
 test model defined <a class="reference external" href="https://github.com/jamescooke/factory_audit/blob/master/factory_audit/plant/models.py">in the &#8216;plant&#8217; app</a>.</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Single Item with one required field &#39;name&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

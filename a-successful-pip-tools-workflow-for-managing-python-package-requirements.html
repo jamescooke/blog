@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -72,9 +72,9 @@ package&nbsp;management.</p>
 <h2>Keep requirements files in their own&nbsp;folder</h2>
 <p>In order to preserve sanity, I keep my project requirements in their own folder
 directly inside the&nbsp;project.</p>
-<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> project
-$ ls requirements/
-base.in  base.txt  Makefile  test.in  test.txt
+<div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>project
+$<span class="w"> </span>ls<span class="w"> </span>requirements/
+base.in<span class="w">  </span>base.txt<span class="w">  </span>Makefile<span class="w">  </span>test.in<span class="w">  </span>test.txt
 </pre></div>
 <p>During this post, I&#8217;ll use this simple example with one set of &#8220;base&#8221;
 requirements and one set of &#8220;test&#8221;&nbsp;requirements.</p>
@@ -113,23 +113,23 @@ test-packages
 <h2>Use a Makefile for common&nbsp;tasks</h2>
 <p>On each project that has multiple requirements files, I use a Makefile and
 place it in the requirements&nbsp;folder.</p>
-<div class="highlight"><pre><span></span><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">check</span> <span class="n">clean</span>
+<div class="highlight"><pre><span></span><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">all</span> <span class="n">check</span> <span class="n">clean</span>
 
-<span class="nv">objects</span> <span class="o">=</span> <span class="k">$(</span>wildcard *.in<span class="k">)</span>
-<span class="nv">outputs</span> <span class="o">:=</span> <span class="k">$(</span>objects:.in<span class="o">=</span>.txt<span class="k">)</span>
+<span class="nv">objects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>wildcard<span class="w"> </span>*.in<span class="k">)</span>
+<span class="nv">outputs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>objects:.in<span class="o">=</span>.txt<span class="k">)</span>
 
-<span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">outputs</span><span class="k">)</span>
+<span class="nf">all</span><span class="o">:</span><span class="w"> </span><span class="k">$(</span><span class="nv">outputs</span><span class="k">)</span>
 
-<span class="nf">%.txt</span><span class="o">:</span> %.<span class="n">in</span>
-    pip-compile -v --output-file <span class="nv">$@</span> $&lt;
+<span class="nf">%.txt</span><span class="o">:</span><span class="w"> </span>%.<span class="n">in</span>
+<span class="w">    </span>pip-compile<span class="w"> </span>-v<span class="w"> </span>--output-file<span class="w"> </span><span class="nv">$@</span><span class="w"> </span>$&lt;
 
-<span class="nf">test.txt</span><span class="o">:</span> <span class="n">base</span>.<span class="n">txt</span>
+<span class="nf">test.txt</span><span class="o">:</span><span class="w"> </span><span class="n">base</span>.<span class="n">txt</span>
 
 <span class="nf">check</span><span class="o">:</span>
-    @which pip-compile &gt; /dev/null
+<span class="w">    </span>@which<span class="w"> </span>pip-compile<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
 
-<span class="nf">clean</span><span class="o">:</span> <span class="n">check</span>
-    - rm *.txt
+<span class="nf">clean</span><span class="o">:</span><span class="w"> </span><span class="n">check</span>
+<span class="w">    </span>-<span class="w"> </span>rm<span class="w"> </span>*.txt
 </pre></div>
 <!-- ** -->
 <p>Here is [a similar] file <a class="reference external" href="https://github.com/jamescooke/flake8-aaa/blob/master/requirements/Makefile">in a current project</a>.</p>
@@ -144,18 +144,18 @@ rather than copying and pasting from this page which does not show tab&nbsp;char
 <p>Let&#8217;s go over the key functionality provided by this&nbsp;Makefile:</p>
 <ul>
 <li><p class="first">First two&nbsp;definitions:</p>
-<div class="highlight"><pre><span></span><span class="nv">objects</span> <span class="o">=</span> <span class="k">$(</span>wildcard *.in<span class="k">)</span>
+<div class="highlight"><pre><span></span><span class="nv">objects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>wildcard<span class="w"> </span>*.in<span class="k">)</span>
 </pre></div>
 <!-- ** -->
 <p><tt class="docutils literal">objects</tt> is a list containing every <tt class="docutils literal">.in</tt> file in requirements&nbsp;folder.</p>
-<div class="highlight"><pre><span></span><span class="nv">outputs</span> <span class="o">:=</span> <span class="k">$(</span>objects:.in<span class="o">=</span>.txt<span class="k">)</span>
+<div class="highlight"><pre><span></span><span class="nv">outputs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>objects:.in<span class="o">=</span>.txt<span class="k">)</span>
 </pre></div>
 <p><tt class="docutils literal">outputs</tt> is also a list made of one <tt class="docutils literal">.txt</tt> filename for each <tt class="docutils literal">.in</tt> file
 in the <tt class="docutils literal">outputs</tt> list. The <tt class="docutils literal">.txt</tt> files do not need to exist yet, this
 list tells <tt class="docutils literal">make</tt> what they should be&nbsp;called.</p>
 </li>
 <li><p class="first">A recipe called <tt class="docutils literal">all</tt> to build all <tt class="docutils literal">.txt</tt> files:</p>
-<div class="highlight"><pre><span></span><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">outputs</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><span class="nf">all</span><span class="o">:</span><span class="w"> </span><span class="k">$(</span><span class="nv">outputs</span><span class="k">)</span>
 </pre></div>
 <p>The <tt class="docutils literal">all</tt> recipe has no commands of its own - it solely depends on all the
 <tt class="docutils literal">.txt</tt> files in the <tt class="docutils literal">outputs</tt> list being built. In order to fulfil this
@@ -164,8 +164,8 @@ list.</p>
 </li>
 <li><p class="first">Up until now, <tt class="docutils literal">make</tt> does not know how to build a <tt class="docutils literal">.txt</tt> file, so here we
 give it a&nbsp;recipe:</p>
-<div class="highlight"><pre><span></span><span class="nf">%.txt</span><span class="o">:</span> %.<span class="n">in</span>
-    pip-compile -v --output-file <span class="nv">$@</span> $&lt;
+<div class="highlight"><pre><span></span><span class="nf">%.txt</span><span class="o">:</span><span class="w"> </span>%.<span class="n">in</span>
+<span class="w">    </span>pip-compile<span class="w"> </span>-v<span class="w"> </span>--output-file<span class="w"> </span><span class="nv">$@</span><span class="w"> </span>$&lt;
 </pre></div>
 <p>The first line tells <tt class="docutils literal">make</tt> that any <tt class="docutils literal">.txt</tt> file depends on the <tt class="docutils literal">.in</tt>
 file with the same name. <tt class="docutils literal">make</tt> will check the date stamp on the two files
@@ -185,7 +185,7 @@ from <tt class="docutils literal">base.in</tt>.</li>
 </ul>
 </li>
 <li><p class="first">Now we tell <tt class="docutils literal">make</tt> about the dependency between the requirements&nbsp;files.</p>
-<div class="highlight"><pre><span></span><span class="nf">test.txt</span><span class="o">:</span> <span class="n">base</span>.<span class="n">txt</span>
+<div class="highlight"><pre><span></span><span class="nf">test.txt</span><span class="o">:</span><span class="w"> </span><span class="n">base</span>.<span class="n">txt</span>
 </pre></div>
 <p>This creates a dependency chain. This is an additional recipe for
 <tt class="docutils literal">test.txt</tt> which tells <tt class="docutils literal">make</tt> that it depends on <tt class="docutils literal">base.txt</tt>. That means
@@ -193,10 +193,10 @@ that if <tt class="docutils literal">make</tt> is asked to build <tt class="docu
 <tt class="docutils literal">test.in</tt> <em>or</em> <tt class="docutils literal">base.txt</tt> have been&nbsp;updated.</p>
 <p>If <tt class="docutils literal">base.in</tt> is updated, then <tt class="docutils literal">make</tt> knows that it will need to recompile
 <tt class="docutils literal">base.txt</tt> in order to make <tt class="docutils literal">test.txt</tt>. We can see that&nbsp;here:</p>
-<div class="highlight"><pre><span></span>$ touch base.in       <span class="c1"># Update timestamp on base.in</span>
-$ make -n test.txt    <span class="c1"># What commands will be run to build test.txt</span>
-pip-compile -v --output-file base.txt base.in
-pip-compile -v --output-file test.txt test.in
+<div class="highlight"><pre><span></span>$<span class="w"> </span>touch<span class="w"> </span>base.in<span class="w">       </span><span class="c1"># Update timestamp on base.in</span>
+$<span class="w"> </span>make<span class="w"> </span>-n<span class="w"> </span>test.txt<span class="w">    </span><span class="c1"># What commands will be run to build test.txt</span>
+pip-compile<span class="w"> </span>-v<span class="w"> </span>--output-file<span class="w"> </span>base.txt<span class="w"> </span>base.in
+pip-compile<span class="w"> </span>-v<span class="w"> </span>--output-file<span class="w"> </span>test.txt<span class="w"> </span>test.in
 </pre></div>
 <p>This is exactly what we want for requirements constraining. If the
 requirements in our base have changed, then we want our test file to be
@@ -208,10 +208,10 @@ inheritance in requirements&nbsp;files.</p>
 </li>
 <li><p class="first">Finally, a recipe to help us update&nbsp;requirements.</p>
 <div class="highlight"><pre><span></span><span class="nf">check</span><span class="o">:</span>
-    @which pip-compile &gt; /dev/null
+<span class="w">    </span>@which<span class="w"> </span>pip-compile<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
 
-<span class="nf">clean</span><span class="o">:</span> <span class="n">check</span>
-    - rm *.txt
+<span class="nf">clean</span><span class="o">:</span><span class="w"> </span><span class="n">check</span>
+<span class="w">    </span>-<span class="w"> </span>rm<span class="w"> </span>*.txt
 </pre></div>
 <!-- ** -->
 <p>The <tt class="docutils literal">check</tt> recipe will fail if <tt class="docutils literal"><span class="pre">pip-tools</span></tt> is not&nbsp;installed.</p>
@@ -227,18 +227,18 @@ it. So let&#8217;s continue with some common workflow&nbsp;actions.</p>
 <div class="section" id="build-one-or-more-requirements-files">
 <h2>Build one or more requirements&nbsp;files</h2>
 <p>To update all requirements use the default <tt class="docutils literal">all</tt> recipe.</p>
-<div class="highlight"><pre><span></span>$ make all
+<div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>all
 </pre></div>
 <p>To update a particular file, ask for it by&nbsp;name:</p>
-<div class="highlight"><pre><span></span>$ make test.txt
+<div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>test.txt
 </pre></div>
 <p>If <tt class="docutils literal">make</tt> tells you that a file is up-to-date but you want to force it to
 be rebuilt you should <tt class="docutils literal">touch</tt> the <tt class="docutils literal">.in</tt> file.</p>
-<div class="highlight"><pre><span></span>$ make base.txt
-make: <span class="s1">&#39;base.txt&#39;</span> is up to date.
-$ touch base.in
-$ make base.txt
-pip-compile -v --output-file base.txt base.in
+<div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>base.txt
+make:<span class="w"> </span><span class="s1">&#39;base.txt&#39;</span><span class="w"> </span>is<span class="w"> </span>up<span class="w"> </span>to<span class="w"> </span>date.
+$<span class="w"> </span>touch<span class="w"> </span>base.in
+$<span class="w"> </span>make<span class="w"> </span>base.txt
+pip-compile<span class="w"> </span>-v<span class="w"> </span>--output-file<span class="w"> </span>base.txt<span class="w"> </span>base.in
 ...
 </pre></div>
 </div>
@@ -247,9 +247,9 @@ pip-compile -v --output-file base.txt base.in
 <p>To add a dependency, locate the appropriate <tt class="docutils literal">.in</tt> file and add the new
 package name there. The version number is only required if a particular version
 of the library is required. The latest version will be chosen by default when&nbsp;compiling.</p>
-<div class="highlight"><pre><span></span>$ cat &gt;&gt; base.in
+<div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>base.in
 ipython
-$ make all
+$<span class="w"> </span>make<span class="w"> </span>all
 </pre></div>
 </div>
 <div class="section" id="update-a-package">
@@ -260,8 +260,8 @@ this and remove every package that the top level package depended on using
 <tt class="docutils literal">sed</tt> with a pattern&nbsp;match.</p>
 <p>Given that I want to update <tt class="docutils literal">ipython</tt> and it is not pinned in my <tt class="docutils literal">.in</tt>
 file:</p>
-<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;/ipython/d&#39;</span> -i *.txt
-$ make all
+<div class="highlight"><pre><span></span>$<span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;/ipython/d&#39;</span><span class="w"> </span>-i<span class="w"> </span>*.txt
+$<span class="w"> </span>make<span class="w"> </span>all
 </pre></div>
 <p>There is no command for this removal built into the Makefile, but potentially
 it could be. Ideally, it could be provided as extra functionality by
@@ -277,7 +277,7 @@ as&nbsp;required.</p>
 <p>A full update of all requirements to the latest version (including updating all
 packages that are not pinned in the <tt class="docutils literal">.in</tt> file with a particular version
 number) can be achieved&nbsp;with:</p>
-<div class="highlight"><pre><span></span>$ make clean all
+<div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>clean<span class="w"> </span>all
 </pre></div>
 <p>The <tt class="docutils literal">clean</tt> recipe will clean out all <tt class="docutils literal">*.txt</tt> files if you have
 <tt class="docutils literal"><span class="pre">pip-tools</span></tt> installed. Then the <tt class="docutils literal">all</tt> recipe will rebuild them all in
@@ -287,7 +287,7 @@ dependency&nbsp;order.</p>
 <h2>Finally</h2>
 <p>A tip for working with Makefiles. If you want to see what commands will be run
 by a recipe, you can use the <tt class="docutils literal"><span class="pre">-n</span></tt> flag and inspect the commands that were&nbsp;planned:</p>
-<div class="highlight"><pre><span></span>$ make -n all
+<div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-n<span class="w"> </span>all
 </pre></div>
 <p>Happy requirements&nbsp;packing!</p>
 </div>
@@ -338,6 +338,9 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/an-ode-to-pipx.html">An Ode to&nbsp;pipx</a>
+                        <p>Using <code>pipx</code> has improved my daily development experience&nbsp;considerably.</p></li>
+                    <li>
                         <a href="https://jamescooke.info/pytests-cache-and-gitignore.html">Pytest&#8217;s cache and&nbsp;gitignore</a>
                         <p class="first last">Sanity checking Pytest&#8217;s <tt class="docutils literal">.gitignore</tt> files.</p>
 </li>
@@ -345,12 +348,6 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                         <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
                         <p class="first last">Thoughts on the benefits of extracting library code from Python
 projects into their own&nbsp;packages.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
-                        <p class="first last">This post explores how to extract arrangement code when working with
-the Arrange Act Assert pattern so that it can be used with certainty
-across the test&nbsp;suite.</p>
 </li>
                 </ul>
         </p>

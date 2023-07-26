@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -61,13 +61,13 @@ returns a new function in its&nbsp;place.</p>
 decorate <cite>my_func</cite> then&#8230;</p>
 <div class="highlight"><pre><span></span><span class="nd">@my_decorator</span>
 <span class="k">def</span> <span class="nf">my_func</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;some stuff&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;some stuff&quot;&quot;&quot;</span>
     <span class="o">...</span>
     <span class="k">return</span>
 </pre></div>
 <p>Is equivalent to&nbsp;writing.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_func</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;some stuff&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;some stuff&quot;&quot;&quot;</span>
     <span class="o">...</span>
     <span class="k">return</span>
 <span class="n">my_func</span> <span class="o">=</span> <span class="n">my_decorator</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span>
@@ -88,8 +88,8 @@ file is loaded - there is nothing else in the&nbsp;file.</p>
 </pre></div>
 <p>Run it on the command line, and &#8220;Hello World&#8221; appears when the <cite>nothing</cite>
 function is&nbsp;decorated.</p>
-<div class="highlight"><pre><span></span>$ python hello.py
-Hello World
+<div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>hello.py
+Hello<span class="w"> </span>World
 </pre></div>
 </li>
 <li><p class="first">When writing a decorator, remember to patch over the docstring of the wrapped
@@ -134,7 +134,7 @@ decorator on a mocked object and inspect how it interacts with&nbsp;it.</p>
 <p>Now use the cache function as a&nbsp;decorator.</p>
 <div class="highlight"><pre><span></span><span class="nd">@cache</span>
 <span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Fibonacci series</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fibonacci series</span>
 
 <span class="sd">    &gt;&gt;&gt; fib(1)</span>
 <span class="sd">    1</span>
@@ -214,6 +214,9 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/an-ode-to-pipx.html">An Ode to&nbsp;pipx</a>
+                        <p>Using <code>pipx</code> has improved my daily development experience&nbsp;considerably.</p></li>
+                    <li>
                         <a href="https://jamescooke.info/pytests-cache-and-gitignore.html">Pytest&#8217;s cache and&nbsp;gitignore</a>
                         <p class="first last">Sanity checking Pytest&#8217;s <tt class="docutils literal">.gitignore</tt> files.</p>
 </li>
@@ -221,12 +224,6 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                         <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
                         <p class="first last">Thoughts on the benefits of extracting library code from Python
 projects into their own&nbsp;packages.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
-                        <p class="first last">This post explores how to extract arrangement code when working with
-the Arrange Act Assert pattern so that it can be used with certainty
-across the test&nbsp;suite.</p>
 </li>
                 </ul>
         </p>

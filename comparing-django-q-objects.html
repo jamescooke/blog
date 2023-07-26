@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -96,7 +96,7 @@ that extends <tt class="docutils literal">unittest.TestCase</tt> (such as Django
 <span class="k">class</span> <span class="nc">QTestMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">assertQEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assert `Q` objects are equal by ensuring that their</span>
 <span class="sd">        unicode outputs are equal (crappy but good enough)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -112,7 +112,7 @@ provides rich diffs on&nbsp;failure:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TestFail</span><span class="p">(</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">QTestMixin</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">test_unhappy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Two Q objects are not the same</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">place</span><span class="o">=</span><span class="s1">&#39;Residential&#39;</span><span class="p">)</span>
@@ -120,11 +120,11 @@ provides rich diffs on&nbsp;failure:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertQEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </pre></div>
 <p>Gives&nbsp;output:</p>
-<div class="highlight"><pre><span></span>AssertionError: u<span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Residential&#39;))&quot;</span> !<span class="o">=</span> u<span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Palace&#39;))&quot;</span>
-- <span class="o">(</span>AND: <span class="o">(</span><span class="s1">&#39;place&#39;</span>, <span class="s1">&#39;Residential&#39;</span><span class="o">))</span>
-?                  ^^^^^^^^^
-+ <span class="o">(</span>AND: <span class="o">(</span><span class="s1">&#39;place&#39;</span>, <span class="s1">&#39;Palace&#39;</span><span class="o">))</span>
-?                  ^  +++
+<div class="highlight"><pre><span></span>AssertionError:<span class="w"> </span>u<span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Residential&#39;))&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span>u<span class="s2">&quot;(AND: (&#39;place&#39;, &#39;Palace&#39;))&quot;</span>
+-<span class="w"> </span><span class="o">(</span>AND:<span class="w"> </span><span class="o">(</span><span class="s1">&#39;place&#39;</span>,<span class="w"> </span><span class="s1">&#39;Residential&#39;</span><span class="o">))</span>
+?<span class="w">                  </span>^^^^^^^^^
++<span class="w"> </span><span class="o">(</span>AND:<span class="w"> </span><span class="o">(</span><span class="s1">&#39;place&#39;</span>,<span class="w"> </span><span class="s1">&#39;Palace&#39;</span><span class="o">))</span>
+?<span class="w">                  </span>^<span class="w">  </span>+++
 </pre></div>
 <p>Which can be very helpful when trying to track down&nbsp;errors.</p>
 <blockquote>

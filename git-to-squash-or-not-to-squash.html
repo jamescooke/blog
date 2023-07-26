@@ -37,7 +37,7 @@
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
                                 <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
-                                                        </ul>
+                        </ul>
                     </nav>
                 </header>
 
@@ -119,15 +119,15 @@ practical experiment with a test&nbsp;repository.</p>
 <div class="section" id="experiment-squashing-with-rebase-and-keeping-history">
 <h2>Experiment: Squashing with rebase and keeping&nbsp;history</h2>
 <p>Make a repository with an initial&nbsp;commit.</p>
-<div class="highlight"><pre><span></span>$ git init
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>init
 </pre></div>
 <p>Create a <cite><span class="caps">README</span>.md</cite> file and put a line of text into it and commit - this
 commit is called&nbsp;A.</p>
-<div class="highlight"><pre><span></span>$ cat &gt; README.md
-First line of readme file
+<div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>&gt;<span class="w"> </span>README.md
+First<span class="w"> </span>line<span class="w"> </span>of<span class="w"> </span>readme<span class="w"> </span>file
 ^C
-$ git add README.md
-$ git commit
+$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>README.md
+$<span class="w"> </span>git<span class="w"> </span>commit
 </pre></div>
 <p>Current <cite>git</cite> tree&nbsp;status:</p>
 <pre class="literal-block">
@@ -137,27 +137,27 @@ A   &lt;-master
 <h3>Work on&nbsp;feature</h3>
 <p>In a new branch, we create a <em>feature</em> to update the <span class="caps">README</span> with two new lines
 and to delete the first&nbsp;line.</p>
-<div class="highlight"><pre><span></span>$ git checkout -b feature-a
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature-a
 
 <span class="c1"># First feature commit (B)</span>
-$ cat &gt;&gt; README.md
-Add a second line
+$<span class="w"> </span>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>README.md
+Add<span class="w"> </span>a<span class="w"> </span>second<span class="w"> </span>line
 ^C
-$ git add README.md
-$ git commit
+$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>README.md
+$<span class="w"> </span>git<span class="w"> </span>commit
 
 <span class="c1"># Second feature commit (C)</span>
-$ cat &gt;&gt; README.md
-Add a third line
+$<span class="w"> </span>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>README.md
+Add<span class="w"> </span>a<span class="w"> </span>third<span class="w"> </span>line
 ^C
-$ git add README.md
-$ git commit
+$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>README.md
+$<span class="w"> </span>git<span class="w"> </span>commit
 
 <span class="c1"># Third feature commit (D)</span>
-$ vim README.md
+$<span class="w"> </span>vim<span class="w"> </span>README.md
 <span class="c1"># Remove first line and save</span>
-$ git add README.md
-$ git commit
+$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>README.md
+$<span class="w"> </span>git<span class="w"> </span>commit
 </pre></div>
 <p>Current <cite>git</cite> tree&nbsp;status:</p>
 <pre class="literal-block">
@@ -169,10 +169,10 @@ A   &lt;-master
 <div class="section" id="check-progress-in-reflog">
 <h3>Check progress in&nbsp;reflog</h3>
 <p>Checkout <cite>master</cite>.</p>
-<div class="highlight"><pre><span></span>$ git checkout master
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>master
 </pre></div>
 <p>Let&#8217;s check the&nbsp;reflog.</p>
-<div class="highlight"><pre><span></span>$ git reflog
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>reflog
 </pre></div>
 <pre class="literal-block">
 8e48d1d HEAD&#64;{0}: checkout: moving from feature-a to master
@@ -195,8 +195,8 @@ f2503d5 HEAD&#64;{3}: commit: B: Add a second line
 <p><cite>feature-a</cite> is ready to bring into <cite>master</cite>. Let&#8217;s first cleanup our history by
 doing an interactive rebase. We use a candidate branch for this work because
 it&#8217;s a nice safety net which can help with&nbsp;testing.</p>
-<div class="highlight"><pre><span></span>$ git checkout feature-a
-$ git checkout -b feature-a-candidate
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>feature-a
+$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature-a-candidate
 </pre></div>
 <p>Current <cite>git</cite> tree&nbsp;status:</p>
 <pre class="literal-block">
@@ -204,7 +204,7 @@ A   &lt;-master
  \
   B--C--D   &lt;-feature-a &lt;-feature-a-candidate
 </pre>
-<div class="highlight"><pre><span></span>$ git rebase --interactive master
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>rebase<span class="w"> </span>--interactive<span class="w"> </span>master
 </pre></div>
 <p>Let&#8217;s squash our three commits into&nbsp;one.</p>
 <pre class="literal-block">
@@ -223,7 +223,7 @@ Updating README.md as per #ticket
 * Remove first line
 </pre>
 <p>Check reflog&nbsp;again:</p>
-<div class="highlight"><pre><span></span>$ git reflog
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>reflog
 </pre></div>
 <pre class="literal-block">
 d0445b2 HEAD&#64;{0}: rebase -i (finish): returning to refs/heads/feature-a-candidat
@@ -249,8 +249,8 @@ what you expect them to be, ensure that no information has been&nbsp;lost.</p>
 <h3>Merge onto&nbsp;master</h3>
 <p>The new commit <cite>E</cite> is the patch for our <em>feature</em> which we now merge onto
 <cite>master</cite>.</p>
-<div class="highlight"><pre><span></span>$ git checkout master
-$ git merge feature-a-candidate master
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>master
+$<span class="w"> </span>git<span class="w"> </span>merge<span class="w"> </span>feature-a-candidate<span class="w"> </span>master
 </pre></div>
 <pre class="literal-block">
 Updating 8e48d1d..d0445b2
@@ -268,7 +268,7 @@ A--E   &lt;-master &lt;-feature-a-candidate
 <div class="section" id="push">
 <h3>Push</h3>
 <p>At this stage the <em>feature</em> would usually be pushed to a branch on <cite>origin</cite>.</p>
-<div class="highlight"><pre><span></span>$ git push origin master
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master
 </pre></div>
 <p>Note that we&#8217;ve only shared the squashed <cite>E</cite> commit, not <cite>B</cite>, <cite>C</cite> or <cite>D</cite> in the
 <cite>feature-a</cite> branch.</p>
@@ -276,7 +276,7 @@ A--E   &lt;-master &lt;-feature-a-candidate
 <div class="section" id="cleanup">
 <h3>Cleanup</h3>
 <p>We can then cleanup our working branches. First the&nbsp;candidate.</p>
-<div class="highlight"><pre><span></span>$ git branch -d feature-a-candidate
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>feature-a-candidate
 </pre></div>
 <p>This leaves us with a tree&nbsp;like:</p>
 <pre class="literal-block">
@@ -298,7 +298,7 @@ their local repository to preserve the full history - that is certainly an&nbsp;
 <p>When deleting the <cite>feature-a</cite> branch <cite>git</cite> requires the <cite>-D</cite> flag to force the
 deletion. <cite>git</cite> does not <em>work out</em> that <cite>E</cite> is <em>equal</em> to <cite>B</cite>, <cite>C</cite> and <cite>D</cite>
 combined, so thinks that history could be&nbsp;lost.</p>
-<div class="highlight"><pre><span></span>$ git branch -D feature-a
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>branch<span class="w"> </span>-D<span class="w"> </span>feature-a
 </pre></div>
 <pre class="literal-block">
 Deleted branch feature-a (was 262057a)
@@ -313,7 +313,7 @@ A--E   &lt;-master
 <div class="section" id="b-c-and-d-are-now-hanging-commits">
 <h3>B, C and D are now hanging&nbsp;commits</h3>
 <p>Check&nbsp;reflog.</p>
-<div class="highlight"><pre><span></span>$ git reflog
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>reflog
 </pre></div>
 <p>This is a part of&nbsp;it:</p>
 <pre class="literal-block">
@@ -326,11 +326,11 @@ f2503d5 HEAD&#64;{14}: commit: B: Add a second line
 <p>The development commits from the <em>feature</em> development are still available and
 could be checked out into <em>detached <span class="caps">HEAD</span></em> state and inspected, played with,
 rebranched. Let&#8217;s try&nbsp;that.</p>
-<div class="highlight"><pre><span></span>$ git checkout 262057a
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>262057a
 </pre></div>
 <p>Now play and explore as much as you&nbsp;want.</p>
 <p>When you&#8217;re ready, move back to <cite>master</cite>.</p>
-<div class="highlight"><pre><span></span>$ git checkout master
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>master
 </pre></div>
 <p>And <cite>git</cite> warns us that we&#8217;ve left behind our hanging&nbsp;commits:</p>
 <pre class="literal-block">
@@ -376,11 +376,11 @@ global, system or&nbsp;local.</p>
 hanging commits. This was challenging because my default settings prevented
 reflog and <cite>gc</cite> from performing the clean, however I found <a class="reference external" href="https://stackoverflow.com/a/14995269/1286705">this <span class="caps">SO</span> answer
 helpful</a>.</p>
-<div class="highlight"><pre><span></span>$ git reflog expire --all --expire-unreachable<span class="o">=</span><span class="m">0</span>
-$ git repack -A -d
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>reflog<span class="w"> </span>expire<span class="w"> </span>--all<span class="w"> </span>--expire-unreachable<span class="o">=</span><span class="m">0</span>
+$<span class="w"> </span>git<span class="w"> </span>repack<span class="w"> </span>-A<span class="w"> </span>-d
 </pre></div>
 <p>Repacking occurred. Now check&nbsp;reflog.</p>
-<div class="highlight"><pre><span></span>$ git reflog
+<div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>reflog
 </pre></div>
 <pre class="literal-block">
 d0445b2 HEAD&#64;{0}: merge feature-a-candidate: Fast-forward

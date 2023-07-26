@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="A quick hacky guide on how to install private packages into pipx so you can use your home-rolled tools on the command line without boilerplate.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>How to Pipx-ify a Private Package // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>How to Pipx-ify a Private&nbsp;Package</h1>
+                <p class="postdate" title="2023-08-02T00:00:00+01:00">- Posted Aug 02, 2023</p>
+            </header>
+            <div class='article-content'>
+                <h2>Installing local private&nbsp;packages</h2>
+<p>Given I&#8217;ve usually cut corners to get things working, my private tools are
+often runnable with the Python installed in the tool&#8217;s virtual&nbsp;environment:</p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">some_tool</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">args</span><span class="p">]</span>
+</code></pre></div>
+
+<p>And if I&#8217;m <em>really</em> lucky, then past-me has done a Python main with <code>-m</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">some_tool</span> <span class="p">[</span><span class="n">args</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Either way, getting them working with pipx I found pretty&nbsp;easy.</p>
+<h3>Try installing from the&nbsp;directory</h3>
+<p>First try installing the private package you want to make runnable from its
+currently installed&nbsp;directory.</p>
+<p>If you want <code>mypackage</code> in <code>~/active</code> to be installed by pipx, then point it at
+the&nbsp;directory:</p>
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>~/active/mypackage
+</code></pre></div>
+
+<p>If this &#8220;Just Works ™️&#8221; for you, then you&#8217;re all set.&nbsp;🎉</p>
+<p>However, I&#8217;m often lazy with my own code, so pipx can&#8217;t find what to&nbsp;install:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ERROR</span><span class="o">:</span><span class="w"> </span><span class="n">Directory</span><span class="w"> </span><span class="s1">&#39;/home/james/active/mypackage&#39;</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">installable</span><span class="o">.</span><span class="w"> </span><span class="n">Neither</span><span class="w"> </span><span class="s1">&#39;setup.py&#39;</span><span class="w"> </span><span class="n">nor</span><span class="w"> </span><span class="s1">&#39;pyproject.toml&#39;</span><span class="w"> </span><span class="n">found</span><span class="o">.</span>
+<span class="n">Cannot</span><span class="w"> </span><span class="n">determine</span><span class="w"> </span><span class="k">package</span><span class="w"> </span><span class="nn">name</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">spec</span><span class="w"> </span><span class="s1">&#39;/home/james/active/mypackage&#39;</span><span class="o">.</span><span class="w"> </span><span class="n">Check</span><span class="w"> </span><span class="k">package</span><span class="w"> </span><span class="nn">spec</span><span class="w"> </span><span class="k">for</span>
+<span class="n">errors</span><span class="o">.</span>
+</code></pre></div>
+
+<h3>Add&nbsp;pyproject.toml</h3>
+<p>Given I&#8217;ve already installed <a href="https://flit.pypa.io/en/stable/">Flit</a> using
+pipx, it&#8217;s now really easy to use Flit as the build system in the project. Just
+run <code>init</code> and follow the prompts for a &#8220;standard&#8221; <code>pyproject.toml</code> to be
+created for&nbsp;you:</p>
+<div class="highlight"><pre><span></span><code>flit<span class="w"> </span>init
+</code></pre></div>
+
+<p>This will give you a default <code>pyproject.toml</code> file.</p>
+<p>You&#8217;ll also need to add a docstring to your projects <code>__init__.py</code> file, something&nbsp;like:</p>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is mypackage and it&#39;s amazing</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
+</code></pre></div>
+
+<p>Now retry installing with <code>pipx install</code> and you&#8217;ll get a new&nbsp;error:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">No</span><span class="w"> </span><span class="nx">apps</span><span class="w"> </span><span class="nx">associated</span><span class="w"> </span><span class="nx">with</span><span class="w"> </span><span class="kn">package</span><span class="w"> </span><span class="nx">mypackage</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">its</span><span class="w"> </span><span class="nx">dependencies</span><span class="p">.</span><span class="w"> </span><span class="nx">If</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="nx">attempting</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">install</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="kn">library</span><span class="p">,</span><span class="w"> </span><span class="nx">pipx</span><span class="w"> </span><span class="nx">should</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">used</span><span class="p">.</span><span class="w"> </span><span class="nx">Consider</span><span class="w"> </span><span class="nx">using</span><span class="w"> </span><span class="nx">pip</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">similar</span><span class="w"> </span><span class="nx">tool</span><span class="w"> </span><span class="nx">instead</span><span class="p">.</span>
+</code></pre></div>
+
+<h3>Add entry&nbsp;points</h3>
+<p>Pipx is complaining because it doesn&#8217;t look like there&#8217;s an executable in
+&#8220;mypackage&#8221; - and that makes sense because there are no entry points in the
+<code>pyproject.toml</code> file.</p>
+<p>To cut a long story short, <a href="https://packaging.python.org/en/latest/specifications/entry-points/#entry-points">entry points are complex
+beasts</a>.
+Here&#8217;s an example of the kind of thing I&#8217;ve hacked into&nbsp;&#8220;mypackage&#8221;:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[project.scripts]</span>
+<span class="n">mypackage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mypackage:cli.do&quot;</span>
+</code></pre></div>
+
+<p>This will make a <code>mypackage</code> executable available on the command line. It tells
+pipx to point at the <code>do()</code> callable in the <code>cli</code> module (I think - <span class="caps">TBH</span> I just
+hit it until it&nbsp;works).</p>
+<p>Now try installing again (note: I&#8217;m lazily in the <code>~/active/mypackage</code>
+directory and just using <code>.</code>), and it <em>should</em>&nbsp;work:</p>
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>--python<span class="o">=</span>python3.11
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">installed</span><span class="w"> </span><span class="kn">package</span><span class="w"> </span><span class="nx">mypackage</span><span class="w"> </span><span class="m m-Double">0.1.0</span><span class="p">,</span><span class="w"> </span><span class="nx">installed</span><span class="w"> </span><span class="nx">using</span><span class="w"> </span><span class="nx">Python</span><span class="w"> </span><span class="m m-Double">3.11.4</span>
+<span class="w">  </span><span class="nx">These</span><span class="w"> </span><span class="nx">apps</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="nx">now</span><span class="w"> </span><span class="nx">globally</span><span class="w"> </span><span class="nx">available</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">mypackage</span>
+<span class="nx">done</span><span class="p">!</span><span class="w"> </span><span class="err">✨</span><span class="w"> </span><span class="err">🌟</span><span class="w"> </span><span class="err">✨</span>
+</code></pre></div>
+
+<h3>Oh no - moar&nbsp;packages!</h3>
+<p>Now I can run <code>mypackage</code> from wherever I want on the command&nbsp;line:</p>
+<div class="highlight"><pre><span></span><code>mypackage<span class="w"> </span>--help
+</code></pre></div>
+
+<p>But there&#8217;s a&nbsp;snag:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/james/.local/bin/mypackage&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">5</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="kn">from</span> <span class="nn">mypackage</span> <span class="kn">import</span> <span class="n">cli</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/james/.local/pipx/venvs/mypackage/lib/python3.8/site-packages/mypackage/cli.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="kn">import</span> <span class="nn">rich_click</span> <span class="k">as</span> <span class="nn">click</span>
+<span class="ne">ModuleNotFoundError</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="s1">&#39;rich_click&#39;</span>
+</code></pre></div>
+
+<p>Pipx hasn&#8217;t installed any dependencies of mypackage - so it won&#8217;t run in it&#8217;s
+nice, new, clean pipx virtual&nbsp;environment!</p>
+<p>Best of all, the pipx install is a <strong>clone</strong> of the package. That means I can
+continue to work on it in my <code>~/active</code> directory, making breaking changes as
+required, while the installed version continues to operate, isolated in its
+pipx-managed install&nbsp;directory.</p>
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/python.html">Python</a>
+                with
+tag                    <a href="https://jamescooke.info/tag/languagepython.html">language:python</a>
+                <br>
+                &ndash; Further reading:
+                <ul>
+                    <li>
+                        <a href="https://jamescooke.info/an-ode-to-pipx.html">An Ode to&nbsp;pipx</a>
+                        <p>Using <code>pipx</code> has improved my daily development experience&nbsp;considerably.</p></li>
+                    <li>
+                        <a href="https://jamescooke.info/pytests-cache-and-gitignore.html">Pytest&#8217;s cache and&nbsp;gitignore</a>
+                        <p class="first last">Sanity checking Pytest&#8217;s <tt class="docutils literal">.gitignore</tt> files.</p>
+</li>
+                    <li>
+                        <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
+                        <p class="first last">Thoughts on the benefits of extracting library code from Python
+projects into their own&nbsp;packages.</p>
+</li>
+                </ul>
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>
