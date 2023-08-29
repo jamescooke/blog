@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="About six months ago, I upgraded our family accounts from Ledger to hledger. The CLI API of hledger is better than that of Ledger and the feedback received when a balance assertion fails is just one example.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>hledger failure messages are better than Ledger’s // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>hledger failure messages are better than&nbsp;Ledger&#8217;s</h1>
+                <p class="postdate" title="2023-08-29T00:00:00+01:00">- Posted Aug 29, 2023</p>
+            </header>
+            <div class='article-content'>
+                <p>For any new plain text accounting project I always recommend using
+<a href="https://hledger.org/">hledger</a> over
+<a href="https://ledger-cli.org/index.html">Ledger</a>.</p>
+<p>The main reason is errors and failures are better reported and rendered with
+hledger, so let&#8217;s look at an example - failed balance&nbsp;assertions.</p>
+<h2>An erroneous&nbsp;assertion</h2>
+<p>Given a journal file with a single transaction, which contains an&nbsp;error:</p>
+<div class="highlight"><pre><span></span><code><span class="mf">2023</span><span class="o">/</span><span class="mf">08</span><span class="o">/</span><span class="mf">29</span><span class="w"> </span><span class="n">Some</span><span class="w"> </span><span class="n">person</span>
+<span class="w">    </span><span class="n">Assets</span><span class="p">:</span><span class="n">Current</span><span class="w">         </span><span class="err">$</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="mf">75.73</span>
+<span class="w">    </span><span class="n">Income</span>
+</code></pre></div>
+
+<p>The error is that the balance of the Current Account is asserted as <code>$ 75.73</code>
+after the transaction, when it&#8217;s really <code>$ 100</code>.</p>
+<h2>Ledger&nbsp;output</h2>
+<p>Running Ledger, here&#8217;s the&nbsp;version:</p>
+<div class="highlight"><pre><span></span><code>ledger<span class="w"> </span>--version
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="n">Ledger</span><span class="w"> </span><span class="mf">3.1</span><span class="o">.</span><span class="mi">3</span><span class="o">-</span><span class="mi">20190331</span><span class="p">,</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">command</span><span class="o">-</span><span class="n">line</span><span class="w"> </span><span class="n">accounting</span><span class="w"> </span><span class="k">tool</span>
+
+<span class="n">Copyright</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="mi">2003</span><span class="o">-</span><span class="mi">2019</span><span class="p">,</span><span class="w"> </span><span class="n">John</span><span class="w"> </span><span class="n">Wiegley</span><span class="o">.</span><span class="w">  </span><span class="n">All</span><span class="w"> </span><span class="n">rights</span><span class="w"> </span><span class="n">reserved</span><span class="o">.</span>
+
+<span class="n">This</span><span class="w"> </span><span class="n">program</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">made</span><span class="w"> </span><span class="n">available</span><span class="w"> </span><span class="n">under</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">terms</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">BSD</span><span class="w"> </span><span class="n">Public</span><span class="w"> </span><span class="n">License</span><span class="o">.</span>
+<span class="n">See</span><span class="w"> </span><span class="n">LICENSE</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">included</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">distribution</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">disclaimer</span><span class="o">.</span>
+</code></pre></div>
+
+<p>Now, let&#8217;s ask for a balance - this will check the transaction and complain
+about the incorrect balance&nbsp;assertion:</p>
+<div class="highlight"><pre><span></span><code>ledger<span class="w"> </span>-f<span class="w"> </span>ledger.dat<span class="w"> </span>bal
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">While</span><span class="w"> </span><span class="nv">parsing</span><span class="w"> </span><span class="nv">file</span><span class="w"> </span><span class="s2">&quot;/tmp/ledger.dat&quot;</span>,<span class="w"> </span><span class="nv">line</span><span class="w"> </span><span class="mi">2</span>:
+<span class="k">While</span><span class="w"> </span><span class="nv">parsing</span><span class="w"> </span><span class="nv">posting</span>:
+<span class="w">  </span><span class="nv">Assets</span>:<span class="nv">Current</span><span class="w">         </span>$<span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>$<span class="w"> </span><span class="mi">75</span>.<span class="mi">73</span>
+<span class="w">                                 </span><span class="o">^^^^^^^</span>
+<span class="nv">Error</span>:<span class="w"> </span><span class="nv">Balance</span><span class="w"> </span><span class="nv">assertion</span><span class="w"> </span><span class="nv">off</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span>$<span class="w"> </span><span class="o">-</span><span class="mi">24</span>.<span class="mi">27</span><span class="w"> </span><span class="ss">(</span><span class="nv">expected</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="nv">see</span><span class="w"> </span>$<span class="w"> </span><span class="mi">100</span><span class="ss">)</span>
+</code></pre></div>
+
+<p>I&#8217;ve always found the &#8220;off by&#8221; amount confusing and find I don&#8217;t know if the
+asserted balance is too low or&nbsp;high.</p>
+<h2>hledger&#8217;s failed&nbsp;assertion</h2>
+<p>Just confirming my <code>hledger</code> version:</p>
+<div class="highlight"><pre><span></span><code>hledger<span class="w"> </span>--version
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>hledger 1.28, linux-x86_64
+</code></pre></div>
+
+<p>Now let&#8217;s run the same balance report with&nbsp;hledger:</p>
+<div class="highlight"><pre><span></span><code>hledger<span class="w"> </span>-f<span class="w"> </span>ledger.dat<span class="w"> </span>bal
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="n">hledger</span><span class="o">:</span><span class="w"> </span><span class="n">Error</span><span class="o">:</span><span class="w"> </span><span class="sr">/tmp/</span><span class="n">ledger</span><span class="o">.</span><span class="na">dat</span><span class="o">:</span><span class="mi">2</span><span class="o">:</span><span class="mi">34</span><span class="o">:</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">29</span><span class="w"> </span><span class="n">Some</span><span class="w"> </span><span class="n">person</span>
+<span class="mi">2</span><span class="w"> </span><span class="o">|</span><span class="w">     </span><span class="n">Assets</span><span class="o">:</span><span class="n">Current</span><span class="w">           </span><span class="n">$</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$</span><span class="w"> </span><span class="mf">75.73</span>
+<span class="w">  </span><span class="o">|</span><span class="w">                                    </span><span class="o">^^^^^^^^^</span>
+<span class="w">  </span><span class="o">|</span><span class="w">     </span><span class="n">Income</span><span class="w">                  </span><span class="n">$</span><span class="w"> </span><span class="o">-</span><span class="mi">100</span>
+
+<span class="n">This</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="n">assertion</span><span class="w"> </span><span class="n">failed</span><span class="o">.</span>
+<span class="n">In</span><span class="w"> </span><span class="n">account</span><span class="o">:</span><span class="w">    </span><span class="n">Assets</span><span class="o">:</span><span class="n">Current</span>
+<span class="n">and</span><span class="w"> </span><span class="n">commodity</span><span class="o">:</span><span class="w"> </span><span class="n">$</span>
+<span class="k">this</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">asserted</span><span class="o">:</span><span class="w">     </span><span class="mf">75.73</span>
+<span class="n">but</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">calculated</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">is</span><span class="o">:</span><span class="w"> </span><span class="mi">100</span>
+<span class="n">a</span><span class="w"> </span><span class="n">difference</span><span class="w"> </span><span class="n">of</span><span class="o">:</span><span class="w">               </span><span class="o">-</span><span class="mf">24.27</span>
+
+<span class="n">Consider</span><span class="w"> </span><span class="n">viewing</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">account</span><span class="s1">&#39;s calculated balances to troubleshoot. Eg:</span>
+
+<span class="s1">hledger reg &#39;</span><span class="n">Assets</span><span class="o">:</span><span class="n">Current$</span><span class="s1">&#39; cur:&#39;</span><span class="o">\</span><span class="n">$</span><span class="err">&#39;</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="n">FILE</span>
+</code></pre></div>
+
+<p>For me, this output&nbsp;is:</p>
+<ul>
+<li>Much more clear. It helpfully shows the failing transaction in the error&nbsp;message.</li>
+<li>Easier to understand: The asserted balance is compared to the computed&nbsp;balance.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Given that plain text accounting is hard enough to work with at the best of
+times, I would always go for a tool that helps me out the most with the
+complexity. Right now, that means I&#8217;d take hledger over&nbsp;Ledger.</p>
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/accounting.html">Accounting</a>
+
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>
