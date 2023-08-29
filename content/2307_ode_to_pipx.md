@@ -2,11 +2,11 @@ Title: An Ode to pipx
 Date: 2023-07-26 21:00
 Category: Python
 Tags: language:python
-Summary: Using `pipx` has improved my daily development experience considerably.
+Summary: Using pipx has improved my daily development experience considerably.
 
 Oh pipx, how I love thee... 🎵
 
-Using pipx means I can have Python packages installed and executable on my path
+Using Pipx means I can have Python packages installed and executable on my path
 much more easily than in the past. That's changed my personal _and_ work
 development experience for the better. Here's how...
 
@@ -105,8 +105,8 @@ they're available all the time on the command line.
 
 My favourite public packages currently installed are:
 
-* [devpi-server](https://github.com/devpi/devpi) to save a tonne of downloads
-  when recreating Tox environments.
+* [devpi-server](https://github.com/devpi/devpi) to allow Tox to install
+  packages without having Pip call PyPI.
 * [flit](https://flit.pypa.io/en/stable/) for packaging.
 * [frogmouth](https://github.com/Textualize/frogmouth/) - my new favourite
   Markdown tool.
@@ -164,7 +164,7 @@ Thanks for reading.
 Thanks to [Brian and Michael's
 coverage](https://pythonbytes.fm/episodes/show/342/dont-believe-those-old-blogging-myths)
 of [Julia Evans's "Some blogging
-myths](https://jvns.ca/blog/2023/06/05/some-blogging-myths/) post... For
+myths"](https://jvns.ca/blog/2023/06/05/some-blogging-myths/) post... For
 "nagging" bloggers that it doesn't have to be perfect - just write the thing
 and put it out there.
 
