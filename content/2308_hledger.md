@@ -2,7 +2,7 @@ Title: hledger failure messages are better than Ledger's
 Date: 2023-08-29
 Category: Accounting
 Summary: About six months ago, I upgraded our family accounts from Ledger to
-    `hledger`. The CLI API of `hledger` is better than that of Ledger, the
+    hledger. The CLI API of hledger is better than that of Ledger and the
     feedback received when a balance assertion fails is just one example.
 
 For any new plain text accounting project I always recommend using
