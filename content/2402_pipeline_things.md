@@ -1,5 +1,6 @@
 Title: Missing tiny data breaks pipeline
-Date: 2024-02-17
+Category: Code
+Date: 2024-02-18
 Summary: At work, when our usage and revenue reporting pipelines fail, they
     usually fail because of *tiny* data.
 
@@ -10,12 +11,18 @@ and validate just fine.
 It turned out a row of advertising revenue was missed for the United States
 Minor Outlying Islands (UMI).
 
-That missed row was worth just £ 0.0003. 🙀
+That missed row was worth just £ 0.0003. 🙀
 
 ## 👌 This is tiny tiny data
 
-At work (Mixcloud) we generate usage reports for major labels on a monthly
-basis. Those reports total thousand of dollars / pounds / euros.
+At work ([Mixcloud](https://www.mixcloud.com/)) we generate usage reports for
+major labels on a monthly basis. The pipeline:
+
+> identifies, reports and pays royalties out on tens of millions of tracks,
+> played by millions of Mixcloud creators, and owned by hundreds of thousands
+> of different artists and songwriters.
+> [Via Mixcloud
+> blog](https://blog.mixcloud.com/2021/06/30/why-mixcloud-doesnt-offer-on-demand-video-vods/)
 
 This missing row was "tiny" by many definitions:
 
@@ -26,9 +33,9 @@ This missing row was "tiny" by many definitions:
   payout time. It would literally make zero change to the total payout for the
   month to any label.
 
-We often use a 0.1 % sense check definition of edge cases when working out what
+We often use a 0.1 % sense check definition of edge cases when working out what
 bugs and issues to put effort against, and by every definition, this missing
-row was less than 0.1 % of all sorts of monthly factors.
+row was less than 0.1 % of all sorts of monthly factors.
 
 ## 🔥 But the pipeline failed
 
@@ -37,18 +44,18 @@ _before_ they were sent to partners. So we built a post-process validation
 system. This checks the generated reports from the client perspective,
 providing row-wise, file-wise and batch-wise validation.
 
-One of these checks ensures that advertising revenue is reported in GBP £.
+One of these checks ensures that advertising revenue is reported in GBP £.
 However, because we had a missing row for the United States Minor Outlying
-Islands (UMI), the reported advertising-based usage row became USD $ and failed
+Islands (UMI), the reported advertising-based usage row became USD $ and failed
 validation.
 
-Under the hood, this happened because we have a `LEFT JOIN` between revenue and
+Under the hood, this happened because we have a `LEFT JOIN` between revenue and
 usage which wasn't populated on the revenue side because the UMI row was
 missing.
 
 ## 🛑 When there's a validation failure, everything stops
 
-When the generated reports with $ 0 amounts of advertising revenue hit our
+When the generated reports with $ 0 amounts of advertising revenue hit our
 validators they fail for the partners whose reports contain enough detail to
 see that revenue and currency information. Even though this was just two
 partners, when we receive those validation errors in the pipeline, the monthly
@@ -60,7 +67,7 @@ assess how many generated reports are tainted.
 ## 🔧 Fix and regenerate
 
 This time the error was, as discussed, tiny. And the fix was pretty tiny too.
-We generated an extra row of revenue for UMI worth £ 0.0001 and spliced it back
+We generated an extra row of revenue for UMI worth £ 0.0001 and spliced it back
 into our monthly source data snapshots.
 
 Then we reran all partners that receive reports on Mixcloud's ad-funded usage
@@ -79,8 +86,8 @@ On the "good" side, we could say:
 > are failing.
 
 In addition, these failures are so rare that we often are surprised when things
-fail. Plus, it's good that we have the validation in place that finds this
-kinds of errors and reports them.
+fail. Plus, it's good that we have the validation in place that finds these
+kind of errors and reports them.
 
 ### This is bad
 
@@ -91,7 +98,24 @@ On the other hand, we could say:
 
 There also seems some truth in this.
 
-Probably the `LEFT JOIN` in our revenue pipeline that caused the USD row to
+Probably the `LEFT JOIN` in our revenue pipeline that caused the USD row to
 appear is not robust enough. And as we've dug more into the error later in the
 week, my colleague Tim might have found a scenario that we would never be able
-to prevent without strengthening this left join.
+to prevent without strengthening this revenue query's SQL.
+
+## ⭐ Turn the bad into good
+
+What I realised is that the failure is a gift in disguise - it's helped us to
+see a flaw in the pipeline that's so often hidden by aggregation. Instead of
+resting on our laurels, we have an opportunity to improve the robustness and
+accuracy of our revenue pipeline, plus a new test case to add to our test
+suite.
+
+As a result of this error, we're also planning to adjust the source of the
+missing row. This is currently a manual monthly process, but we've seen that it
+might be better incorporated into our pipeline directly, which we think will
+give more stability.
+
+So, if you happen to be that Mixcloud user in the United States Minor Outlying
+Islands who listened in January - thanks so much. Your unusual pattern of
+listening really helped us out. 😊
