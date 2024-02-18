@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" property="og:description" content="At work, when our usage and revenue reporting pipelines fail, they usually fail because of tiny data.">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://jamescooke.info/theme/droidstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Sans+Mono|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+
+        <title>Missing tiny data breaks pipeline // James Cooke // Brighton-based Python developer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="fake"> </div>
+        <div class="container">
+            <div class="row">
+                <header class="span3">
+                    <h1 class="blogtitle">
+                        <a href="https://jamescooke.info"><img id="profileimg" src="/images/coding_cooke_ltd.png" alt="James Cooke" ></a>James Cooke
+                    </h1>
+                    <nav>
+                        <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/pages/hello-my-name-is-james.html">About</a></li>
+                                <li><a href="/feeds/all.atom.xml">Atom Feed</a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+    <section class="span7 offset1 content">
+        <article class="blogpost">
+            <header>
+                <h1>Missing tiny data breaks&nbsp;pipeline</h1>
+                <p class="postdate" title="2024-02-18T00:00:00+00:00">- Posted Feb 18, 2024</p>
+            </header>
+            <div class='article-content'>
+                <p>This week, during our monthly reporting run, two major label licensing reports
+failed validation. This is unexpected because usually all reports are generated
+and validate just&nbsp;fine.</p>
+<p>It turned out a row of advertising revenue was missed for the United States
+Minor Outlying Islands (<span class="caps">UMI</span>).</p>
+<p>That missed row was worth just £ 0.0003.&nbsp;🙀</p>
+<h2>👌 This is tiny tiny&nbsp;data</h2>
+<p>At work (<a href="https://www.mixcloud.com/">Mixcloud</a>) we generate usage reports for
+major labels on a monthly basis. The&nbsp;pipeline:</p>
+<blockquote>
+<p>identifies, reports and pays royalties out on tens of millions of tracks,
+played by millions of Mixcloud creators, and owned by hundreds of thousands
+of different artists and songwriters.
+<a href="https://blog.mixcloud.com/2021/06/30/why-mixcloud-doesnt-offer-on-demand-video-vods/">Via Mixcloud&nbsp;blog</a></p>
+</blockquote>
+<p>This missing row was &#8220;tiny&#8221; by many&nbsp;definitions:</p>
+<ul>
+<li>It was a tiny territory that I have to <a href="https://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands">look up on
+  Wikipedia</a>.
+  Turns out the population is about 300&nbsp;people.</li>
+<li>It was a tiny amount of revenue that would get rounded out of existence at
+  payout time. It would literally make zero change to the total payout for the
+  month to any&nbsp;label.</li>
+</ul>
+<p>We often use a 0.1 % sense check definition of edge cases when working out what
+bugs and issues to put effort against, and by every definition, this missing
+row was less than 0.1 % of all sorts of monthly&nbsp;factors.</p>
+<h2>🔥 But the pipeline&nbsp;failed</h2>
+<p>A long time ago, I realised that we needed to validate the reports generated
+<em>before</em> they were sent to partners. So we built a post-process validation
+system. This checks the generated reports from the client perspective,
+providing row-wise, file-wise and batch-wise&nbsp;validation.</p>
+<p>One of these checks ensures that advertising revenue is reported in <span class="caps">GBP</span> £.
+However, because we had a missing row for the United States Minor Outlying
+Islands (<span class="caps">UMI</span>), the reported advertising-based usage row became <span class="caps">USD</span> $ and failed&nbsp;validation.</p>
+<p>Under the hood, this happened because we have a <code>LEFT JOIN</code> between revenue and
+usage which wasn&#8217;t populated on the revenue side because the <span class="caps">UMI</span> row was&nbsp;missing.</p>
+<h2>🛑 When there&#8217;s a validation failure, everything&nbsp;stops</h2>
+<p>When the generated reports with $ 0 amounts of advertising revenue hit our
+validators they fail for the partners whose reports contain enough detail to
+see that revenue and currency information. Even though this was just two
+partners, when we receive those validation errors in the pipeline, the monthly
+production&nbsp;stops.</p>
+<p>We keep the generated reports, but work to find out the cause of the error and
+assess how many generated reports are&nbsp;tainted.</p>
+<h2>🔧 Fix and&nbsp;regenerate</h2>
+<p>This time the error was, as discussed, tiny. And the fix was pretty tiny too.
+We generated an extra row of revenue for <span class="caps">UMI</span> worth £ 0.0001 and spliced it back
+into our monthly source data&nbsp;snapshots.</p>
+<p>Then we reran all partners that receive reports on Mixcloud&#8217;s ad-funded usage
+and our ops colleagues got our monthly production process back up to&nbsp;speed.</p>
+<h2>🤔 Is this kind of behaviour a &#8220;good&#8221;&nbsp;thing?</h2>
+<p>After this incident, I&#8217;m left wondering if it&#8217;s <span class="caps">OK</span> that our pipeline is halted
+by a missing row worth less than a penny that wouldn&#8217;t affect monthly&nbsp;payouts.</p>
+<h3>This is&nbsp;good</h3>
+<p>On the &#8220;good&#8221; side, we could&nbsp;say:</p>
+<blockquote>
+<p>All the main sources of error are stable, it&#8217;s just the tiny edge cases that
+are&nbsp;failing.</p>
+</blockquote>
+<p>In addition, these failures are so rare that we often are surprised when things
+fail. Plus, it&#8217;s good that we have the validation in place that finds these
+kind of errors and reports&nbsp;them.</p>
+<h3>This is&nbsp;bad</h3>
+<p>On the other hand, we could&nbsp;say:</p>
+<blockquote>
+<p>The pipelines are so fragile that a tiny missing piece of revenue allocated
+to a user in a territory can bring down a monthly reporting&nbsp;run.</p>
+</blockquote>
+<p>There also seems some truth in&nbsp;this.</p>
+<p>Probably the <code>LEFT JOIN</code> in our revenue pipeline that caused the <span class="caps">USD</span> row to
+appear is not robust enough. And as we&#8217;ve dug more into the error later in the
+week, my colleague Tim might have found a scenario that we would never be able
+to prevent without strengthening this revenue query&#8217;s <span class="caps">SQL</span>.</p>
+<h2>⭐ Turn the bad into&nbsp;good</h2>
+<p>What I realised is that the failure is a gift in disguise - it&#8217;s helped us to
+see a flaw in the pipeline that&#8217;s so often hidden by aggregation. Instead of
+resting on our laurels, we have an opportunity to improve the robustness and
+accuracy of our revenue pipeline, plus a new test case to add to our test&nbsp;suite.</p>
+<p>As a result of this error, we&#8217;re also planning to adjust the source of the
+missing row. This is currently a manual monthly process, but we&#8217;ve seen that it
+might be better incorporated into our pipeline directly, which we think will
+give more&nbsp;stability.</p>
+<p>So, if you happen to be that Mixcloud user in the United States Minor Outlying
+Islands who listened in January - thanks so much. Your unusual pattern of
+listening really helped us out.&nbsp;😊</p>
+            </div>
+        </article>
+
+        <hr />
+
+        <p class="article-meta">
+            &ndash;
+            Posted in <a href="https://jamescooke.info/category/code.html">Code</a>
+
+        </p>
+
+        <hr />
+
+
+ 
+    </section>
+
+            </div>
+            <div class="row">
+                <footer class="offset4 span7">
+                    <p>&copy; James Cooke &ndash;
+                        Built with <a href="https://github.com/jamescooke/droidstrap">Droidstrap theme</a>
+                        for <a href="https://blog.getpelican.com/">Pelican</a>
+                    </p>
+                    <p>Licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</p>
+                </footer>
+        </div>
+
+    </body>
+</html>
