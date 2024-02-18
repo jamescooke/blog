@@ -119,3 +119,7 @@ give more stability.
 So, if you happen to be that Mixcloud user in the United States Minor Outlying
 Islands who listened in January - thanks so much. Your unusual pattern of
 listening really helped us out. 😊
+
+---
+
+🙏 Thanks to Duncan and Dan for proof reading and suggestions.
