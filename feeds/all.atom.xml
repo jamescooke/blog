@@ -85,7 +85,9 @@ might be better incorporated into our pipeline directly, which we think will
 give more&amp;nbsp;stability.&lt;/p&gt;
 &lt;p&gt;So, if you happen to be that Mixcloud user in the United States Minor Outlying
 Islands who listened in January - thanks so much. Your unusual pattern of
-listening really helped us out.&amp;nbsp;😊&lt;/p&gt;</content><category term="Code"></category></entry><entry><title>hledger failure messages are better than Ledger’s</title><link href="https://jamescooke.info/hledger-failure-messages-are-better-than-ledgers.html" rel="alternate"></link><published>2023-08-29T00:00:00+01:00</published><updated>2023-08-29T00:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2023-08-29:/hledger-failure-messages-are-better-than-ledgers.html</id><summary type="html">&lt;p&gt;About six months ago, I upgraded our family accounts from Ledger to
+listening really helped us out.&amp;nbsp;😊&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;🙏 Thanks to Duncan and Dan for proof reading and&amp;nbsp;suggestions.&lt;/p&gt;</content><category term="Code"></category></entry><entry><title>hledger failure messages are better than Ledger’s</title><link href="https://jamescooke.info/hledger-failure-messages-are-better-than-ledgers.html" rel="alternate"></link><published>2023-08-29T00:00:00+01:00</published><updated>2023-08-29T00:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2023-08-29:/hledger-failure-messages-are-better-than-ledgers.html</id><summary type="html">&lt;p&gt;About six months ago, I upgraded our family accounts from Ledger to
 hledger. The &lt;span class="caps"&gt;CLI&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; of hledger is better than that of Ledger and the
 feedback received when a balance assertion fails is just one&amp;nbsp;example.&lt;/p&gt;</summary><content type="html">&lt;p&gt;For any new plain text accounting project I always recommend using
 &lt;a href="https://hledger.org/"&gt;hledger&lt;/a&gt; over
