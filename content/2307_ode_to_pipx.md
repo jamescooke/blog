@@ -6,7 +6,7 @@ Summary: Using pipx has improved my daily development experience considerably.
 
 Oh pipx, how I love thee... 🎵
 
-Using Pipx means I can have Python packages installed and executable on my path
+Using pipx means I can have Python packages installed and executable on my path
 much more easily than in the past. That's changed my personal _and_ work
 development experience for the better. Here's how...
 
@@ -81,7 +81,7 @@ Then, installing IPython was as simple as:
 pipx install ipython
 ```
 
-Everything just worked and IPython was installed successfully. Pipx even warned
+Everything just worked and IPython was installed successfully. pipx even warned
 me that there was a previous executable on my path (my previous crappy wrapper
 script).
 
@@ -95,7 +95,7 @@ endpoints on my shell's `PATH`.
   `~/active` (my usual working path). Along with their Make recipes for
   managing virtual environments and upgrades.
 * 🙅 Gone is the need for orchestration scripts and Make recipes to "know" the
-  particular directory and virtual environment a package is installed in. Pipx
+  particular directory and virtual environment a package is installed in. pipx
   can upgrade everything with `pipx upgrade-all`.
 
 ## ✅ Public packages
