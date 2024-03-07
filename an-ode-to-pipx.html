@@ -49,7 +49,7 @@
             </header>
             <div class='article-content'>
                 <p>Oh pipx, how I love thee&#8230;&nbsp;🎵</p>
-<p>Using Pipx means I can have Python packages installed and executable on my path
+<p>Using pipx means I can have Python packages installed and executable on my path
 much more easily than in the past. That&#8217;s changed my personal <em>and</em> work
 development experience for the better. Here&#8217;s&nbsp;how&#8230;</p>
 <h2>Before&nbsp;pipx</h2>
@@ -110,7 +110,7 @@ per <a href="https://pypa.github.io/pipx/">the instructions</a>.</p>
 <div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>ipython
 </code></pre></div>
 
-<p>Everything just worked and IPython was installed successfully. Pipx even warned
+<p>Everything just worked and IPython was installed successfully. pipx even warned
 me that there was a previous executable on my path (my previous crappy wrapper&nbsp;script).</p>
 <h3>A better dev&nbsp;life</h3>
 <p>Now I use pipx to install, manage the virtual environment and expose packages&#8217;
@@ -121,7 +121,7 @@ endpoints on my shell&#8217;s <code>PATH</code>.</p>
   <code>~/active</code> (my usual working path). Along with their Make recipes for
   managing virtual environments and&nbsp;upgrades.</li>
 <li>🙅 Gone is the need for orchestration scripts and Make recipes to &#8220;know&#8221; the
-  particular directory and virtual environment a package is installed in. Pipx
+  particular directory and virtual environment a package is installed in. pipx
   can upgrade everything with <code>pipx upgrade-all</code>.</li>
 </ul>
 <h2>✅ Public&nbsp;packages</h2>
@@ -194,6 +194,10 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                 &ndash; Further reading:
                 <ul>
                     <li>
+                        <a href="https://jamescooke.info/pipxs-upgrade-is-shallow-lets-go-deeper.html">Pipx&#8217;s upgrade is shallow, let&#8217;s go&nbsp;deeper</a>
+                        <p>Software installed in pipx&#8217;s managed virtual environments can get
+stale. How can we update those packages <em>and</em> their&nbsp;dependencies?</p></li>
+                    <li>
                         <a href="https://jamescooke.info/pytests-cache-and-gitignore.html">Pytest&#8217;s cache and&nbsp;gitignore</a>
                         <p class="first last">Sanity checking Pytest&#8217;s <tt class="docutils literal">.gitignore</tt> files.</p>
 </li>
@@ -201,12 +205,6 @@ tag                    <a href="https://jamescooke.info/tag/languagepython.html"
                         <a href="https://jamescooke.info/its-good-to-extract.html">It&#8217;s good to&nbsp;extract</a>
                         <p class="first last">Thoughts on the benefits of extracting library code from Python
 projects into their own&nbsp;packages.</p>
-</li>
-                    <li>
-                        <a href="https://jamescooke.info/aaa-part-2-extracting-arrange-code-to-make-fixtures.html"><span class="caps">AAA</span> Part 2: Extracting Arrange code to make&nbsp;fixtures</a>
-                        <p class="first last">This post explores how to extract arrangement code when working with
-the Arrange Act Assert pattern so that it can be used with certainty
-across the test&nbsp;suite.</p>
 </li>
                 </ul>
         </p>

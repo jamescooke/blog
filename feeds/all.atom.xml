@@ -1,5 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2024-02-18T00:00:00+00:00</updated><entry><title>Missing tiny data breaks pipeline</title><link href="https://jamescooke.info/missing-tiny-data-breaks-pipeline.html" rel="alternate"></link><published>2024-02-18T00:00:00+00:00</published><updated>2024-02-18T00:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2024-02-18:/missing-tiny-data-breaks-pipeline.html</id><summary type="html">&lt;p&gt;At work, when our usage and revenue reporting pipelines fail, they
+<feed xmlns="http://www.w3.org/2005/Atom"><title>James Cooke</title><link href="https://jamescooke.info/" rel="alternate"></link><link href="https://jamescooke.info/feeds/all.atom.xml" rel="self"></link><id>https://jamescooke.info/</id><updated>2024-03-07T00:00:00+00:00</updated><entry><title>Pipx’s upgrade is shallow, let’s go deeper</title><link href="https://jamescooke.info/pipxs-upgrade-is-shallow-lets-go-deeper.html" rel="alternate"></link><published>2024-03-07T00:00:00+00:00</published><updated>2024-03-07T00:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2024-03-07:/pipxs-upgrade-is-shallow-lets-go-deeper.html</id><summary type="html">&lt;p&gt;Software installed in pipx&amp;#8217;s managed virtual environments can get
+stale. How can we update those packages &lt;em&gt;and&lt;/em&gt; their&amp;nbsp;dependencies?&lt;/p&gt;</summary><content type="html">&lt;p&gt;pipx has been managing my Python tools for almost a&amp;nbsp;year.&lt;/p&gt;
+&lt;p&gt;But those tools are getting stale - new versions are out - I need to&amp;nbsp;upgrade.&lt;/p&gt;
+&lt;h2&gt;💪 Let&amp;#8217;s upgrade&amp;nbsp;this&lt;/h2&gt;
+&lt;p&gt;One of my favourite and most used Python tools installed in pipx is
+&lt;a href="https://pypi.org/project/frogmouth/"&gt;Frogmouth&lt;/a&gt;. While working on some
+documentation, I think I&amp;#8217;ve spotted a bug in some Markdown rendering. So before
+I report the bug, let&amp;#8217;s ensure I&amp;#8217;ve got the latest&amp;nbsp;version.&lt;/p&gt;
+&lt;p&gt;Upgrading &amp;#8220;Is Easy ™️&amp;#8221;. Just use &lt;code&gt;pipx upgrade&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;upgrade&lt;span class="w"&gt; &lt;/span&gt;frogmouth
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We get a spinner, and&amp;nbsp;then:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;frogmouth is already at latest version 0.9.2 (location: /home/james/.local/pipx/venvs/frogmouth)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Success! Nothing to do, end of blog&amp;nbsp;post.&lt;/p&gt;
+&lt;p&gt;&amp;#8230;&lt;/p&gt;
+&lt;h2&gt;🔎 Let&amp;#8217;s&amp;nbsp;check&lt;/h2&gt;
+&lt;p&gt;Frogmouth is using &lt;a href="https://pypi.org/project/textual/"&gt;Textual&lt;/a&gt; and
+&lt;a href="https://pypi.org/project/rich/"&gt;rich&lt;/a&gt; under the hood - so if I want to make
+sure I&amp;#8217;ve got the latest Markdown code, I need to ensure they&amp;#8217;ve been upgraded&amp;nbsp;too.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s ask &lt;code&gt;pip&lt;/code&gt; to tell us all versions of packages in the &lt;code&gt;frogmouth&lt;/code&gt; virtual&amp;nbsp;environment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;runpip&lt;span class="w"&gt; &lt;/span&gt;frogmouth&lt;span class="w"&gt; &lt;/span&gt;list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Package&lt;/span&gt;&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="n"&gt;Version&lt;/span&gt;
+&lt;span class="o"&gt;------------------&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;---------&lt;/span&gt;
+&lt;span class="n"&gt;anyio&lt;/span&gt;&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="mf"&gt;3.7&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;certifi&lt;/span&gt;&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="mf"&gt;2023.7&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;
+&lt;span class="n"&gt;frogmouth&lt;/span&gt;&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="mf"&gt;0.9&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="err"&gt;👈&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Here&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;s Frogmouth at the latest version&lt;/span&gt;
+&lt;span class="n"&gt;h11&lt;/span&gt;&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="mf"&gt;0.14&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;httpcore&lt;/span&gt;&lt;span class="w"&gt;           &lt;/span&gt;&lt;span class="mf"&gt;0.17&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;span class="n"&gt;httpx&lt;/span&gt;&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="mf"&gt;0.24&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;idna&lt;/span&gt;&lt;span class="w"&gt;               &lt;/span&gt;&lt;span class="mf"&gt;3.4&lt;/span&gt;
+&lt;span class="n"&gt;importlib&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;6.8&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;linkify&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="mf"&gt;2.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;span class="n"&gt;markdown&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="mf"&gt;3.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;mdit&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;plugins&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="mf"&gt;0.4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;mdurl&lt;/span&gt;&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;span class="n"&gt;pip&lt;/span&gt;&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="mf"&gt;24.0&lt;/span&gt;
+&lt;span class="n"&gt;pkg_resources&lt;/span&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;Pygments&lt;/span&gt;&lt;span class="w"&gt;           &lt;/span&gt;&lt;span class="mf"&gt;2.16&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;rich&lt;/span&gt;&lt;span class="w"&gt;               &lt;/span&gt;&lt;span class="mf"&gt;13.5&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="w"&gt;       &lt;/span&gt;&lt;span class="err"&gt;👈&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;rich&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;is&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;at&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;13.7&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;PyPI&lt;/span&gt;
+&lt;span class="n"&gt;setuptools&lt;/span&gt;&lt;span class="w"&gt;         &lt;/span&gt;&lt;span class="mf"&gt;69.1&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;sniffio&lt;/span&gt;&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="mf"&gt;1.3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;textual&lt;/span&gt;&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="mf"&gt;0.43&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="w"&gt;       &lt;/span&gt;&lt;span class="err"&gt;👈&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Textual&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;is&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;at&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;0.52&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;PyPI&lt;/span&gt;
+&lt;span class="n"&gt;typing_extensions&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="mf"&gt;4.7&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;uc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;micro&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;span class="n"&gt;wheel&lt;/span&gt;&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="mf"&gt;0.42&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;xdg&lt;/span&gt;&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="mf"&gt;6.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;zipp&lt;/span&gt;&lt;span class="w"&gt;               &lt;/span&gt;&lt;span class="mf"&gt;3.16&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Uho - rich and Textual didn&amp;#8217;t get updated by doing &lt;code&gt;pipx upgrade&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;🤔 This kinda makes&amp;nbsp;sense&lt;/h2&gt;
+&lt;p&gt;When we have a virtual environment for a project and we run &lt;code&gt;pip upgrade&lt;/code&gt;, it
+&lt;em&gt;just&lt;/em&gt; upgrades the package we request. It only upgrades dependencies if they
+conflict with the newly upgraded package. This is called the &amp;#8220;only-if-needed&amp;#8221;
+strategy and is &lt;a href="https://pip.pypa.io/en/stable/user_guide/#only-if-needed-recursive-upgrade"&gt;documented in the pip User
+Guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;But, given I&amp;#8217;m a &lt;a href="https://pypi.org/project/pip-tools/"&gt;pip-tools&lt;/a&gt; addict, I
+rarely call &lt;code&gt;pip&lt;/code&gt; directly. Usually I blow away all of a project&amp;#8217;s
+requirements, rebuild them with &lt;code&gt;pip-compile&lt;/code&gt; and then install all the new
+freshness with &lt;code&gt;pip-sync&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;How can I get this &amp;#8220;everything new&amp;#8221; behaviour with &lt;code&gt;pipx&lt;/code&gt;? I think there are
+two&amp;nbsp;options&amp;#8230;&lt;/p&gt;
+&lt;h2&gt;Option 1: Tell pip to be&amp;nbsp;eager&lt;/h2&gt;
+&lt;p&gt;Also listed in the pip User Guide is the &amp;#8220;eager&amp;#8221; option&amp;nbsp;which:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;upgrades all dependencies regardless of whether they still satisfy the new
+parent&amp;nbsp;requirements.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This sounds like what I&amp;#8217;m looking&amp;nbsp;for.&lt;/p&gt;
+&lt;p&gt;And, luckily, &lt;code&gt;pipx upgrade --help&lt;/code&gt; shows us just what we&amp;nbsp;need:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;--pip-args PIP_ARGS   Arbitrary pip arguments to pass directly to pip install/upgrade commands
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let&amp;#8217;s try it by passing &lt;code&gt;--upgrade-strategy=eager&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;upgrade&lt;span class="w"&gt; &lt;/span&gt;--pip-args&lt;span class="o"&gt;=&lt;/span&gt;--upgrade-strategy&lt;span class="o"&gt;=&lt;/span&gt;eager&lt;span class="w"&gt; &lt;/span&gt;frogmouth
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This, unfortunately, gives very little output regarding the packages being
+updated. So let&amp;#8217;s check them again with &lt;code&gt;pip list&lt;/code&gt; (this time just grepping for
+&amp;#8216;rich&amp;#8217; and&amp;nbsp;&amp;#8216;textual&amp;#8217;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;runpip&lt;span class="w"&gt; &lt;/span&gt;frogmouth&lt;span class="w"&gt; &lt;/span&gt;list&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;-E&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^rich|^textual&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;rich               13.7.1   🎉 Yay - upgraded to latest.
+textual            0.43.2   😞 boo - not upgraded to latest.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;😬 Textual ain&amp;#8217;t gunna&amp;nbsp;upgrade&lt;/h3&gt;
+&lt;p&gt;After &amp;#8220;some&amp;#8221; digging, it turns out that Textual isn&amp;#8217;t going to upgrade when
+installing / upgrading Frogmouth. That&amp;#8217;s because Frogmouth has a &lt;a href="https://python-poetry.org/docs/dependency-specification/#caret-requirements"&gt;caret
+requirement&lt;/a&gt;
+in &lt;a href="https://github.com/Textualize/frogmouth/blob/main/pyproject.toml#L31"&gt;its &lt;code&gt;pyproject.toml&lt;/code&gt;
+file&lt;/a&gt;
+which restricts Textual from being upgraded beyond &lt;code&gt;0.43&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I only discovered this after pulling out &lt;code&gt;pip-tools&lt;/code&gt; and running a clean
+compile of the current Frogmouth requirements and diffing them to the output of
+&lt;code&gt;pipx runpip frogmouth list&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Personally, I think this kind of pinning is frustrating, especially in &lt;a href="https://0ver.org/"&gt;zero
+versioned&lt;/a&gt; software. If something breaks I can apply any
+pins required to get them to work - I don&amp;#8217;t need the upstream maintainer to do
+it for me. That just creates slowness and unnecessary&amp;nbsp;confusion.&lt;/p&gt;
+&lt;p&gt;Anyway - back to the&amp;nbsp;upgrades&amp;#8230;&lt;/p&gt;
+&lt;h2&gt;Option 2: Hit it with a&amp;nbsp;reinstall&lt;/h2&gt;
+&lt;p&gt;There is &lt;em&gt;another&lt;/em&gt; way. That&amp;#8217;s to ask pipx to do a reinstallation of the
+software. As per &lt;code&gt;pipx reinstall --help&lt;/code&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Package is uninstalled, then installed with pipx install &lt;span class="caps"&gt;PACKAGE&lt;/span&gt; with the
+same options used in the original install of &lt;span class="caps"&gt;PACKAGE&lt;/span&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Warning: this is a bit of a lie. The &lt;code&gt;--python&lt;/code&gt; option is not kept when doing
+reinstall. But, this &lt;em&gt;does&lt;/em&gt; allow for new versions of Python to be used after&amp;nbsp;reinstalling.&lt;/p&gt;
+&lt;p&gt;Given that I&amp;#8217;m not using the default Python version for pipx installs, I always
+have to pass in my preferred&amp;nbsp;Python:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;reinstall&lt;span class="w"&gt; &lt;/span&gt;frogmouth&lt;span class="w"&gt; &lt;/span&gt;--python&lt;span class="o"&gt;=&lt;/span&gt;python3.12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nx"&gt;uninstalled&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;frogmouth&lt;/span&gt;&lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;✨&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;🌟&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;✨&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;installed&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;frogmouth&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m m-Double"&gt;0.9.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;installed&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;using&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Python&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m m-Double"&gt;3.12.2&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;These&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;apps&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;are&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;now&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;globally&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;available&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;frogmouth&lt;/span&gt;
+&lt;span class="nx"&gt;done&lt;/span&gt;&lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;✨&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;🌟&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;✨&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And rich and Textual got to the same versions as before with&amp;nbsp;&amp;#8220;eager&amp;#8221;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;runpip&lt;span class="w"&gt; &lt;/span&gt;frogmouth&lt;span class="w"&gt; &lt;/span&gt;list&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;-E&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^rich|^textual&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;rich               13.7.1
+textual            0.43.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Which is&amp;nbsp;best?&lt;/h2&gt;
+&lt;p&gt;My guess is you should use what you think is best for your&amp;nbsp;workflow.&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;m aggressive with my upgrading, so I&amp;#8217;m happy with the &lt;code&gt;pipx reinstall&lt;/code&gt; route.
+This also may give cleaner virtual environments since we shouldn&amp;#8217;t get any
+hanging dependencies in the scenario that a package stops using a particular&amp;nbsp;dependency.&lt;/p&gt;
+&lt;p&gt;Also, during my experimentation, I accidentally installed a package off PyPI
+called &amp;#8220;eager&amp;#8221; 🤦. Luckily it didn&amp;#8217;t run and the source doesn&amp;#8217;t look malicious
+to my trusting eye. But it&amp;#8217;s this kind of mistake that&amp;#8217;s nicely cleaned up
+every time the virtual environment is recreated with &lt;code&gt;reinstall&lt;/code&gt;.&amp;nbsp;😅&lt;/p&gt;</content><category term="Python"></category><category term="language:python"></category></entry><entry><title>Missing tiny data breaks pipeline</title><link href="https://jamescooke.info/missing-tiny-data-breaks-pipeline.html" rel="alternate"></link><published>2024-02-18T00:00:00+00:00</published><updated>2024-02-18T00:00:00+00:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2024-02-18:/missing-tiny-data-breaks-pipeline.html</id><summary type="html">&lt;p&gt;At work, when our usage and revenue reporting pipelines fail, they
 usually fail because of &lt;em&gt;tiny&lt;/em&gt;&amp;nbsp;data.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This week, during our monthly reporting run, two major label licensing reports
 failed validation. This is unexpected because usually all reports are generated
 and validate just&amp;nbsp;fine.&lt;/p&gt;
@@ -169,7 +313,7 @@ asserted balance is too low or&amp;nbsp;high.&lt;/p&gt;
 &lt;p&gt;Given that plain text accounting is hard enough to work with at the best of
 times, I would always go for a tool that helps me out the most with the
 complexity. Right now, that means I&amp;#8217;d take hledger over&amp;nbsp;Ledger.&lt;/p&gt;</content><category term="Accounting"></category></entry><entry><title>An Ode to pipx</title><link href="https://jamescooke.info/an-ode-to-pipx.html" rel="alternate"></link><published>2023-07-26T21:00:00+01:00</published><updated>2023-07-26T21:00:00+01:00</updated><author><name>James</name></author><id>tag:jamescooke.info,2023-07-26:/an-ode-to-pipx.html</id><summary type="html">&lt;p&gt;Using pipx has improved my daily development experience&amp;nbsp;considerably.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Oh pipx, how I love thee&amp;#8230;&amp;nbsp;🎵&lt;/p&gt;
-&lt;p&gt;Using Pipx means I can have Python packages installed and executable on my path
+&lt;p&gt;Using pipx means I can have Python packages installed and executable on my path
 much more easily than in the past. That&amp;#8217;s changed my personal &lt;em&gt;and&lt;/em&gt; work
 development experience for the better. Here&amp;#8217;s&amp;nbsp;how&amp;#8230;&lt;/p&gt;
 &lt;h2&gt;Before&amp;nbsp;pipx&lt;/h2&gt;
@@ -230,7 +374,7 @@ per &lt;a href="https://pypa.github.io/pipx/"&gt;the instructions&lt;/a&gt;.&lt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipx&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;ipython
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Everything just worked and IPython was installed successfully. Pipx even warned
+&lt;p&gt;Everything just worked and IPython was installed successfully. pipx even warned
 me that there was a previous executable on my path (my previous crappy wrapper&amp;nbsp;script).&lt;/p&gt;
 &lt;h3&gt;A better dev&amp;nbsp;life&lt;/h3&gt;
 &lt;p&gt;Now I use pipx to install, manage the virtual environment and expose packages&amp;#8217;
@@ -241,7 +385,7 @@ endpoints on my shell&amp;#8217;s &lt;code&gt;PATH&lt;/code&gt;.&lt;/p&gt;
   &lt;code&gt;~/active&lt;/code&gt; (my usual working path). Along with their Make recipes for
   managing virtual environments and&amp;nbsp;upgrades.&lt;/li&gt;
 &lt;li&gt;🙅 Gone is the need for orchestration scripts and Make recipes to &amp;#8220;know&amp;#8221; the
-  particular directory and virtual environment a package is installed in. Pipx
+  particular directory and virtual environment a package is installed in. pipx
   can upgrade everything with &lt;code&gt;pipx upgrade-all&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;✅ Public&amp;nbsp;packages&lt;/h2&gt;
