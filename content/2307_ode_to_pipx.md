@@ -6,7 +6,7 @@ Summary: Using pipx has improved my daily development experience considerably.
 
 Oh pipx, how I love thee... 🎵
 
-Using pipx means I can have Python packages installed and executable on my path
+Using Pipx means I can have Python packages installed and executable on my path
 much more easily than in the past. That's changed my personal _and_ work
 development experience for the better. Here's how...
 
